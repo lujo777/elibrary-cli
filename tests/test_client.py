@@ -1047,7 +1047,7 @@ def test_check_session_and_logout(client, site, http):
     out = client.logout()
     assert out.outcome == "logged_out"
     assert [r.url.path for r in site.requests] == ["/defaultx.asp", "/end_session.asp"]
-    assert site.requests[1].method == "POST" and site.requests[1].content == b"saveuser=1"
+    assert site.requests[1].method == "POST" and site.requests[1].content == b"saveuser=0"
 
 
 def test_cache_stats_and_clear(client, site, settings):

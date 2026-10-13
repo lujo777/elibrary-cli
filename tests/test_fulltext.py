@@ -1886,3 +1886,16 @@ def test_saved_card_54076582_full_text_from_cyberleninka_end_to_end(http, site, 
     assert again.from_cache and again.offset == res.next_offset
     assert len(site.requests) == 1 and len(ext.requests) == 2
     client.close()
+
+
+def test_signed_in_card_links_to_full_text_asp():
+    """Signed-in item page (live 2026-10-14): file_article(fid, n) -> file_article.asp, load_article(id) ->
+    full_text.asp?id=<id>."""
+    html = fixture_bytes("item_patent_47430099_signed_in")
+    assert el.is_logged_in(html)
+    links = el.find_elibrary_pdf_links(html, item_id=47430099)
+    # the card's "Загрузить: Полный текст (PDF)" button (file_article) comes first — that is what
+    # downloaded the PDF live; load_article's full_text.asp is the fallback
+    assert links[0] == "https://elibrary.ru/file_article.asp?fileid=47430099&filenum=1"
+    assert 'action="/full_text.asp?id=" + iid' in html.decode("utf-8")  # the signed-in load_article()
+    assert not el.is_logged_in(fixture_bytes("item_patent_47430099"))

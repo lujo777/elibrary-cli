@@ -1059,7 +1059,7 @@ def test_auth_logout_and_clear(runner, clients, site, http):
     site.add(path_is("/end_session.asp"), lambda r: html("querybox_form"))
     data = ok_json(invoke(runner, "auth", "logout"))
     assert data["outcome"] == "logged_out" and data["logged_in"] is False
-    assert body_of(site.requests[0]) == {"saveuser": "1"}
+    assert body_of(site.requests[0]) == {"saveuser": "0"}  # really sign out (no remembered login)
     http.set_cookies({"SUserID": "x"})
     data = ok_json(invoke(runner, "auth", "clear"))
     assert data["has_session_cookie"] is False and data["cookie_names"] == []
@@ -1211,3 +1211,15 @@ def test_years_are_not_digit_grouped_in_tables():
     assert _num(9999) == "9999"
     assert _num(10000) == "10 000"
     assert _num(1170544) == "1 170 544"
+
+
+def test_auth_logout_keep_option(runner, clients, site):
+    site.add(lambda r: "end_session.asp" in str(r.url),
+             lambda r: httpx2.Response(200, content=fixture_bytes("titles_form"),
+                                       headers={"Content-Type": "text/html; Charset=UTF-8"}))
+    r = invoke(runner, "auth", "logout", "--keep", "-f", "json")
+    assert r.exit_code == 0
+    assert site.requests[-1].content == b"saveuser=1"
+    r = invoke(runner, "auth", "logout", "-f", "json")
+    assert r.exit_code == 0
+    assert site.requests[-1].content == b"saveuser=0"

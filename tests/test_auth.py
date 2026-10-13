@@ -368,7 +368,8 @@ def test_logout_posts_saveuser_and_clears_account(http, site):
     info = logout(http)
     req = site.requests[0]
     assert req.method == "POST" and req.url.path == "/end_session.asp"
-    assert req.content == b"saveuser=1"
+    # saveuser=0 = "do not save my data": saveuser=1 keeps a remembered login (live finding 2026-10-14)
+    assert req.content == b"saveuser=0"
     assert req.headers["Referer"] == "https://elibrary.ru/defaultx.asp"
     assert info.outcome == "logged_out" and info.state == "anonymous"
     assert info.message == "Сессия закрыта"
@@ -668,3 +669,21 @@ def test_import_cookies_reports_a_pause_that_stays(http, site):
     res = import_cookies(http, "SUserID=1; SCookieGUID=G", user_agent="UA")
     assert res["breaker_open"] is True and res["breaker_gate"] == "ip_blocked"
     assert any("не снята" in w for w in res["warnings"])
+
+
+def test_logout_keep_sends_saveuser_1_and_explains_remembered_login(http, site):
+    """With remember=True the site restores a "Запомнить меня" login on the next page (live 2026-10-14)."""
+    site.add(path_is("/end_session.asp"), respond(fixture_bytes("item_patent_47430099_signed_in")))
+    info = logout(http, remember=True)
+    assert site.requests[0].content == b"saveuser=1"
+    assert info.logged_in and info.user_name == "reader"
+    assert "без --keep" in info.message
+
+
+def test_signed_in_fixture_session_box():
+    """A real signed-in page (2026-10-14; login, SPIN and IP replaced by placeholders)."""
+    info = parse_session_info(fixture_bytes("item_patent_47430099_signed_in"))
+    assert info.logged_in and info.state == "logged_in"
+    assert info.user_name == "reader"
+    assert info.ip_address == "192.0.2.1"
+    assert not info.login_form_present

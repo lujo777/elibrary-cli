@@ -146,9 +146,14 @@ def auth_login(
 
 
 @auth_app.command("logout")
-def auth_logout(fmt: Fmt = None) -> None:
-    """Выйти из учётной записи (end_session.asp)."""
-    info = run(lambda c: c.logout())
+def auth_logout(
+    keep: Annotated[bool, typer.Option(
+        "--keep", help="Сохранить данные для входа на сайте (как «ОК» в вопросе сайта при выходе): "
+                       "запомненный вход восстановится при следующем запросе")] = False,
+    fmt: Fmt = None,
+) -> None:
+    """Выйти из учётной записи (end_session.asp, по умолчанию с забыванием запомненного входа)."""
+    info = run(lambda c: c.logout(remember=keep))
     if info.message:
         echo_err(info.message)
     emit(info, fmt)

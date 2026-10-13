@@ -443,9 +443,13 @@ def test_fixtures_contain_no_real_ip_and_no_cookies(path):
 @pytest.mark.parametrize("name", HTML_FIXTURES)
 def test_session_box_of_every_fixture_is_anonymous(name):
     info = parse_session_info(fixture_bytes(name))
+    assert info.ip_address in (None, DOC_IP)
+    if name.endswith("_signed_in"):
+        # the one deliberately signed-in page: login replaced by a placeholder
+        assert info.logged_in and info.user_name == "reader"
+        return
     assert info.state in ("anonymous", "captcha", "unknown")
     assert info.user_name is None and not info.logged_in
-    assert info.ip_address in (None, DOC_IP)
 
 
 @pytest.mark.parametrize("name", PARSED_FIXTURES)

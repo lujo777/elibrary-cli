@@ -45,8 +45,12 @@
   зарубежных/облачных IP. Почти всё отдаётся с HTTP 200 — классифицировать нужно по URL и содержимому
   (`http.classify`).
 * Вход: `POST /start_session.asp` с полями `login`, `password`, `knowme`, `rpage` (форма `login`, JS
-  `check_all()`); выход — `POST /end_session.asp` (`saveuser=1`). Признак входа — блок `#win_session` с
-  «Имя пользователя: …».
+  `check_all()`); проверено вживую 14.10.2026 — один POST, в ответ страница с `#win_session`
+  «Имя пользователя: <логин>», «SPIN-код автора», «IP-адрес компьютера».
+* Выход: `POST /end_session.asp`. У вошедшего читателя JS `end_session()` спрашивает «Сохранить Ваши
+  данные на этом компьютере?»: `saveuser=1` закрывает сессию, но при входе с «Запомнить меня» следующий
+  запрос **снова входит** (проверено вживую), `saveuser=0` действительно выходит. `elibrary auth logout`
+  шлёт `saveuser=0`, `--keep` — `saveuser=1`.
 
 ## 3. Поиск публикаций: `query_results.asp`
 
@@ -162,10 +166,15 @@ translated, wos, scopus, white, vak, risc, ftopen, sortorder, order` (+ чекб
   доступ закрыт; нет значка — полного текста в НЭБ нет.
 * Для **анонимного** пользователя все функции полного текста (`load_article`, `url_article`,
   `file_article`) выдают «необходимо вначале войти в библиотеку». Скачивание PDF — только после входа.
-* У вошедшего читателя `load_article(id)` отправляет форму `results` на **`full_text.asp?id=<id>`**
-  (работает и GET); ответ — PDF или ссылка/редирект на `/download/elibrary_<id>_<число>.pdf` (число
-  выдаётся сервером, вычислить его нельзя). По коду сторонних проектов; без учётной записи вживую не
-  проверялось.
+* У вошедшего читателя (проверено вживую 14.10.2026, фикстура `item_patent_47430099_signed_in.html`):
+  `load_article(iid)` отправляет форму `results` на **`/full_text.asp?id=<iid>`**; `file_article(fid,
+  filenum)` — на **`/file_article.asp`** (`fileid`, `filenum`; это кнопка «Загрузить: Полный текст (PDF)»
+  карточки); `url_article(idid, urlnum)` — на `/url_article.asp` (`did`, `urlnum`, сайт издателя).
+  Ответ — PDF (у патента 47430099 — 388 КБ через `file_article.asp?fileid=47430099&filenum=1`) или
+  ссылка/редирект на `/download/elibrary_<id>_<число>.pdf`.
+* Флаг поиска «только с полным текстом на eLibrary» (`search_fulltext`) включает и **платные** тексты:
+  такие карточки показывают цену (`order_item`), `elibrary-cli` сообщает «платный за N руб.» и ничего
+  не заказывает.
 * Поэтому `fulltext` использует: (1) PDF elibrary при наличии вошедшей сессии; (2) открытые источники
   по DOI/названию (КиберЛенинка, Unpaywall, OpenAlex, Crossref, `citation_pdf_url` издателя).
 
@@ -199,6 +208,10 @@ translated, wos, scopus, white, vak, risc, ftopen, sortorder, order` (+ чекб
 | `get author 17783`, `author-pubs` стр. 1 и 2 | `author_profile.asp`, `author_items.asp` (GET, затем POST) | SPIN, ORCID, аффилиации; 26 страниц |
 | `get org-pubs 18078`, `get issue --journal-id 8559` | `org_items.asp`, `contents.asp` | 49 публикаций; 29 статей выпуска с рубриками и страницами |
 | `fulltext 54076582` | `item.asp` + КиберЛенинка | 22 700 символов HTML-текста, совпадение названия 1.0 |
+| `auth login` (реальный аккаунт, 14.10.2026) | `start_session.asp` | вход выполнен, признаки входа распознаны |
+| `fulltext 47430099 -s elibrary` (патент), `fulltext 91666420 -s elibrary` (статья) | `item.asp` + `file_article.asp` / `full_text.asp` | PDF скачан, 23 221 и 6 464 символа текста |
+| `search articles … --fulltext-only` + `fulltext 80454169` | `query_results.asp`, `item.asp` | платный текст распознан (967 руб.), заказ не делается |
+| `auth logout` | `end_session.asp` | с `saveuser=1` вход восстанавливался → исправлено на `saveuser=0`, выход подтверждён |
 
 Капча на этой сессии появлялась после ~13 запросов при паузах 4–8 с; с паузой 6–8 с и без лишних
 фрагментов (`ispdf.asp`) 17 запросов прошли без неё.

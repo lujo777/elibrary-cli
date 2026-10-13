@@ -9,8 +9,10 @@ What this module is built on (see ``docs/reverse-engineering.md`` §2 and ``docs
   ``Имя пользователя:`` with ``Незарегистрированный пользователь`` for anonymous visitors or the
   account name (a link to ``author_info.asp?isold=1``) for signed-in readers, plus
   ``Начало работы`` / ``Время работы`` and, on some page families, ``IP-адрес компьютера`` and
-  ``Название организации``. Logout is ``POST /end_session.asp`` with ``saveuser=1`` (form
-  ``session``, JS ``end_session()``).
+  ``Название организации``. Logout is ``POST /end_session.asp`` (form ``session``, JS
+  ``end_session()``). For a signed-in reader the JS first asks "Сохранить Ваши данные на этом
+  компьютере?": ``saveuser=1`` closes the session but keeps the remembered login (with ``knowme`` the
+  next request is signed in again — verified live 2026-10-14), ``saveuser=0`` forgets it.
 * The ``<form>`` tags sit between table rows, so an HTML5 parser leaves the ``form`` element
   empty and the inputs outside it. The login form fields are therefore read from the raw markup
   (:func:`login_form_fields`), and the boxes are read as rows of label/value cells.
@@ -465,20 +467,29 @@ def _reset_env_login_attempt() -> None:
         _env_login_attempted = False
 
 
-def logout(http: ElibraryHTTP, *, saveuser: str = "1") -> SessionInfo:
-    """Close the session: ``POST /end_session.asp`` with ``saveuser=1`` (form ``session`` of every page).
+def logout(http: ElibraryHTTP, *, remember: bool = False) -> SessionInfo:
+    """Close the session: ``POST /end_session.asp`` (form ``session`` of every page).
 
+    ``remember=False`` sends ``saveuser=0`` — the site's "do not save my data on this computer" answer,
+    which really signs out. ``saveuser=1`` (``remember=True``) only closes the current session: a login
+    made with "Запомнить меня" is restored on the next request (verified live 2026-10-14).
     Clears the stored account name and the remembered search query; cookies are kept (the server
     replaces them with an anonymous session).
     """
     referer = http.absolute("defaultx.asp")
+    saveuser = "1" if remember else "0"
     page = http.post(LOGOUT_PATH, [("saveuser", saveuser)], referer=referer, cache_ttl_hours=TTL_NONE)
     http.state.delete("account", "query.current")
     http.cookies_changed()
     info = parse_session_info(page.content, url=page.url)
     info.outcome = "logged_out"
-    info.message = ("Сессия закрыта" if not info.logged_in
-                    else f"Сервер всё ещё показывает вход под именем {info.user_name}")
+    if not info.logged_in:
+        info.message = "Сессия закрыта" + (" (данные для входа сохранены на сайте)" if remember else "")
+    elif remember:
+        info.message = (f"Сессия закрыта, но сайт снова вошёл под именем {info.user_name}: вход был запомнен "
+                        "(«Запомнить меня»). Чтобы выйти совсем, выполните `elibrary auth logout` без --keep.")
+    else:
+        info.message = f"Сервер всё ещё показывает вход под именем {info.user_name}"
     return info
 
 

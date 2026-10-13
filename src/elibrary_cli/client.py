@@ -1379,9 +1379,9 @@ class ElibraryClient:
         secret = password if password is not None else self.settings.password
         return auth.login(self.http, user or "", secret or "", remember=remember)
 
-    def logout(self) -> SessionInfo:
-        """Close the signed-in session (``end_session.asp``)."""
-        return auth.logout(self.http)
+    def logout(self, *, remember: bool = False) -> SessionInfo:
+        """Sign out (``end_session.asp``); ``remember=True`` keeps the site's remembered login."""
+        return auth.logout(self.http, remember=remember)
 
     def browser_session(self, purpose: str = "captcha", *, url: str | None = None, timeout_s: float = 600,
                         channel: str | None = None) -> SessionInfo:
