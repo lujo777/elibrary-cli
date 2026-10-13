@@ -1,5 +1,7 @@
 # elibrary-cli
 
+[![CI](https://github.com/lujo777/elibrary-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/lujo777/elibrary-cli/actions/workflows/ci.yml)
+
 Инструмент для работы с [eLIBRARY.RU](https://elibrary.ru) (Научная электронная библиотека, РИНЦ) из
 командной строки **и** MCP-сервер для ИИ-ассистентов (Claude Code, Claude Desktop, Cursor и др.).
 

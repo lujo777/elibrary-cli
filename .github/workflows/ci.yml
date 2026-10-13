@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Tests never touch the network (tests/conftest.py blocks every non-loopback connection);
+# nothing in CI may send requests to elibrary.ru.
+jobs:
+  test:
+    name: tests (${{ matrix.os }}, Python ${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.10", "3.13"]
+        include:
+          - os: ubuntu-latest
+            python: "3.11"
+          - os: ubuntu-latest
+            python: "3.12"
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+      - name: Install
+        run: uv sync --locked
+      - name: Lint
+        run: uv run ruff check src tests
+      - name: Test
+        run: uv run pytest -q
+
+  build:
+    name: build and smoke-test the wheel
+    runs-on: ubuntu-latest
+    env:
+      PYTHONUTF8: "1"
+      ELIBRARY_OFFLINE: "1"
+      ELIBRARY_HOME: ${{ github.workspace }}/.smoke-home
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - name: Build sdist and wheel
+        run: uv build
+      - name: Install the wheel into a clean venv
+        run: |
+          uv venv "$RUNNER_TEMP/smoke"
+          uv pip install --python "$RUNNER_TEMP/smoke/bin/python" "$(ls dist/*.whl)[pdf]"
+      - name: Smoke test (offline)
+        run: |
+          bin="$RUNNER_TEMP/smoke/bin"
+          "$bin/elibrary" --version
+          "$bin/elibrary" --help > /dev/null
+          "$bin/elibrary" refdata > /dev/null
+          "$bin/elibrary" auth status -f json > /dev/null
+          "$bin/elibrary-mcp" --help > /dev/null
+          "$bin/python" - <<'EOF'
+          import os
+          import anyio
+          from mcp import Client, StdioServerParameters
+
+          async def main() -> None:
+              server = StdioServerParameters(command=os.path.join(os.environ["RUNNER_TEMP"], "smoke", "bin", "elibrary-mcp"),
+                                             env=dict(os.environ))
+              async with Client(server) as client:
+                  tools = (await client.list_tools()).tools
+                  names = {t.name for t in tools}
+                  assert len(tools) >= 20, names
+                  assert "elibrary_search_articles" in names and "elibrary_get_fulltext" in names, names
+                  assert all(t.output_schema for t in tools), "every tool must publish an output schema"
+                  status = await client.call_tool("elibrary_session_status", {})
+                  assert not status.is_error, status
+                  print(f"MCP stdio OK: {len(tools)} tools")
+
+          anyio.run(main)
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
