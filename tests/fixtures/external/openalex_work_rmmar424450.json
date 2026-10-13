@@ -1,0 +1,260 @@
+{
+ "id": "https://openalex.org/W4387698866",
+ "doi": "https://doi.org/10.17816/rmmar424450",
+ "title": "Idiopathic omentum hemorrhage as a cause of hemoperitoneum",
+ "display_name": "Idiopathic omentum hemorrhage as a cause of hemoperitoneum",
+ "publication_year": 2023,
+ "publication_date": "2023-10-17",
+ "ids": {
+  "openalex": "https://openalex.org/W4387698866",
+  "doi": "https://doi.org/10.17816/rmmar424450"
+ },
+ "language": "en",
+ "primary_location": {
+  "id": "doi:10.17816/rmmar424450",
+  "doi": "https://doi.org/10.17816/rmmar424450",
+  "is_oa": true,
+  "landing_page_url": "https://doi.org/10.17816/rmmar424450",
+  "pdf_url": "https://journals.eco-vector.com/RMMArep/article/download/424450/pdf",
+  "source": {
+   "id": "https://openalex.org/S4210234893",
+   "display_name": "Russian Military Medical Academy Reports",
+   "issn_l": "2713-2315",
+   "issn": [
+    "2713-2315",
+    "2713-2323"
+   ],
+   "is_oa": false,
+   "is_in_doaj": false,
+   "is_core": false,
+   "listed_in": [],
+   "host_organization": "https://openalex.org/P4310312788",
+   "host_organization_name": "ECO-vector",
+   "host_organization_lineage": [
+    "https://openalex.org/P4310312788"
+   ],
+   "host_organization_lineage_names": [
+    "ECO-vector"
+   ],
+   "type": "journal"
+  },
+  "license": "cc-by-nc-nd",
+  "license_id": "https://openalex.org/licenses/cc-by-nc-nd",
+  "version": "publishedVersion",
+  "is_accepted": true,
+  "is_published": true,
+  "raw_source_name": "Russian Military Medical Academy Reports",
+  "raw_type": "journal-article"
+ },
+ "type": "article",
+ "open_access": {
+  "is_oa": true,
+  "oa_status": "hybrid",
+  "oa_url": "https://journals.eco-vector.com/RMMArep/article/download/424450/pdf",
+  "any_repository_has_fulltext": false
+ },
+ "authorships": [
+  {
+   "author_position": "first",
+   "author": {
+    "id": "https://openalex.org/A5047607363",
+    "display_name": "V. V. Ryazanov",
+    "orcid": "https://orcid.org/0000-0002-0037-2854",
+    "observed_orcids": [
+     "https://orcid.org/0000-0002-0037-2854"
+    ]
+   },
+   "is_corresponding": false,
+   "raw_author_name": "Vladimir V. Ryazanov",
+   "raw_orcid": "https://orcid.org/0000-0002-0037-2854"
+  },
+  {
+   "author_position": "middle",
+   "author": {
+    "id": "https://openalex.org/A5029841220",
+    "display_name": "Гульназ Камальдиновна Садыкова",
+    "orcid": "https://orcid.org/0000-0002-6791-518X",
+    "observed_orcids": [
+     "https://orcid.org/0000-0002-6791-518X"
+    ]
+   },
+   "is_corresponding": false,
+   "raw_author_name": "Gulnaz K. Sadykova",
+   "raw_orcid": "https://orcid.org/0000-0002-6791-518X"
+  },
+  {
+   "author_position": "middle",
+   "author": {
+    "id": "https://openalex.org/A5065453849",
+    "display_name": "I. S. Zheleznyak",
+    "orcid": "https://orcid.org/0000-0001-7383-512X",
+    "observed_orcids": [
+     "https://orcid.org/0000-0001-7383-512X"
+    ]
+   },
+   "is_corresponding": false,
+   "raw_author_name": "Igor S. Zheleznyak",
+   "raw_orcid": "https://orcid.org/0000-0001-7383-512X"
+  },
+  {
+   "author_position": "middle",
+   "author": {
+    "id": "https://openalex.org/A5019226062",
+    "display_name": "Victor V. Ipatov",
+    "orcid": "https://orcid.org/0000-0002-9799-4616",
+    "observed_orcids": [
+     "https://orcid.org/0000-0002-9799-4616"
+    ]
+   },
+   "is_corresponding": false,
+   "raw_author_name": "Victor V. Ipatov",
+   "raw_orcid": "https://orcid.org/0000-0002-9799-4616"
+  },
+  {
+   "author_position": "middle",
+   "author": {
+    "id": "https://openalex.org/A5039315096",
+    "display_name": "Ilya S. Khodkevich",
+    "orcid": "https://orcid.org/0000-0003-0359-5831",
+    "observed_orcids": [
+     "https://orcid.org/0000-0003-0359-5831"
+    ]
+   },
+   "is_corresponding": false,
+   "raw_author_name": "Ilya S. Khodkevich",
+   "raw_orcid": "https://orcid.org/0000-0003-0359-5831"
+  },
+  {
+   "author_position": "middle",
+   "author": {
+    "id": "https://openalex.org/A5092501639",
+    "display_name": "Роман Анатольевич Постаногов",
+    "orcid": "https://orcid.org/0000-0002-0523-9411",
+    "observed_orcids": [
+     "https://orcid.org/0000-0002-0523-9411"
+    ]
+   },
+   "is_corresponding": false,
+   "raw_author_name": "Roman A. Postanogov",
+   "raw_orcid": "https://orcid.org/0000-0002-0523-9411"
+  },
+  {
+   "author_position": "middle",
+   "author": {
+    "id": "https://openalex.org/A5025130364",
+    "display_name": "Gennadiy G. Romanov",
+    "orcid": "https://orcid.org/0000-0001-5987-8158",
+    "observed_orcids": [
+     "https://orcid.org/0000-0001-5987-8158"
+    ]
+   },
+   "is_corresponding": false,
+   "raw_author_name": "Gennadiy G. Romanov",
+   "raw_orcid": "https://orcid.org/0000-0001-5987-8158"
+  },
+  {
+   "author_position": "last",
+   "author": {
+    "id": "https://openalex.org/A5046831175",
+    "display_name": "Anastasiya Ya. Latysheva",
+    "orcid": "https://orcid.org/0000-0003-3677-8765",
+    "observed_orcids": [
+     "https://orcid.org/0000-0003-3677-8765"
+    ]
+   },
+   "is_corresponding": false,
+   "raw_author_name": "Anastasiya Ya. Latysheva",
+   "raw_orcid": "https://orcid.org/0000-0003-3677-8765"
+  }
+ ],
+ "best_oa_location": {
+  "id": "doi:10.17816/rmmar424450",
+  "doi": "https://doi.org/10.17816/rmmar424450",
+  "is_oa": true,
+  "landing_page_url": "https://doi.org/10.17816/rmmar424450",
+  "pdf_url": "https://journals.eco-vector.com/RMMArep/article/download/424450/pdf",
+  "source": {
+   "id": "https://openalex.org/S4210234893",
+   "display_name": "Russian Military Medical Academy Reports",
+   "issn_l": "2713-2315",
+   "issn": [
+    "2713-2315",
+    "2713-2323"
+   ],
+   "is_oa": false,
+   "is_in_doaj": false,
+   "is_core": false,
+   "listed_in": [],
+   "host_organization": "https://openalex.org/P4310312788",
+   "host_organization_name": "ECO-vector",
+   "host_organization_lineage": [
+    "https://openalex.org/P4310312788"
+   ],
+   "host_organization_lineage_names": [
+    "ECO-vector"
+   ],
+   "type": "journal"
+  },
+  "license": "cc-by-nc-nd",
+  "license_id": "https://openalex.org/licenses/cc-by-nc-nd",
+  "version": "publishedVersion",
+  "is_accepted": true,
+  "is_published": true,
+  "raw_source_name": "Russian Military Medical Academy Reports",
+  "raw_type": "journal-article"
+ },
+ "locations": [
+  {
+   "id": "doi:10.17816/rmmar424450",
+   "doi": "https://doi.org/10.17816/rmmar424450",
+   "is_oa": true,
+   "landing_page_url": "https://doi.org/10.17816/rmmar424450",
+   "pdf_url": "https://journals.eco-vector.com/RMMArep/article/download/424450/pdf",
+   "source": {
+    "id": "https://openalex.org/S4210234893",
+    "display_name": "Russian Military Medical Academy Reports",
+    "issn_l": "2713-2315",
+    "issn": [
+     "2713-2315",
+     "2713-2323"
+    ],
+    "is_oa": false,
+    "is_in_doaj": false,
+    "is_core": false,
+    "listed_in": [],
+    "host_organization": "https://openalex.org/P4310312788",
+    "host_organization_name": "ECO-vector",
+    "host_organization_lineage": [
+     "https://openalex.org/P4310312788"
+    ],
+    "host_organization_lineage_names": [
+     "ECO-vector"
+    ],
+    "type": "journal"
+   },
+   "license": "cc-by-nc-nd",
+   "license_id": "https://openalex.org/licenses/cc-by-nc-nd",
+   "version": "publishedVersion",
+   "is_accepted": true,
+   "is_published": true,
+   "raw_source_name": "Russian Military Medical Academy Reports",
+   "raw_type": "journal-article"
+  }
+ ],
+ "locations_count": 1,
+ "has_fulltext": true,
+ "has_content": {
+  "grobid_xml": true,
+  "pdf": true
+ },
+ "content_urls": {
+  "pdf": "https://content.openalex.org/works/W4387698866.pdf",
+  "grobid_xml": "https://content.openalex.org/works/W4387698866.grobid-xml"
+ },
+ "biblio": {
+  "volume": "42",
+  "issue": "3",
+  "first_page": "319",
+  "last_page": "331"
+ }
+}

@@ -1,0 +1,749 @@
+
+<html>
+<head>
+<style type="text/css">
+BODY, P, TR, TD, INPUT, SELECT, OPTION, TEXTAREA, UL {font-family: Tahoma, Verdana, Arial Cyr, Arial, Helvetica, sans-serif; font-size: 8pt;}
+A {text-decoration: none; color: #00008f}
+H1 {font-family: Tahoma, Verdana, Arial Cyr, Arial, Helvetica, sans-serif; font-size: 9pt;}
+H2 {font-family: Tahoma, Verdana, Arial Cyr, Arial, Helvetica, sans-serif; font-size: 9pt;}
+FORM, H1, H2 {margin: 0}
+A:hover {color: #ff0000; text-decoration: underline}
+.menus A {color: #ffffff}
+.menus A:hover {color: #ffffff; text-decoration: underline}
+.menub A {color: #000000}
+.expandable {cursor:pointer;}
+img.expandable {filter:alpha(opacity=70); opacity: 0.7;}
+.win_expandable {cursor:pointer}
+.expanded {display:}
+.collapsed {display:none}
+.menug A {color: #555555}
+.redref A {color: #ED1C24}
+P.break {page-break-before: always}
+.input {border: #7f9db9 1px solid; background: #f5f5f5; height: 20px}
+.inputw {border: #7f9db9 1px solid; background: #ffffff; height: 20px}
+.inputr {border: #7f9db9 1px solid; background: #f5f5f5}
+.inputrw {border: #7f9db9 1px solid; background: #ffffff}
+.ast A:hover {text-decoration: none; color: #F26C4F}
+.ast A {font-family: Times New Roman, Garamond, Times, Georgia, serif; font-size: 30pt; color: #F26C4F}
+.astb A:hover {text-decoration: none; color: #00008f}
+.astb A {font-family: Times New Roman, Times, serif; font-size: 30pt; color: #00008f}
+.aster {color: #F26C4F; font-family: Times New Roman, Times, serif; font-size: 16pt; cursor:pointer;}
+.tooltip {
+	background-color:#000;
+	border:1px solid #fff;
+	padding:10px 15px;
+	width:250px;
+	display:none;
+	color:#fff;
+	text-align:left;
+	font-size:8pt;
+	/* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:0 0 10px #000;
+}
+.tooltip A:hover {color: #ffffff; text-decoration: underline}
+.tooltip A {color: #ffffff; text-decoration: underline}
+.redtext {color: #F26C4F;}
+.bluetext {color: #00008f;}
+</style>
+<meta property="og:image" content="https://elibrary.ru/images/elibrary_fb.png" />
+
+<title>Результаты поискового запроса</title>
+
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<SCRIPT LANGUAGE="JavaScript">
+//window.onerror=null;
+w_down=new Image();
+w_down.src="/pic/w_show.gif";
+w_up=new Image();
+w_up.src="/pic/w_hide.gif";
+
+function hideShow(elem,parent) {
+  var child =  document.getElementById(elem);
+  child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+  if (parent.className == "win_expandable") parent.src = child.className == "collapsed" ? w_down.src : w_up.src;
+}
+function RowSelect(row,sel){
+  row.bgColor = sel==1 ? "#dddddd" : "#f5f5f5";
+}
+function show_help(topic){
+  var frm = document.forms["results"];
+  anewwin=window.open("", "addwin", "resizable=yes,scrollbars=yes,height=300,width=500,top=0,left=0");
+  frm.action=topic;
+  frm.target="addwin";
+  frm.submit()
+}
+function select_all(){
+  var frm = document.forms["results"];
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       frm.elements[i].checked=1;
+       document.all.restab.rows["a" + frm.elements[i].name.substring(3, frm.elements[i].name.length)].bgColor = "#dddddd";}
+  }
+}
+function deselect_all(){
+  var frm = document.forms["results"];
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       frm.elements[i].checked=0;
+       document.all.restab.rows["a" + frm.elements[i].name.substring(3, frm.elements[i].name.length)].bgColor = "#f5f5f5";}
+  }
+}
+function itembox_add(){
+  var frm = document.forms["results"];
+  var issel=0;
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       if (frm.elements[i].checked) {issel=1; break}
+    }
+  }
+  if (issel==0) {
+    alert ("Не выделено ни одной статьи")}
+  else {
+    anewwin=window.open("", "dialog", "resizable=no,scrollbars=no,height=200,width=400,top=200,left=200");
+    anewwin.resizeTo(400,200);
+    frm.add_all.value=0;
+    frm.action="itembox_item_add.asp";
+    frm.target="dialog";
+    frm.submit()
+  }
+}
+function itembox_add_all(){
+  var frm = document.forms["results"];
+  anewwin=window.open("", "dialog", "resizable=no,scrollbars=no,height=200,width=400,top=200,left=200");
+  anewwin.resizeTo(400,200);
+  frm.add_all.value=1;
+  frm.action="itembox_item_add.asp";
+  frm.target="dialog";
+  frm.submit()
+}
+function itembox_new(aid,anam){
+  var frm = document.forms["results"];
+  var el = document.createElement("OPTION");
+  el.text=anam;
+  el.value=aid;
+  frm.itemboxid.options[frm.itemboxid.options.length]=el;
+  frm.itemboxid[frm.itemboxid.length-1].selected=true;
+}
+function load_article(id){
+
+  alert("Для доступа к полному тексту необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function url_article(idid, urlnum){
+
+  alerts("Для просмотра документа необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function order_item(id, pr){
+
+  alert("Для заказа полного текста публикации необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+
+var didScroll = false;
+var didScroll2 = false;
+
+function isVisible(tag) {
+    var t = $(tag);
+    var w = $(window);
+    var wt = w.scrollTop();
+    var tt = t.offset().top;
+    var tb = tt + t.height();
+    return ((tb <= wt + w.height()) && (tt >= wt));
+}
+function pdf_icon(b) {
+  if (!b.prop("shown") && isVisible(b)) {
+    b.prop("shown", true);
+    b.load("ispdf.asp?itemid=" + b.attr('name').substring(4) + "&rand=" + Math.random());
+  }
+}
+function get_pdfs(){
+  $('div[id^="pdf_"]:not(prop("shown"))').each(function(){
+    pdf_icon($(this))
+  });
+}
+setInterval(function() {
+  if ( didScroll2 ) {
+	didScroll2=false;
+	get_pdfs();
+    }
+ }, 200);
+
+$(document).ready(function() { 
+
+$(window).scroll(function() {
+     didScroll = true;
+ });
+
+setInterval(function() {
+  if ( didScroll ) {
+	didScroll=false;
+	didScroll2=true;
+    }
+ }, 500);
+
+	didScroll=true;
+})
+	
+</SCRIPT>
+</head>
+
+<body bgcolor=#f5f5f5 onLoad='document.all.loading.style.display="none"; document.all.thepage.style.display=""'>
+
+<div id="loading" style="position:absolute; width:100%; text-align:center; top:300px;">
+Пожалуйста, подождите, <br>пока Ваш запрос будет обработан
+<br><img src="/pic/query_wait.gif" border=0 width=31 height=31 vspace=5></div>
+
+<div id="thepage" style="display: none">
+
+<table width=100% cellpadding=0 cellspacing=0 border=0>
+<tr><td width=100% align=center valign=top>
+
+<table width=970 cellpadding=0 cellspacing=0 border=0 background="/pic/bg5.gif">
+<tr><td width=165 align=left valign=top>
+
+<table border=0 cellspacing=0 cellpadding=0 width=150>
+
+<tr><td><img src="/pic/1pix.gif" vspace=14></td></tr>
+
+<tr><td><a href="/defaultx.asp"><img src="/images/elibrary_logo.gif" width=150 height=33 border=0 title="eLIBRARY.RU - НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА"></a></td></tr>
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_search(){
+if (document.forms["search"].ftext.value.length > 1) {
+  var frm = document.forms["search"];
+  frm.action="/query_results.asp";
+  frm.target="";
+  frm.submit();
+  return false}
+else {
+   alert("Введите не менее двух символов");
+   return false}
+}
+</SCRIPT>
+<FORM name="search" action="/query_results.asp" method=POST onSubmit="return check_search()">
+<input type="hidden" name="where_fulltext" value="on">
+<input type="hidden" name="where_name" value="on">
+<input type="hidden" name="where_abstract" value="on">
+<input type="hidden" name="where_keywords" value="on">
+<input type="hidden" name="where_affiliation" value="">
+<input type="hidden" name="where_references" value="">
+<input type="hidden" name="type_article" value="on">
+<input type="hidden" name="type_disser" value="on">
+<input type="hidden" name="type_book" value="on">
+<input type="hidden" name="type_report" value="on">
+<input type="hidden" name="type_conf" value="on">
+<input type="hidden" name="type_patent" value="on">
+<input type="hidden" name="type_preprint" value="on">
+<input type="hidden" name="type_grant" value="on">
+<input type="hidden" name="type_dataset" value="on">
+<input type="hidden" name="search_freetext" value="">
+<input type="hidden" name="search_morph" value="on">
+<input type="hidden" name="search_fulltext" value="">
+<input type="hidden" name="search_open" value="">
+<input type="hidden" name="search_results" value="">
+<input type="hidden" name="titles_all" value="">
+<input type="hidden" name="authors_all" value="">
+<input type="hidden" name="rubrics_all" value="">
+<input type="hidden" name="queryboxid" value="">
+<input type="hidden" name="itemboxid" value="">
+<input type="hidden" name="begin_year" value="">
+<input type="hidden" name="end_year" value="">
+<input type="hidden" name="issues" value="all">
+<input type="hidden" name="orderby" value="rank">
+<input type="hidden" name="order" value="rev">
+<input type="hidden" name="changed" value="1">
+
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#555555>
+<tr><td width=100% bgcolor=#555555>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#555555 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Поиск в библиотеке</font><td width=15><img src="/pic/w_show.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_search',this)"></td>
+</td></tr></table></td></tr></table>
+<div ID="win_search" class="collapsed">
+
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#eeeeee width=100%>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+<tr><td width=100% align=center valign=top>
+<input type=text name="ftext" value="" size=10 maxlength=255 style="width:120px; border-left: #5c6aa6 1px solid; border-right: #5c6aa6 1px solid; border-top: #5c6aa6 1px solid; border-bottom: #5c6aa6 1px solid"><br>
+<img src="/pic/1pix.gif" vspace=4><br>
+<input type=submit value="Поиск" style="color:#ffffff; width:50px; background:#F26C4F; border-left: #F26C4F 0px solid; border-right: #F26C4F 0px solid; border-top: #F26C4F 0px solid; border-bottom: #F26C4F 0px solid">
+</td></tr>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+</table>
+
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#dddddd class="menub" width=100%>
+<tr valign=middle align=center><td><a href="/querybox.asp?scope=newquery">Расширенный поиск</a></td></tr></table>
+
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#dddddd class="menub" width=100%>
+<tr valign=middle align=center><td><a href="/neural_search.asp">Нейропоиск</a></td></tr></table>
+
+</div>
+
+</FORM>
+
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_all(){
+  jn=0;
+  if (document.forms["login"].login.value==""){jn=1}
+  if (document.forms["login"].password.value==""){jn=1}
+ if (jn==0){return true}
+ if (jn==1){alert("Не указан пароль или имя читателя!");
+            return false}
+}
+</SCRIPT>
+
+<FORM name="login" action="/start_session.asp" method=POST onSubmit="return check_all()">
+<input type=hidden name="rpage" value=https://elibrary.ru/query_results.asp?rubrics_all=&changed=1&querybox_name=&where_abstract=on&type_article=on&search_itemboxid=&queryboxid=0&authors_all=&titles_all=&queryid=&ftext=qzxjvwk пфыщцук&where_name=on&where_references=&end_year=0&where_keywords=on&search_freetext=on&begin_year=0&order=rev&issues=all&orderby=rank&save_queryboxid=0>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#555555 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Вход в библиотеку</font>
+</td><td width=15><img src="/pic/w_hide.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_login',this)" id="img_login"></td></tr></table></td></tr></table>
+<div ID="win_login" class="expanded">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#5c6aa6 width=100%>
+<tr valign=top><td width=100% bgcolor=#5c6aa6 align=center>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#eeeeee width=100%>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Имя пользователя<br>&nbsp;или адрес эл. почты:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<input type=text name="login" value="" size=10 maxlength=255 style="width:120px; border-left: #5c6aa6 1px solid; border-right: #5c6aa6 1px solid; border-top: #5c6aa6 1px solid; border-bottom: #5c6aa6 1px solid; text-align: center">
+</td></tr>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Пароль:</font></td></tr>
+<tr><td align=center width=100%>
+<input type=password name="password" value="" size=10 maxlength=255 style="width:120px; border-left: #5c6aa6 1px solid; border-right: #5c6aa6 1px solid; border-top: #5c6aa6 1px solid; border-bottom: #5c6aa6 1px solid; text-align: center">
+</td></tr>
+
+<tr><td align=center width=100%>
+<img src="/pic/1pix.gif" vspace=2><br>
+<input type=submit value="Вход" style="color:#ffffff; width:50px; background:#F26C4F; border-left: #F26C4F 0px solid; border-right: #F26C4F 0px solid; border-top: #F26C4F 0px solid; border-bottom: #F26C4F 0px solid">
+</td></tr></table>
+
+<table border=0 cellspacing=0 cellpadding=2 bgcolor=#eeeeee width=100%>
+<tr><td width=14 align=right valign=middle><input type=checkbox name="knowme"></td><td align=left valign=middle nowrap><font color=#00008f>Запомнить меня</font></td></tr>
+<tr><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td><td align=left valign=middle nowrap><a href="/access_terms.asp">Правила доступа</a></td></tr>
+<tr><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td><td align=left valign=middle nowrap><a href="/author_info.asp?isnew=1&rpage=https%3A%2F%2Felibrary%2Eru%2Fquery%5Fresults%2Easp%3Frubrics%5Fall%3D%26changed%3D1%26querybox%5Fname%3D%26where%5Fabstract%3Don%26type%5Farticle%3Don%26search%5Fitemboxid%3D%26queryboxid%3D0%26authors%5Fall%3D%26titles%5Fall%3D%26queryid%3D%26ftext%3Dqzxjvwk+%D0%BF%D1%84%D1%8B%D1%89%D1%86%D1%83%D0%BA%26where%5Fname%3Don%26where%5Freferences%3D%26end%5Fyear%3D0%26where%5Fkeywords%3Don%26search%5Ffreetext%3Don%26begin%5Fyear%3D0%26order%3Drev%26issues%3Dall%26orderby%3Drank%26save%5Fqueryboxid%3D0">Регистрация</a></td></tr>
+<tr><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td><td align=left valign=middle nowrap><a href="/pass_request.asp">Забыли пароль?</a></td></tr>
+<tr><td colspan=2><img src="/pic/1pix.gif"></td></tr>
+</table>
+</td></tr></table>
+</div>
+</td></tr>
+</FORM>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Навигатор</font>
+</td><td width=15><img src="/pic/w_hide.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_goto',this)"></td></tr></table></td></tr></table>
+<div ID="win_goto" class="expanded">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#5c6aa6 width=100%>
+<tr valign=top><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=2 bgcolor=#eeeeee width=100%>
+
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/titles.asp">ЖУРНАЛЫ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/books.asp">КНИГИ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/patents.asp">ПАТЕНТЫ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/querybox.asp">ПОИСК</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/authors.asp">АВТОРЫ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/orgs.asp">ОРГАНИЗАЦИИ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/keywords.asp">КЛЮЧЕВЫЕ СЛОВА</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/rubrics.asp">РУБРИКАТОР</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/region_compare.asp">РЕГИОНЫ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+
+
+<tr><td colspan=2 ><img src="/pic/1pix.gif"></td></tr>
+<tr bgcolor=#dddddd align=center valign=middle><td colspan=2 class="menub"><a href="/defaultx.asp">Начальная страница</a></td></tr>
+</table>
+</td></tr></table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function end_session(){
+
+  document.forms["session"].saveuser.value="1";
+
+  document.forms["session"].action="/end_session.asp";
+  document.forms["session"].target="";
+  document.forms["session"].submit()
+}
+</SCRIPT>
+<FORM action="/end_session.asp" method=POST name="session">
+<input type="hidden" name="saveuser" value="1">
+
+
+
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Текущая сессия</font>
+</td><td width=15><img src="/pic/w_show.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_session',this)"></td></tr></table></td></tr></table>
+<div ID="win_session" class="collapsed">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#5c6aa6 width=100%>
+<tr valign=top><td width=100% bgcolor=#5c6aa6 align=center>
+<table border=0 cellspacing=0 cellpadding=1 bgcolor=#eeeeee width=100%>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Имя пользователя:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>Незарегистрированный пользователь</font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Начало работы:</font></td></tr>
+
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>13.10.2026 17:51</font></td></tr>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Время работы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>00:40</font></td></tr>
+
+<tr><td align=center width=100% bgcolor=#dddddd class="menub">
+<a href="/project_user_office.asp">Личный кабинет</a></td></tr>
+
+<tr><td align=center width=100% bgcolor=#dddddd class="menub">
+<a href="javascript:end_session()">Закрыть сессию</a></td></tr>
+</table>
+</td></tr></table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+</FORM>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Легенда</font>
+</td><td width=15><img src="/pic/w_hide.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_legend',this)"></td></tr></table></td></tr></table>
+<div ID="win_legend" class="expanded">
+
+<table width=100% cellspacing=0 cellpadding=3 border=0 bgcolor=#eeeeee>
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=2><br></td></tr>
+<tr><td width=15% align=right valign=top><img src="/images/download_green.png" width=16 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Доступ к полному тексту документа открыт</font></td></tr>
+<tr><td width=15% align=right valign=top><img src="/images/download_blue.png" width=16 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Полный текст доступен на сайте издателя</font></td></tr>
+<tr><td width=15% align=right valign=top><img src="/images/download_yellow.png" width=16 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Полный текст может быть получен через систему заказа</font></td></tr>
+<tr><td width=15% align=right valign=top><img src="/images/download_orange.png" width=16 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Доступ к полному тексту закрыт</font></td></tr>
+<tr><td valign=top align=center><font color=#00008f>-</font></td><td align=left><font color=#00008f>Если иконки нет - полный текст документа отсутствует в НЭБ</font></td></tr>
+
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=2><br></td></tr>
+</table>
+
+</div>
+</td></tr>
+
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Контакты</font>
+</td><td width=15><img src="/pic/w_show.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_contact',this)"></td></tr></table></td></tr></table>
+<div ID="win_contact" class="collapsed">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#eeeeee width=100%>
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=2><br></td></tr>
+<tr valign=top><td width=100% bgcolor=#5c6aa6 align=center>
+<table border=0 cellspacing=0 cellpadding=1 bgcolor=#eeeeee width=100%>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Служба поддержки:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>(7-495) 544-2494 доб. 1<br></font>
+<font color=#00008f><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font></td></tr>
+</td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Издателям журналов:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>(7-495) 544-2494 доб. 2<br></font>
+<font color=#00008f><a href="mailto:publish@elibrary.ru">publish@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Издателям книг:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>(7-495) 544-2494 доб. 3<br></font>
+<font color=#00008f><a href="mailto:book@elibrary.ru">book@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Издателям (Science Space):</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:info@sciencespace.ru">info@sciencespace.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Организациям (Science Index):</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:org@scienceindex.ru">org@scienceindex.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Доступ к API:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:api@elibrary.ru">api@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Подписчикам:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 6<br></font>
+<font color=#00008f><a href="mailto:sales.team@elibrary.ru">sales.team@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Конференции и семинары:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 7<br></font>
+<font color=#00008f><a href="mailto:conf@elibrary.ru">conf@elibrary.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Почтовый адрес:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>117246, г. Москва, Научный проезд, д. 14А, стр. 3, таунхаус 1</font><br><a href="/contact_new.asp"><b>схема проезда</b></a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Веб-сайт:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://elibrary.ru">https://elibrary.ru</a></font></td></tr>
+<tr><td width=100% align=center valign=top>
+</td></tr>
+
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Размещение рекламы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:reklama@elibrary.ru">reklama@elibrary.ru</a></font></td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=1></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Вакансии:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:info@elibrary.ru">info@elibrary.ru</a></font></td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=1></td></tr>
+
+</table>
+</td></tr>
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=2><br></td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Копирайт</font>
+</td><td width=15><img src="/pic/w_show.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_copyright',this)"></td></tr></table></td></tr></table>
+<div ID="win_copyright" class="collapsed">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#5c6aa6 width=100%>
+<tr valign=top><td width=100% bgcolor=#5c6aa6 align=center>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#eeeeee width=100%>
+<tr><td width=100% align=center valign=top bgcolor=#eeeeee>
+<img src="/pic/1pix.gif" vspace=2><br><font color=#00008f><a href="/copyright.asp">&copy; 2000-2026<br>ООО НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА</a></font><br><img src="/pic/1pix.gif" vspace=2></td></tr>
+<tr><td align=center width=100% bgcolor=#dddddd class="menub"><a href="/copyright.asp">
+Все права защищены.</a></td></tr>
+
+</table>
+</td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+
+<!-- Yandex.Metrika -->
+<div style="display:none;"><script type="text/javascript">
+(function(w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter171463 = new Ya.Metrika(171463);
+        } catch(e) {}
+    });
+})(window, 'yandex_metrika_callbacks');
+</script></div>
+<script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script>
+<noscript><div style="position:absolute"><img src="//mc.yandex.ru/watch/171463" alt="" /></div></noscript>
+<!-- /Yandex.Metrika -->
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9339902-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })();
+</script>
+
+
+</td></tr>
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+
+
+
+</table>
+
+</td><td width=580 align=center valign=top>
+
+
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+
+<tr><td width=100% align=center valign=top>
+<img src="/pic/1pix.gif" vspace=6><br>
+
+
+<table border=0 cellspacing=0 cellpadding=0 width=580>
+<FORM method=post name="results" action="query_results.asp">
+<input type="hidden" name="add_all" value="">
+<input type="hidden" name="paysum" value="">
+<input type="hidden" name="payitemid" value="">
+<input type="hidden" name="id" value="">
+<input type="hidden" name="authorid" value="">
+<input type="hidden" name="did" value="1">
+<input type="hidden" name="urlnum" value="1">
+
+<tr><td width=10 height=14></td>
+<td width=75 height=65 rowspan=5 align=center valign=middle>
+<table width=100% height=100% border=0 cellspacing=1 cellpadding=0 bgcolor=#ffffff>
+<tr><td width=100% height=100% bgcolor=#eeeeee align=center valign=middle><img src="images/menu_journ.jpg" width=73 height=63 border=0 style="filter:alpha(opacity=70)" onMouseover="this.filters.alpha.opacity=90" onMouseout="this.filters.alpha.opacity=70"></td></tr></table></td>
+<td width=495></td></tr>
+<tr><td bgcolor=#555555><img src="/pic/1pix.gif"></td>
+<td height=19 align=right valign=middle bgcolor=#555555><font color=#ffffff><b>РЕЗУЛЬТАТЫ ПОИСКОВОГО ЗАПРОСА</b><img src="/pic/1pix.gif" hspace=10></font></td></tr>
+<tr><td height=1 bgcolor=#ffffff></td><td bgcolor=#ffffff></td></tr>
+<tr><td height=14 bgcolor=#dddddd></td><td bgcolor=#f5f5f5 background="/pic/line1_gr.gif"></td></tr>
+<tr><td height=9></td><td></td></tr>
+</table>
+</td></tr>
+
+<tr><td width=100% align=center valign=top>
+
+<img src="/pic/1pix.gif" vspace=3><br>
+<b></font></b><br>
+
+<img src="/pic/1pix.gif" vspace=3><br>
+
+
+
+
+<center><img src="images/but_orange_!.gif" width=15 height=15 hspace=10 border=0 align=absmiddle>Не найдено публикаций, соответствующих запросу</center>
+
+</td></tr></table>
+
+
+</td>
+<td width=10>&nbsp;</td>
+<td width=200 align=right valign=top>
+
+<img src="/pic/1pix.gif" vspace=14><br>
+<table width=200 cellspacing=0 cellpadding=3 border=0 bgcolor=#eeeeee>
+<tr><td colspan=2 bgcolor=#555555 valign=middle align=center>
+<font color=#ffffff>Возможные действия</font>
+</td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:select_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:select_all()">Выделить все публикации на этой странице</a>
+</td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:deselect_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:deselect_all()">Снять выделение</a>
+</td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:itembox_add()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:itembox_add()">Добавить выделенные статьи в подборку:</a></td></tr>
+
+<tr><td colspan=2 align=center><select name="itemboxid" style="width:190px" class="input">
+
+<option value="0" selected>Новая подборка
+</select>&nbsp;</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:itembox_add_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:itembox_add_all()">Добавить все страницы с результатами поиска в указанную выше подборку</a></td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="querybox.asp?scope=current"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="querybox.asp?scope=current">Вернуться к поисковой форме и изменить условия запроса</a></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="querybox.asp?scope=newquery"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="querybox.asp?scope=newquery">Создать новый поисковый запрос</a></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="querybox.asp?scope=infound"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="querybox.asp?scope=infound">Продолжить поиск среди найденных результатов</a></td></tr>
+
+
+
+
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=8><br></td></tr>
+</table><br><br>
+
+</FORM>
+
+<img src="/pic/1pix.gif" vspace=9><br>
+
+
+</td></tr></table>
+</td></tr></table>
+
+<br><br>
+</div>
+</html>

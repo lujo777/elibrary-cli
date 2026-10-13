@@ -1,0 +1,2325 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="robots" content="noarchive">
+
+
+<title>Вестник Томского государственного университета / содержание выпуска  № 526 за 2026 год</title>
+
+<script type="text/javascript" src="/jquery.min.js"></script>
+<script type="text/javascript" src="/jquery.tools.min.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.easydrag.js"></script>
+<script type="text/javascript" src="/elibrary1.js"></script>
+<script type="text/javascript" src="/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/style_sm.css" type="text/css" media="screen">
+
+<SCRIPT LANGUAGE="JavaScript">
+
+but_blue_hover=new Image();
+but_blue_hover.src="/images/but_blue_hover.png";
+but_red_hover=new Image();
+but_red_hover.src="/images/but_red_hover.png";
+but_gray_hover=new Image();
+but_gray_hover.src="/images/but_gray_hover.png";
+
+w_down=new Image();
+w_down.src="/pic/w_show.gif";
+w_up=new Image();
+w_up.src="/pic/w_hide.gif";
+r_down=new Image();
+r_down.src="/images/or_plus1.png";
+r_up=new Image();
+r_up.src="/images/or_minus1.png";
+
+var selRow;
+var row_color;
+function onRowClick(row){
+  if(row != selRow){
+     if (selRow != null){
+        selRow.bgColor = row_color;
+     }
+  selRow = row;
+  row_color = row.bgColor;
+  selRow.bgColor="#e8e8e8";
+  }
+}
+function hideShow(elem,parent) {
+  var child =  document.getElementById(elem);
+  child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+  if (parent.className == "win_expandable") parent.src = child.className == "collapsed" ? w_down.src : w_up.src;
+}
+function hideShowRed(elem,par) {
+  var child = document.getElementById(elem);
+  var parent = document.getElementById(par);
+  child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+  if (parent.className == "win_expandable") parent.src = child.className == "collapsed" ? r_down.src : r_up.src;
+}
+function RowSelect(row,sel){
+  var rbgc = sel==1 ? "#e8e8e8" : "#f5f5f5";
+  $('#'+row+' td').attr('bgColor', rbgc);
+}
+function select_all(){
+  $('input:checkbox[name^="tid"]').attr('checked', true);
+  $('input:checkbox[name^="pid"]').attr('checked', true);
+  $('tr[id^="arw"] td').attr('bgColor', "#e8e8e8");
+  $('tr[id^="brw"] td').attr('bgColor', "#e8e8e8");
+}
+function deselect_all(){
+  $('input:checkbox[name^="tid"]').attr('checked', false);
+  $('input:checkbox[name^="pid"]').attr('checked', false);
+  $('tr[id^="arw"] td').attr('bgColor', "#f5f5f5");
+  $('tr[id^="brw"] td').attr('bgColor', "#f5f5f5");
+}
+function qr_code(dd){
+  $.fancybox({
+    href : '/qr_code_edn.asp?edn='+dd+'&rand=' + Math.random(),
+    title : '',
+	  padding : 20,     
+	  width : 250,
+	  height : 300,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+    });
+}
+function itembox_add(){
+  var frm = document.forms["results"];
+  var issel=0;
+  frm.items_all.value="";
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       if (frm.elements[i].checked) {
+	     issel=issel+1;
+	     frm.items_all.value = frm.items_all.value + frm.elements[i].name.substring(3, frm.elements[i].name.length) + "|";
+	   }
+    }
+ }
+ if (issel==0) {
+    alerts ("Не выделено ни одной публикации")}
+ else {
+    $.fancybox({
+      href : 'itembox_item_add2.asp?itemboxid='+frm.itemboxid.value+'&items_all='+frm.items_all.value ,
+      title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 150,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+    });
+  }
+}
+
+function itembox_new(aid,anam){
+  var frm = document.forms["results"];
+  var el = document.createElement("OPTION");
+  el.text=anam;
+  el.value=aid;
+  frm.itemboxid.options[frm.itemboxid.options.length]=el;
+  frm.itemboxid[frm.itemboxid.length-1].selected=true;
+}
+function itembox_add_all(){
+  var frm = document.forms["results"];
+    $.fancybox({
+      href : 'itembox_item_add2.asp?itemboxid='+frm.itemboxid.value+'&add_all=2&items_all='+frm.items_all.value ,
+      title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 150,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+    });
+}
+function newquery(){
+  document.forms["results"].action="querybox.asp";
+  document.forms["results"].target="";
+  document.forms["results"].submit()
+}
+function show_help(topic){
+  anewwin=window.open("", "addwin", "resizable=yes,scrollbars=yes,height=300,width=500,top=0,left=0");
+  document.forms["results"].action=topic;
+  document.forms["results"].target="addwin";
+  document.forms["results"].submit()
+}
+function load_article(id){
+
+  alerts("Для доступа к полному тексту необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function file_article(fid, filenum){
+
+  alerts("Для просмотра файла необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function url_article(idid, urlnum){
+
+  alerts("Для просмотра документа необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function order_item(id, pr){
+
+  alerts("Для заказа полного текста публикации необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.forms["login"].login.focus();
+
+}
+
+
+function isVisible(tag) {
+    var t = $(tag);
+    var w = $(window);
+    var wt = w.scrollTop();
+    var tt = t.offset().top;
+    var tb = tt + t.height();
+    return ((tb <= wt + w.height()) && (tt >= wt));
+}
+function pdf_icon(b) {
+  if (!b.prop("shown") && isVisible(b)) {
+    b.prop("shown", true);
+    b.load("ispdf.asp?itemid=" + b.attr('name').substring(4) + "&rand=" + Math.random());
+  }
+}
+function get_pdfs(){
+  $('div[id^="pdf_"]:not(prop("shown"))').each(function(){
+    pdf_icon($(this))
+  });
+}
+setInterval(function() {
+  if ( didScroll2 ) {
+	didScroll2=false;
+	get_pdfs();
+    }
+ }, 200);
+
+$(document).ready(function() { 
+	didScroll=true;
+})
+	
+</SCRIPT>
+</head>
+
+<body onLoad='document.all.loading.style.display="none"; document.all.thepage.style.display=""'>
+
+<div id="loading" style="position:absolute; width:100%; text-align:center; top:300px;">
+Пожалуйста, подождите, <br>пока Ваш запрос будет обработан
+<br><img src="/pic/query_wait.gif" border=0 width=31 height=31 vspace=5></div>
+
+<div id="thepage" style="display: none">
+<table width=100% cellpadding=0 cellspacing=0 border=0>
+<tr><td width=100% align=center valign=top>
+
+
+<table  cellpadding=0 cellspacing=0 border=0>
+<tr><td width=170 align=left valign=top id="leftcol">
+
+<table border=0 cellspacing=0 cellpadding=0 width=150>
+
+<tr><td><a href="/defaultx.asp"><img src="/images/welcome1.jpg" width=150 title="НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА eLIBRARY.RU" border=0 vspace=15></a></td></tr>
+
+<tr><td><a href="/defaultx.asp"><img id="elibrary_logo" src="/images/elibrary_logo2.svg" width=150 height=39 border=0 vspace=10 title="eLIBRARY.RU - НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА"></a></td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=5></td></tr>
+<tr><td width=150 align=center valign=top>
+<a href="title_about_new.asp?id=8559"><img src="/itemfiles/0/9/3/4/4/7/0/4/9//1561-7793_i526_p000.jpg" border=0 width=120 title='О журнале "Вестник Томского государственного университета"' style="behavior: url(/pie/PIE.htc); box-shadow: 1px 2px 3px #888;" hspace=0></a>
+</td></tr>
+
+
+<tr><td><img src="/pic/1pix.gif" vspace=10></td></tr>
+<script language="JavaScript">
+if (supportsSVG) {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo2.svg";}
+else {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo.gif";}
+</script>
+<SCRIPT LANGUAGE="JavaScript">
+function check_all(){
+  if (document.forms["login"].login.value==""){
+    alert("Не указано имя пользователя!");
+	return false;
+	}
+  else if (document.forms["login"].password.value==""){
+    alert("Не указан пароль!");
+	return false;
+	}
+  else{
+    var frm = document.forms["login"];
+    frm.action="/start_session.asp";
+    frm.target="";
+    frm.submit();
+   }
+}
+function login_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_all();
+	return false;
+  }
+} 
+function sso_orgs(){
+  var frm = document.forms["results"];
+  $.fancybox({
+    href : 'sso_orgs.asp' ,
+    title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 200,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+  });
+}
+function show_hide_password(target){
+	var input = document.getElementById('password');
+	if (input.getAttribute('type') == 'password') {
+		target.classList.add('view');
+		input.setAttribute('type', 'text');
+	} 
+	else {
+		target.classList.remove('view');
+		input.setAttribute('type', 'password');
+	}
+	return false;
+}
+</SCRIPT>
+
+<FORM method=post name="login" onSubmit="return false">
+<input type=hidden name="rpage" value=https://elibrary.ru/contents.asp?titleid=8559>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_login').slideToggle(500, function(){didScroll = true;})" title="Вход в библиотеку для зарегистрированных пользователей">ВХОД</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_login" class="expanded">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Имя пользователя<br>&nbsp;или адрес эл. почты:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<div class="formfr" style="width:126px;"><input type=text id="login" name="login" value="" style="width:118px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"></div>
+</td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Пароль:</font></td></tr>
+<tr><td align=center width=100%>
+<div class="formfr" style="width:126px;"><input type=password id="password" name="password" value="" style="width:102px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"><a href="#" class="password-control" onclick="return show_hide_password(this);"></a></div>
+</td></tr>
+
+<tr><td align=center width=100%>
+
+<div style="height: 9px;"></div>
+<div class="butred" style="width: 52px;" onClick="check_all()">Вход</div>
+<div style="height: 9px;"></div>
+
+</td></tr></table>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr valign=middle class="menub"><td align=center width=30><input type=checkbox name="knowme"></td><td align=left width=101>Запомнить меня</td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/access_terms.asp">Правила доступа</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/author_info.asp?isnew=1&rpage=https%3A%2F%2Felibrary%2Eru%2Fcontents%2Easp%3Ftitleid%3D8559">Регистрация</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/pass_request.asp">Забыли пароль?</a></td></tr>
+
+
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:sso_orgs()">Вход через Вашу организацию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+</td></tr>
+</FORM>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_basket').slideToggle(500, function(){didScroll = true;})" title="Состояние корзины в электронном магазине eLIBRARY.ru">КОРЗИНА</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_basket" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+<tr><td width=100% align=center valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Всего в корзине:&nbsp;</font><font color=#00008f><b><span id="basket_num">0</span></b>&nbsp;публ.</font></td></tr>
+<tr><td width=100% align=center valign=top>
+&nbsp;<font color=#000000>на сумму:&nbsp;</font><font color=#00008f><b><span id="basket_sum">0</span></b>&nbsp;руб.</font></td></tr>
+</td></tr>
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=center width=30 valign=bottom><a href="/basket.asp"><img src="/images/basket.png" width=15 height=15 border=0></a></td><td align=left width=110 valign=top><a href="/basket.asp">Содержание корзины</a></td></tr>
+</table>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_search(){
+if (document.forms["search"].ftext.value.length > 1) {
+  var frm = document.forms["search"];
+  frm.action="/query_results.asp";
+  frm.target="";
+  frm.submit();
+  }
+else {
+  alert("Введите не менее двух символов");
+  }
+}
+function search_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_search();
+	return false;
+  }
+} 
+</SCRIPT>
+<FORM method=post name="search" onSubmit="return false">
+<input type="hidden" name="where_fulltext" value="on">
+<input type="hidden" name="where_name" value="on">
+<input type="hidden" name="where_abstract" value="on">
+<input type="hidden" name="where_keywords" value="on">
+<input type="hidden" name="where_affiliation" value="">
+<input type="hidden" name="where_references" value="">
+<input type="hidden" name="type_article" value="on">
+<input type="hidden" name="type_disser" value="on">
+<input type="hidden" name="type_book" value="on">
+<input type="hidden" name="type_report" value="on">
+<input type="hidden" name="type_conf" value="on">
+<input type="hidden" name="type_patent" value="on">
+<input type="hidden" name="type_preprint" value="on">
+<input type="hidden" name="type_grant" value="on">
+<input type="hidden" name="type_dataset" value="on">
+<input type="hidden" name="search_freetext" value="">
+<input type="hidden" name="search_morph" value="on">
+<input type="hidden" name="search_fulltext" value="">
+<input type="hidden" name="search_open" value="">
+<input type="hidden" name="search_results" value="">
+<input type="hidden" name="titles_all" value="">
+<input type="hidden" name="authors_all" value="">
+<input type="hidden" name="rubrics_all" value="">
+<input type="hidden" name="queryboxid" value="">
+<input type="hidden" name="itemboxid" value="">
+<input type="hidden" name="begin_year" value="">
+<input type="hidden" name="end_year" value="">
+<input type="hidden" name="issues" value="all">
+<input type="hidden" name="orderby" value="rank">
+<input type="hidden" name="order" value="rev">
+<input type="hidden" name="changed" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_search').slideToggle(500, function(){didScroll = true;})" title="Поиск в Научной электронной библиотеке">ПОИСК</span></b></font>
+</td></tr>
+</table>
+<div ID="win_search" class="collapsed">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=140 align=center valign=top>
+<div style="height: 10px;"></div>
+<div class="formfr" style="width:126px;"><input type=text id="ftext" name="ftext" value="" style="width:118px;" class="inputt" onKeyPress="search_enter(event);"></div>
+<div style="height: 11px;"></div>
+
+<div class="butblue" style="width: 52px;" onClick="check_search()">Найти</div>
+
+</td></tr>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+</table>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/querybox.asp?scope=newquery">Расширенный поиск</a></td></tr>
+
+
+<tr><td colspan=2><div style="height:3px;"></div></td></tr>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/neural_search.asp">Нейропоиск</a></td></tr>
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+
+</FORM>
+
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_goto').slideToggle(500, function(){didScroll = true;})" title="Быстрый переход на популярные страницы сайта">НАВИГАТОР</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_goto" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=4 cellpadding=0 width=140>
+
+<tr valign=top><td width=25 align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left width=115><a href="/titles.asp">ЖУРНАЛЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/books.asp">КНИГИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/patents.asp">ПАТЕНТЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/querybox.asp">ПОИСК</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/authors.asp">АВТОРЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/orgs.asp">ОРГАНИЗАЦИИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/keywords.asp">КЛЮЧЕВЫЕ СЛОВА</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/rubrics.asp">РУБРИКАТОР</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/region_compare.asp">РЕГИОНЫ</a></td></tr>
+
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=25 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=115 valign=top><a href="/defaultx.asp">Начальная страница</a></td></tr></table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_legend').slideToggle(500, function(){didScroll = true;})" title="Назначение используе">ЛЕГЕНДА</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_legend" class="expanded">
+
+<div style="height: 10px;"></div>
+<table width=100% cellspacing=0 cellpadding=3 border=0 bgcolor=#eeeeee>
+<tr><td width=15% align=right valign=top><img src="/images/download_green.png" width=16 hspace=3 border=0></td><td width=85% align=left valign=middle><font color=#00008f>Доступ к полному тексту документа открыт</font></td></tr>
+<tr><td align=right valign=top><img src="/images/download_blue.png" width=16 hspace=3 border=0></td><td align=left valign=middle><font color=#00008f>Полный текст доступен на сайте издателя</font></td></tr>
+<tr><td align=right valign=top><img src="/images/download_yellow.png" width=16 hspace=3 border=0></td><td align=left valign=middle><font color=#00008f>Полный текст может быть получен через систему заказа</font></td></tr>
+<tr><td align=right valign=top><img src="/images/download_orange.png" width=16 hspace=3 border=0></td><td align=left valign=middle><font color=#00008f>Доступ к полному тексту закрыт</font></td></tr>
+<tr><td valign=top align=center><font color=#00008f>-</font></td><td align=left><font color=#00008f>Если иконки нет - полный текст документа отсутствует в НЭБ</font></td></tr>
+
+</table>
+
+</div></div>
+</td></tr>
+
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function end_session(){
+
+  document.forms["session"].saveuser.value="1";
+
+  document.forms["session"].action="/end_session.asp";
+  document.forms["session"].target="";
+  document.forms["session"].submit()
+}
+</SCRIPT>
+<FORM action="/end_session.asp" method=POST name="session">
+<input type="hidden" name="saveuser" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_session').slideToggle(500, function(){didScroll = true;})" title="Информация о текущей сессии пользователя">СЕССИЯ</span></b></font>
+</td></tr>
+</table>
+
+
+<div ID="win_session" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>Имя пользователя:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>Незарегистрированный пользователь</font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Начало работы:</font></td></tr>
+
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>13.10.2026 17:51</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Время работы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>00:42</font></td></tr>
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="/project_user_office.asp">Личный кабинет</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:end_session()">Закрыть сессию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+</FORM>
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_contact').slideToggle(500, function(){didScroll = true;})" title="Контактная информация Научной электронной библиотеки">КОНТАКТЫ</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_contact" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Служба поддержки:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 1<br></font>
+<font color=#00008f><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font></td></tr>
+</td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям журналов:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 2<br></font>
+<font color=#00008f><a href="mailto:publish@elibrary.ru">publish@elibrary.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям книг:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 3<br></font>
+<font color=#00008f><a href="mailto:book@elibrary.ru">book@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Space для издательств:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:info@sciencespace.ru">info@sciencespace.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Index для организаций:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:org@scienceindex.ru">org@scienceindex.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Доступ к API:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:api@elibrary.ru">api@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Подписчикам:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 6<br></font>
+<font color=#00008f><a href="mailto:sales.team@elibrary.ru">sales.team@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Конференции, семинары:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 7<br></font>
+<font color=#00008f><a href="mailto:conf@elibrary.ru">conf@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Почтовый адрес:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="/contact_new.asp">117246, г. Москва,
+Научный проезд, д. 14А, стр. 3, таунхаус 1</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Веб-сайт:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://elibrary.ru">https://elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Telegram-канал:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://t.me/elibrary_ru_official" target=_blank>t.me/elibrary_ru_official</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Размещение рекламы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:reklama@elibrary.ru">reklama@elibrary.ru</a></font></td></tr>
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/contact_new.asp">Схема проезда</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="https://support.elibrary.ru">Задать вопрос</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/vacancy.asp">Вакансии</a></td></tr>
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<div style="width: 140px;" class="help-panel">
+<table width=140 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=15% align=right valign=top>
+<img src="/images/but_orange_i.gif" width=15 height=15 hspace=0 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>По всем вопросам, связанным с работой в системе Science Index, обращайтесь, пожалуйста, в службу поддержки:<br><br>
++7 (495) 544-2494<br><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font>
+</td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+
+
+</table>
+
+</td><td align=left valign=top>
+
+<FORM method=post name="results" onSubmit="return false">
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr><td width=600 align=left valign=top>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+<tr><td width=100% align=left valign=top>
+
+<div class="header-panel">
+<div style="margin: 0; border: 0; padding: 0 0 5px 0; text-align: center; font-size: 9pt;"><font color=#5674b9><b>СОДЕРЖАНИЕ ВЫПУСКА</b></font></div>
+</div>
+
+</td></tr></table>
+
+</td><td width=200 align=right valign=middle id="rightcol">
+
+
+<table width=200 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=12% align=right valign=top>
+<a href="https://t.me/elibrary_ru_official/106" target=_blank><img src="/images/telegram.svg" width=24 height=24 border=0></a></td>
+<td width=88% align=left valign=middle><font color=#00008f><a href="https://t.me/elibrary_ru_official/106" target=_blank>Система быстрого поиска по идентификаторам на eLIBRARY.RU</a></font>
+</td></tr>
+</table>
+</td></tr>
+
+
+<tr><td align=left valign=top>
+
+<table width=550 cellspacing=0 cellpadding=3 border=0>
+<tr valign=middle>
+<td width=2%></td>
+<td width=25% align=left>eLIBRARY ID:&nbsp;<font color=#00008f><a href="contents.asp?id=93447049">93447049</a></font></td>
+<td width=15% align=center></td>
+
+<td align=left width=5%></td>
+
+<td width=53% align=right></td>
+</tr>
+
+</table>
+<div style="height:5px;"></div>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+
+<input type="hidden" name="itembox_name" value="">
+<input type="hidden" name="titleid" value="8559">
+<input type="hidden" name="add_all" value="">
+<input type="hidden" name="paysum" value="">
+<input type="hidden" name="payitemid" value="">
+<input type="hidden" name="items_all" value="">
+<input type="hidden" name="did" value="1">
+<input type="hidden" name="urlnum" value="1">
+<input type="hidden" name="filenum" value="1">
+<input type="hidden" name="fileid" value="8559">
+
+<tr><td width=100% align=left valign=top>
+
+<div style="width:540px; margin:10px 20px 10px 20px; border:0; padding:0; text-align: center; font-size: 10pt;">
+<a href="title_about_new.asp?id=8559"><font color=#F26C4F><b>ВЕСТНИК ТОМСКОГО ГОСУДАРСТВЕННОГО УНИВЕРСИТЕТА</b></font></a>
+<div style="height:5px;"></div>
+<span style="font-size:8pt;"><font color=#00008F><a href='org_profile.asp?id=366'>Национальный исследовательский Томский государственный университет</a><br></font> <i>(Томск)</i></span>
+</div>
+
+
+
+
+<table width=580 border=0 cellspacing=0 cellpadding=2>
+<tr><td width=574 align=center valign=middle>
+<div style="width:540px; margin:0 20px 10px 20px; border:0; padding:0; text-align: center; font-size: 9pt;">
+<img src="/pic/1pix.gif" hspace=10>Номер:&nbsp;<font color=#F26C4F><b><span style="font-size:10pt;">526</span></b></font>
+<img src="/pic/1pix.gif" hspace=10>Год:&nbsp;<font color=#F26C4F><b><span style="font-size:10pt;">2026</span></b></font>
+
+</div>
+</td></tr>
+
+
+</table>
+
+
+
+
+
+<div style="height:16px;"></div>
+
+<table width=580 cellspacing=0 cellpadding=3 id="restab" style="border-spacing: 0px 4px; table-layout:fixed;">
+<tr align=center valign=middle height=15>
+<td width=24>&nbsp;</td>
+<td width=454><font color=#555555><b>Название статьи</b></font></td>
+<td width=54><font color=#555555><b>Стр.</b></font></td>
+<td width=24><span title="Число цитирований публикации в РИНЦ"><font color=#555555><b>Цит.</b></font></span></td></tr>
+<tr><td colspan=4>
+<div style="width: 574px;" class="table-line"></div>
+</td></tr>
+
+<tr><td colspan=4 height=0></td></tr>
+
+
+  <tr valign=middle bgcolor=#f5f5f5><td align=center colspan=4><b>ФИЛОЛОГИЯ</b></td></tr>
+
+<tr valign=middle id="arw93447050">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447050" id="tid93447050"  onClick='if (this.checked) {RowSelect("arw93447050",1)} else {RowSelect("arw93447050",0)}'><div id="pdf_93447050" name="pdf_93447050"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447050"><b><span style="line-height:1.0;">НЕМЕЙНСТРИМНЫЙ ЖУРНАЛИСТСКИЙ ДИСКУРС ОБ ИСКУССТВЕННОМ ИНТЕЛЛЕКТЕ: СИСТЕМНО-КРИТИЧЕСКАЯ ПЕРСПЕКТИВА</span></b></a><br><font color=#00008f><i>Агнистикова Ольга Игоревна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+5-12
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447051">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447051" id="tid93447051"  onClick='if (this.checked) {RowSelect("arw93447051",1)} else {RowSelect("arw93447051",0)}'><div id="pdf_93447051" name="pdf_93447051"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447051"><b><span style="line-height:1.0;">РОЛЬ АБОРИГЕННЫХ УРБАНОНИМОВ В ОТРАЖЕНИИ КУЛЬТУРНО-ЯЗЫКОВОГО ЛАНДШАФТА КАНБЕРРЫ</span></b></a><br><font color=#00008f><i>Миниярова Диана Руслановна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+13-19
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447052">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447052" id="tid93447052"  onClick='if (this.checked) {RowSelect("arw93447052",1)} else {RowSelect("arw93447052",0)}'><div id="pdf_93447052" name="pdf_93447052"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447052"><b><span style="line-height:1.0;">РЕПРЕЗЕНТАЦИЯ БЕЛОРУССКОЙ НАЦИОНАЛЬНОЙ ИДЕНТИЧНОСТИ ЧЕРЕЗ ОБРАЗ «ДРУГОГО» В ОНЛАЙН-СМИ 2020-2022 ГГ</span></b></a><br><font color=#00008f><i>Мороз Кристина Олеговна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+20-28
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447053">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447053" id="tid93447053"  onClick='if (this.checked) {RowSelect("arw93447053",1)} else {RowSelect("arw93447053",0)}'><div id="pdf_93447053" name="pdf_93447053"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447053"><b><span style="line-height:1.0;">СПОРТИВНЫЕ ФЕМИНИТИВЫ В РУССКОМ ЯЗЫКЕ КОНЦА XIX - НАЧАЛА XX В</span></b></a><br><font color=#00008f><i>Руднев Дмитрий Владимирович, Зеленин Александр Васильевич</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+29-41
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447054">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447054" id="tid93447054"  onClick='if (this.checked) {RowSelect("arw93447054",1)} else {RowSelect("arw93447054",0)}'><div id="pdf_93447054" name="pdf_93447054"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447054"><b><span style="line-height:1.0;">ОБРАЗ ЗИМЫ В АСПЕКТЕ ХУДОЖЕСТВЕННОЙ ПЕРЦЕПТИВНОСТИ (НА МАТЕРИАЛЕ ПОЭТИЧЕСКИХ ТЕКСТОВ ТОМСКИХ АВТОРОВ)</span></b></a><br><font color=#00008f><i>Трунова Марина Васильевна, Крюкова Лариса Борисовна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+42-50
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+  <tr valign=middle bgcolor=#f5f5f5><td align=center colspan=4><b>PHILOLOGY</b></td></tr>
+
+<tr valign=middle id="arw93447055">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447055" id="tid93447055"  onClick='if (this.checked) {RowSelect("arw93447055",1)} else {RowSelect("arw93447055",0)}'><div id="pdf_93447055" name="pdf_93447055"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447055"><b><span style="line-height:1.0;">THE INFORMATION POLICY OF THE PRESS UNDER CRITICAL CIRCUMSTANCES: TIFLIS NEWSPAPERS AND SOCIETY RESPONSE TO THE DISASTER OF JANUARY 6, 1892</span></b></a><br><font color=#00008f><i>Khachatryan Gurgen K.</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+51-57
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+  <tr valign=middle bgcolor=#f5f5f5><td align=center colspan=4><b>ФИЛОСОФИЯ</b></td></tr>
+
+<tr valign=middle id="arw93447056">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447056" id="tid93447056"  onClick='if (this.checked) {RowSelect("arw93447056",1)} else {RowSelect("arw93447056",0)}'><div id="pdf_93447056" name="pdf_93447056"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447056"><b><span style="line-height:1.0;">ФИЛОСОФСКО-МЕТОДОЛОГИЧЕСКИЕ АСПЕКТЫ ГИПОТЕЗЫ ТЕМНОЙ МАТЕРИИ В СОВРЕМЕННОЙ КОСМОЛОГИИ</span></b></a><br><font color=#00008f><i>Иваненко Максим Александрович</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+58-64
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447057">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447057" id="tid93447057"  onClick='if (this.checked) {RowSelect("arw93447057",1)} else {RowSelect("arw93447057",0)}'><div id="pdf_93447057" name="pdf_93447057"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447057"><b><span style="line-height:1.0;">ПРОТИВ КОНЦЕПЦИИ ОНТОЛОГИЧЕСКОГО ПЛЮРАЛИЗМА Х. ПАТНЭМА (НА ПРИМЕРЕ СРАВНЕНИЯ ОНТОЛОГИЙ КВАНТОВОЙ И КЛАССИЧЕСКОЙ ХИМИИ)</span></b></a><br><font color=#00008f><i>Чечеткина Ирина Игоревна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+65-73
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+  <tr valign=middle bgcolor=#f5f5f5><td align=center colspan=4><b>СОЦИОЛОГИЯ И ПОЛИТОЛОГИЯ</b></td></tr>
+
+<tr valign=middle id="arw93447058">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447058" id="tid93447058"  onClick='if (this.checked) {RowSelect("arw93447058",1)} else {RowSelect("arw93447058",0)}'><div id="pdf_93447058" name="pdf_93447058"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447058"><b><span style="line-height:1.0;">МОРСКОЕ СОТРУДНИЧЕСТВО РОССИЙСКОЙ ФЕДЕРАЦИИ С ГОСУДАРСТВАМИ АЗИАТСКО-ТИХООКЕАНСКОГО РЕГИОНА</span></b></a><br><font color=#00008f><i>Зеленева Ирина Владимировна, Зыченко Артём Игоревич</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+74-83
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447059">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447059" id="tid93447059"  onClick='if (this.checked) {RowSelect("arw93447059",1)} else {RowSelect("arw93447059",0)}'><div id="pdf_93447059" name="pdf_93447059"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447059"><b><span style="line-height:1.0;">ЭТНИЧЕСКАЯ ДИСКРИМИНАЦИЯ КАК ФАКТОР ЭЛЕКТОРАЛЬНОЙ АКТИВНОСТИ НАЦИОНАЛЬНЫХ МЕНЬШИНСТВ В РОССИИ</span></b></a><br><font color=#00008f><i>Мухаметов Руслан Салихович</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+84-92
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447060">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447060" id="tid93447060"  onClick='if (this.checked) {RowSelect("arw93447060",1)} else {RowSelect("arw93447060",0)}'><div id="pdf_93447060" name="pdf_93447060"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447060"><b><span style="line-height:1.0;">МЕХАНИЗМЫ КОНСТРУИРОВАНИЯ И ТРАНСЛЯЦИИ УНИВЕРСИТЕТСКОЙ ЦЕННОСТНОЙ ИДЕНТИЧНОСТИ (НА ПРИМЕРЕ НАЦИОНАЛЬНОГО ИССЛЕДОВАТЕЛЬСКОГО ТОМСКОГО ГОСУДАРСТВЕННОГО УНИВЕРСИТЕТА)</span></b></a><br><font color=#00008f><i>Дунбинский Илья Александрович, Хрущева Полина Дмитриевна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+93-101
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+  <tr valign=middle bgcolor=#f5f5f5><td align=center colspan=4><b>ИСТОРИЯ</b></td></tr>
+
+<tr valign=middle id="arw93447061">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447061" id="tid93447061"  onClick='if (this.checked) {RowSelect("arw93447061",1)} else {RowSelect("arw93447061",0)}'><div id="pdf_93447061" name="pdf_93447061"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447061"><b><span style="line-height:1.0;">КОСТЯНЫЕ НАКЛАДКИ НА ЛУК С ГОРОДИЩА ИВАНОВСКОЕ I</span></b></a><br><font color=#00008f><i>Балюнов Игорь Валерьевич</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+102-107
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447062">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447062" id="tid93447062"  onClick='if (this.checked) {RowSelect("arw93447062",1)} else {RowSelect("arw93447062",0)}'><div id="pdf_93447062" name="pdf_93447062"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447062"><b><span style="line-height:1.0;">ОТ РАБОЧЕГО ДО ВОЕННОГО КОМИССАРА: ОПЫТ РЕКОНСТРУКЦИИ БИОГРАФИИ ГРИГОРИЯ АЛЕКСАНДРОВИЧА ЛЕНЬКОВА</span></b></a><br><font color=#00008f><i>Бехтерев Сергей Львович, Бехтерева Людмила Николаевна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+108-116
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447063">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447063" id="tid93447063"  onClick='if (this.checked) {RowSelect("arw93447063",1)} else {RowSelect("arw93447063",0)}'><div id="pdf_93447063" name="pdf_93447063"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447063"><b><span style="line-height:1.0;">СОВРЕМЕННЫЙ ОПЫТ ПРИМЕНЕНИЯ МАССОВОЙ ГЕНЕАЛОГИИ (НА ПРИМЕРЕ НАПИСАНИЯ БИОГРАФИЙ ПРЕДКОВ, УЧАСТВОВАВШИХ В ВЕЛИКОЙ ОТЕЧЕСТВЕННОЙ ВОЙНЕ)</span></b></a><br><font color=#00008f><i>Кудланов Константин Борисович</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+117-128
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447064">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447064" id="tid93447064"  onClick='if (this.checked) {RowSelect("arw93447064",1)} else {RowSelect("arw93447064",0)}'><div id="pdf_93447064" name="pdf_93447064"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447064"><b><span style="line-height:1.0;">ПРЕДПОСЫЛКИ И СОЗДАНИЕ ПЕРЕДВИЖНЫХ КОТЕЛЬНЫХ ДЛЯ БАННО-ПРАЧЕЧНО-ДЕЗИНФЕКЦИОННЫХ И БАННО-ДЕЗИНФЕКЦИОННЫХ ПОЕЗДОВ В СОВЕТСКОЙ АРМИИ (1960-1970-Е ГГ.)</span></b></a><br><font color=#00008f><i>Попов Александр Валентинович</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+129-135
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447065">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447065" id="tid93447065"  onClick='if (this.checked) {RowSelect("arw93447065",1)} else {RowSelect("arw93447065",0)}'><div id="pdf_93447065" name="pdf_93447065"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447065"><b><span style="line-height:1.0;">ИДЕИ СОЦИАЛЬНОЙ РЕГУЛЯЦИИ И СОЦИАЛЬНОЙ ПОМОЩИ КАК ГОСУДАРСТВЕННОЙ ПОЛИТИКИ В ШВЕЦИИ НАЧАЛА ХХ В. В РАБОТАХ РУДОЛЬФА ЧЕЛЛЕНА</span></b></a><br><font color=#00008f><i>Рагозин Герман Сергеевич</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+136-142
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447066">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447066" id="tid93447066"  onClick='if (this.checked) {RowSelect("arw93447066",1)} else {RowSelect("arw93447066",0)}'><div id="pdf_93447066" name="pdf_93447066"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447066"><b><span style="line-height:1.0;">ПРИХРАМОВЫЕ КЛАДБИЩА В СИСТЕМЕ АРХЕОЛОГИЧЕСКИХ ИССЛЕДОВАНИЙ РУССКИХ СИБИРСКИХ ГОРОДОВ (ПО МАТЕРИАЛАМ ГОРОДА ТАРЫ)</span></b></a><br><font color=#00008f><i>Татауров Сергей Филиппович</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+143-148
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447067">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447067" id="tid93447067"  onClick='if (this.checked) {RowSelect("arw93447067",1)} else {RowSelect("arw93447067",0)}'><div id="pdf_93447067" name="pdf_93447067"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447067"><b><span style="line-height:1.0;">СЕРБСКОЕ НАЦИОНАЛЬНО-ОСВОБОДИТЕЛЬНОЕ ДВИЖЕНИЕ В 1804-1835 ГГ. В ОФИЦИАЛЬНОМ ДИСКУРСЕ РОССИЙСКОЙ ИМПЕРИИ: МЕЖДУ «ИМПЕРИЕЙ», «БРАТСТВОМ» И «РЕВОЛЮЦИЕЙ»</span></b></a><br><font color=#00008f><i>Турыгина Наталья Валерьевна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+149-155
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447068">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447068" id="tid93447068"  onClick='if (this.checked) {RowSelect("arw93447068",1)} else {RowSelect("arw93447068",0)}'><div id="pdf_93447068" name="pdf_93447068"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447068"><b><span style="line-height:1.0;">ОТЕЧЕСТВЕННЫЕ ИСТОРИОГРАФИЧЕСКИЕ ПОДХОДЫ К ИЗУЧЕНИЮ СОВЕТСКОГО СТУДЕНЧЕСТВА</span></b></a><br><font color=#00008f><i>Штацкая Ангелина Михайловна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+156-166
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+  <tr valign=middle bgcolor=#f5f5f5><td align=center colspan=4><b>ПЕДАГОГИКА</b></td></tr>
+
+<tr valign=middle id="arw93447069">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447069" id="tid93447069"  onClick='if (this.checked) {RowSelect("arw93447069",1)} else {RowSelect("arw93447069",0)}'><div id="pdf_93447069" name="pdf_93447069"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447069"><b><span style="line-height:1.0;">ТЕОРИЯ АФФОРДАНСОВ КАК ИНСТРУМЕНТ ПРОЕКТИРОВАНИЯ ДОСТУПНОГО ЭЛЕКТРОННОГО ОБУЧЕНИЯ</span></b></a><br><font color=#00008f><i>Косова Екатерина Алексеевна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+167-180
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447070">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447070" id="tid93447070"  onClick='if (this.checked) {RowSelect("arw93447070",1)} else {RowSelect("arw93447070",0)}'><div id="pdf_93447070" name="pdf_93447070"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447070"><b><span style="line-height:1.0;">ВЛИЯНИЕ ПРОФЕССИОНАЛЬНО-ПРИКЛАДНОЙ ФИЗИЧЕСКОЙ ПОДГОТОВКИ НА ФОРМИРОВАНИЕ ЛИЧНОСТНЫХ КАЧЕСТВ БУДУЩИХ РАБОТНИКОВ ТАМОЖЕННОЙ СЛУЖБЫ</span></b></a><br><font color=#00008f><i>Котова Ольга Владимировна, Курасбедиани Зураби Важаевич</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+181-193
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447071">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447071" id="tid93447071"  onClick='if (this.checked) {RowSelect("arw93447071",1)} else {RowSelect("arw93447071",0)}'><div id="pdf_93447071" name="pdf_93447071"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447071"><b><span style="line-height:1.0;">ФОРМИРОВАНИЕ ЛИЧНОСТНЫХ ПРОФЕССИОНАЛЬНО И СОЦИАЛЬНО ЗНАЧИМЫХ КАЧЕСТВ СПЕЦИАЛИСТА НОВОГО ФОРМАТА В ПРОЦЕССЕ ОБУЧЕНИЯ ИНОСТРАННЫМ ЯЗЫКАМ</span></b></a><br><font color=#00008f><i>Краснощекова Галина Алексеевна, Вахрушева Оксана Валерьевна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+194-204
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447072">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447072" id="tid93447072"  onClick='if (this.checked) {RowSelect("arw93447072",1)} else {RowSelect("arw93447072",0)}'><div id="pdf_93447072" name="pdf_93447072"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447072"><b><span style="line-height:1.0;">ПОТЕНЦИАЛ ТРАНСФЕРА ЛУЧШИХ ЗАРУБЕЖНЫХ ПРАКТИК АРКТИЧЕСКОГО ВЫСШЕГО ОБРАЗОВАНИЯ: ОПЫТ ШВЕЦИИ И НОРВЕГИИ</span></b></a><br><font color=#00008f><i>Трифонова Ирина Сергеевна, Лёвкина Анастасия Олеговна, Лёвкин Вадим Евгеньевич</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+205-214
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447073">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447073" id="tid93447073"  onClick='if (this.checked) {RowSelect("arw93447073",1)} else {RowSelect("arw93447073",0)}'><div id="pdf_93447073" name="pdf_93447073"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447073"><b><span style="line-height:1.0;">РЕАЛИЗАЦИЯ РЕГИОНАЛЬНОГО КОМПОНЕНТА В ПРОЕКТНОЙ ДЕЯТЕЛЬНОСТИ НА ИНОСТРАННОМ ЯЗЫКЕ В ШКОЛЕ И ВУЗЕ</span></b></a><br><font color=#00008f><i>Шерехова Ольга Михайловна, Юсупова Лилия Наильевна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+215-226
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+  <tr valign=middle bgcolor=#f5f5f5><td align=center colspan=4><b>ПРАВО</b></td></tr>
+
+<tr valign=middle id="arw93447074">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447074" id="tid93447074"  onClick='if (this.checked) {RowSelect("arw93447074",1)} else {RowSelect("arw93447074",0)}'><div id="pdf_93447074" name="pdf_93447074"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447074"><b><span style="line-height:1.0;">ПРИНЦИП УЯЗВИМОСТИ И БИОЭТИЧЕСКОЕ ДОСТОИНСТВО В СИСТЕМЕ БИОПРАВА В ВЕК ГЕНЕТИЧЕСКОЙ ИНФОРМАЦИИ И БИОМЕДИЦИНСКИХ ТЕХНОЛОГИЙ</span></b></a><br><font color=#00008f><i>Кравец Игорь Александрович</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+227-242
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447075">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447075" id="tid93447075"  onClick='if (this.checked) {RowSelect("arw93447075",1)} else {RowSelect("arw93447075",0)}'><div id="pdf_93447075" name="pdf_93447075"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447075"><b><span style="line-height:1.0;">РОССИЙСКАЯ ФЕДЕРАЦИЯ И МЕЖДУНАРОДНОЕ КОСМИЧЕСКОЕ ПРАВО: ВЗАИМОСВЯЗЬ ВНЕШНЕПОЛИТИЧЕСКОЙ ПОЗИЦИИ И НАЦИОНАЛЬНОЙ СТРАТЕГИИ ОСВОЕНИЯ КОСМОСА</span></b></a><br><font color=#00008f><i>Гуторова Алла Николаевна, Гайдаржи Владислав Артёмович, Каверин Кирилл Романович</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+243-248
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447076">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447076" id="tid93447076"  onClick='if (this.checked) {RowSelect("arw93447076",1)} else {RowSelect("arw93447076",0)}'><div id="pdf_93447076" name="pdf_93447076"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447076"><b><span style="line-height:1.0;">ПРИНЦИП УЧАСТИЯ ГРАЖДАН В СОХРАНЕНИИ И ИСПОЛЬЗОВАНИИ ЖИВОТНОГО МИРА: ПРОБЛЕМЫ РЕАЛИЗАЦИИ</span></b></a><br><font color=#00008f><i>Иванова Светлана Витальевна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+249-258
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447077">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447077" id="tid93447077"  onClick='if (this.checked) {RowSelect("arw93447077",1)} else {RowSelect("arw93447077",0)}'><div id="pdf_93447077" name="pdf_93447077"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447077"><b><span style="line-height:1.0;">НЕКОТОРЫЕ ПРОБЛЕМЫ ПРАВОВОГО И ОРГАНИЗАЦИОННОГО ОБЕСПЕЧЕНИЯ АНТИТЕРРОРИСТИЧЕСКОЙ ЗАЩИЩЕННОСТИ ОБЪЕКТОВ ТРАНСПОРТНОЙ ИНФРАСТРУКТУРЫ В УСЛОВИЯХ СОВРЕМЕННЫХ ВЫЗОВОВ</span></b></a><br><font color=#00008f><i>Петрищева Наталья Сергеевна, Шатанкова Елена Николаевна, Балашов Константин Геннадьевич</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+259-266
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw93447078">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid93447078" id="tid93447078"  onClick='if (this.checked) {RowSelect("arw93447078",1)} else {RowSelect("arw93447078",0)}'><div id="pdf_93447078" name="pdf_93447078"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=93447078"><b><span style="line-height:1.0;">ПРОБЛЕМНЫЕ АСПЕКТЫ РОДИТЕЛЬСКОЙ ОТСРОЧКИ ОТБЫВАНИЯ НАКАЗАНИЯ (СТ. 82 УК РФ)</span></b></a><br><font color=#00008f><i>Сипягина Майя Николаевна</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+267-273
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+</table>
+
+
+
+<br>
+</td></tr></table>
+
+</td>
+<td align=right valign=top>
+
+<div id="panel_default" style="position: relative; width: 200px; height:0; margin: 0; border: 1px; padding: 0"></div>
+<div id="panel" style="position: relative; width: 200px; margin: 0; border: 0; padding: 0">
+
+<div style="width: 190px;" class="right-panel">
+
+<table width=190 cellspacing=0 cellpadding=3 border=0>
+
+<tr><td colspan=2 align=center valign=top><font color=#F26C4F><b>ИНСТРУМЕНТЫ</b></font><br><img src="/pic/1pix.gif" vspace=1><br></td></tr>
+
+
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:select_all()" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:select_all()" rel=nofollow>Выделить все статьи</a>
+</td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:deselect_all()" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:deselect_all()" rel=nofollow>Снять выделение</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:itembox_add()" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:itembox_add()" rel=nofollow>Добавить выделенные статьи в подборку:</a></td></tr>
+
+<tr><td colspan=2 align=center><div class="formfr"><select name="itemboxid" style="width:180px" class="input">
+
+<option value="0" selected>Новая подборка
+</select></div>&nbsp;</td></tr>
+
+
+
+<tr><td width=15% align=right valign=top>
+<img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Список выпусков</font></td></tr>
+<tr><td></td><td align=left valign=top>
+
+<table width=100% cellspacing=0 cellpadding=2 border=0>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=49632234">
+&nbsp;Online First
+</a>&nbsp;(0&nbsp;ст.)</td></tr>
+
+<tr><td width=12% align=left valign=top><img id="issimg2026" src="/images/or_minus1.png" class="win_expandable" onClick="hideShowRed('issueyear2026', 'issimg2026')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2026', 'issimg2026')">2026</span></font></b></td></tr>
+<tbody ID="issueyear2026" class="expanded">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=90510442" >
+&nbsp;№&nbsp;522</a>&nbsp;(29&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=91759045" >
+&nbsp;№&nbsp;523</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=91762631" >
+&nbsp;№&nbsp;524</a>&nbsp;(27&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=91772174" >
+&nbsp;№&nbsp;525</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><span ><font color=#F26C4F>
+&nbsp;№&nbsp;526</font></span>&nbsp;(29&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2025" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2025', 'issimg2025')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2025', 'issimg2025')">2025</span></font></b></td></tr>
+<tbody ID="issueyear2025" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=82851768" >
+&nbsp;№&nbsp;510</a>&nbsp;(26&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=82853173" >
+&nbsp;№&nbsp;511</a>&nbsp;(27&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=82880393" >
+&nbsp;№&nbsp;512</a>&nbsp;(28&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=82891503" >
+&nbsp;№&nbsp;513</a>&nbsp;(26&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=83197574" >
+&nbsp;№&nbsp;514</a>&nbsp;(27&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=86085802" >
+&nbsp;№&nbsp;515</a>&nbsp;(28&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=88684448" >
+&nbsp;№&nbsp;516</a>&nbsp;(27&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=83189681" >
+&nbsp;№&nbsp;517</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=88906669" >
+&nbsp;№&nbsp;518</a>&nbsp;(26&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=88981580" >
+&nbsp;№&nbsp;519</a>&nbsp;(27&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=88997023" >
+&nbsp;№&nbsp;520</a>&nbsp;(29&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=88866831" >
+&nbsp;№&nbsp;521</a>&nbsp;(30&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2024" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2024', 'issimg2024')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2024', 'issimg2024')">2024</span></font></b></td></tr>
+<tbody ID="issueyear2024" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=67349243" >
+&nbsp;№&nbsp;498</a>&nbsp;(25&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=67972648" >
+&nbsp;№&nbsp;499</a>&nbsp;(24&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=68555190" >
+&nbsp;№&nbsp;500</a>&nbsp;(26&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=74528423" >
+&nbsp;№&nbsp;501</a>&nbsp;(28&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=74973349" >
+&nbsp;№&nbsp;502</a>&nbsp;(23&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=75215680" >
+&nbsp;№&nbsp;503</a>&nbsp;(28&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=78807814" >
+&nbsp;№&nbsp;504</a>&nbsp;(26&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=79012166" >
+&nbsp;№&nbsp;505</a>&nbsp;(28&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=80317267" >
+&nbsp;№&nbsp;506</a>&nbsp;(26&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=80488814" >
+&nbsp;№&nbsp;507</a>&nbsp;(28&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=82507752" >
+&nbsp;№&nbsp;508</a>&nbsp;(29&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=82738112" >
+&nbsp;№&nbsp;509</a>&nbsp;(28&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2023" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2023', 'issimg2023')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2023', 'issimg2023')">2023</span></font></b></td></tr>
+<tbody ID="issueyear2023" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=54058964" >
+&nbsp;№&nbsp;486</a>&nbsp;(27&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=54143353" >
+&nbsp;№&nbsp;487</a>&nbsp;(25&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=54593859" >
+&nbsp;№&nbsp;488</a>&nbsp;(26&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=54704539" >
+&nbsp;№&nbsp;489</a>&nbsp;(25&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=54753838" >
+&nbsp;№&nbsp;490</a>&nbsp;(25&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=54894967" >
+&nbsp;№&nbsp;491</a>&nbsp;(23&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=55367875" >
+&nbsp;№&nbsp;492</a>&nbsp;(23&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=60022026" >
+&nbsp;№&nbsp;493</a>&nbsp;(26&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=60023581" >
+&nbsp;№&nbsp;494</a>&nbsp;(24&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=63424173" >
+&nbsp;№&nbsp;495</a>&nbsp;(23&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=65490331" >
+&nbsp;№&nbsp;496</a>&nbsp;(23&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=65672461" >
+&nbsp;№&nbsp;497</a>&nbsp;(26&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2022" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2022', 'issimg2022')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2022', 'issimg2022')">2022</span></font></b></td></tr>
+<tbody ID="issueyear2022" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=48447029" >
+&nbsp;№&nbsp;474</a>&nbsp;(32&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=48699606" >
+&nbsp;№&nbsp;475</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=49483845" >
+&nbsp;№&nbsp;476</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=49534215" >
+&nbsp;№&nbsp;477</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=49610836" >
+&nbsp;№&nbsp;478</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=50008560" >
+&nbsp;№&nbsp;479</a>&nbsp;(29&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=50046210" >
+&nbsp;№&nbsp;480</a>&nbsp;(29&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=50104062" >
+&nbsp;№&nbsp;481</a>&nbsp;(28&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=50294972" >
+&nbsp;№&nbsp;482</a>&nbsp;(28&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=50392791" >
+&nbsp;№&nbsp;483</a>&nbsp;(28&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=50503947" >
+&nbsp;№&nbsp;484</a>&nbsp;(26&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=53978883" >
+&nbsp;№&nbsp;485</a>&nbsp;(27&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2021" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2021', 'issimg2021')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2021', 'issimg2021')">2021</span></font></b></td></tr>
+<tbody ID="issueyear2021" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=45666521" >
+&nbsp;№&nbsp;462</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=45849165" >
+&nbsp;№&nbsp;463</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=46209115" >
+&nbsp;№&nbsp;464</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=46453288" >
+&nbsp;№&nbsp;465</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=46667883" >
+&nbsp;№&nbsp;466</a>&nbsp;(32&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=46662283" >
+&nbsp;№&nbsp;467</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=47282935" >
+&nbsp;№&nbsp;468</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=47560587" >
+&nbsp;№&nbsp;469</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=47931996" >
+&nbsp;№&nbsp;470</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=48118935" >
+&nbsp;№&nbsp;471</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=48159554" >
+&nbsp;№&nbsp;472</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=48223907" >
+&nbsp;№&nbsp;473</a>&nbsp;(31&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2020" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2020', 'issimg2020')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2020', 'issimg2020')">2020</span></font></b></td></tr>
+<tbody ID="issueyear2020" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=42463690" >
+&nbsp;№&nbsp;450</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=42658285" >
+&nbsp;№&nbsp;451</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=42917318" >
+&nbsp;№&nbsp;452</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=42934514" >
+&nbsp;№&nbsp;453</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=43131709" >
+&nbsp;№&nbsp;454</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=43923591" >
+&nbsp;№&nbsp;455</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=43959954" >
+&nbsp;№&nbsp;456</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=44199605" >
+&nbsp;№&nbsp;457</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=44403402" >
+&nbsp;№&nbsp;458</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=44464500" >
+&nbsp;№&nbsp;459</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=44620240" >
+&nbsp;№&nbsp;460</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=44870175" >
+&nbsp;№&nbsp;461</a>&nbsp;(31&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2019" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2019', 'issimg2019')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2019', 'issimg2019')">2019</span></font></b></td></tr>
+<tbody ID="issueyear2019" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=37182713" >
+&nbsp;№&nbsp;438</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=37275909" >
+&nbsp;№&nbsp;439</a>&nbsp;(29&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=37657733" >
+&nbsp;№&nbsp;440</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=38247902" >
+&nbsp;№&nbsp;441</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=38506657" >
+&nbsp;№&nbsp;442</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=39249440" >
+&nbsp;№&nbsp;443</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=39556347" >
+&nbsp;№&nbsp;444</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=41199671" >
+&nbsp;№&nbsp;445</a>&nbsp;(32&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=41344299" >
+&nbsp;№&nbsp;446</a>&nbsp;(32&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=41436600" >
+&nbsp;№&nbsp;447</a>&nbsp;(32&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=41763328" >
+&nbsp;№&nbsp;448</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=41831868" >
+&nbsp;№&nbsp;449</a>&nbsp;(31&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2018" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2018', 'issimg2018')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2018', 'issimg2018')">2018</span></font></b></td></tr>
+<tbody ID="issueyear2018" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34838596" >
+&nbsp;№&nbsp;426</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34868750" >
+&nbsp;№&nbsp;427</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34913593" >
+&nbsp;№&nbsp;428</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=35122536" >
+&nbsp;№&nbsp;429</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=35185465" >
+&nbsp;№&nbsp;430</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=35552681" >
+&nbsp;№&nbsp;431</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=36292856" >
+&nbsp;№&nbsp;432</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=36387767" >
+&nbsp;№&nbsp;433</a>&nbsp;(29&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=36487672" >
+&nbsp;№&nbsp;434</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=36665374" >
+&nbsp;№&nbsp;435</a>&nbsp;(33&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=36769831" >
+&nbsp;№&nbsp;436</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=37045442" >
+&nbsp;№&nbsp;437</a>&nbsp;(32&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2017" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2017', 'issimg2017')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2017', 'issimg2017')">2017</span></font></b></td></tr>
+<tbody ID="issueyear2017" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34421015" >
+&nbsp;№&nbsp;414</a>&nbsp;(29&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34421461" >
+&nbsp;№&nbsp;415</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34474850" >
+&nbsp;№&nbsp;416</a>&nbsp;(29&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34482005" >
+&nbsp;№&nbsp;417</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34486597" >
+&nbsp;№&nbsp;418</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34525663" >
+&nbsp;№&nbsp;419</a>&nbsp;(28&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34535074" >
+&nbsp;№&nbsp;420</a>&nbsp;(29&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34537414" >
+&nbsp;№&nbsp;421</a>&nbsp;(29&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34537413" >
+&nbsp;№&nbsp;422</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34550543" >
+&nbsp;№&nbsp;423</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34552088" >
+&nbsp;№&nbsp;424</a>&nbsp;(34&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34837829" >
+&nbsp;№&nbsp;425</a>&nbsp;(32&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2016" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2016', 'issimg2016')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2016', 'issimg2016')">2016</span></font></b></td></tr>
+<tbody ID="issueyear2016" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34215815" >
+&nbsp;№&nbsp;402</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34223629" >
+&nbsp;№&nbsp;403</a>&nbsp;(28&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34226254" >
+&nbsp;№&nbsp;404</a>&nbsp;(27&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34233236" >
+&nbsp;№&nbsp;405</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34258448" >
+&nbsp;№&nbsp;406</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34255169" >
+&nbsp;№&nbsp;407</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34255170" >
+&nbsp;№&nbsp;408</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34261294" >
+&nbsp;№&nbsp;409</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34325201" >
+&nbsp;№&nbsp;410</a>&nbsp;(29&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34330892" >
+&nbsp;№&nbsp;411</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34334750" >
+&nbsp;№&nbsp;412</a>&nbsp;(30&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34399098" >
+&nbsp;№&nbsp;413</a>&nbsp;(32&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2015" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2015', 'issimg2015')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2015', 'issimg2015')">2015</span></font></b></td></tr>
+<tbody ID="issueyear2015" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34059420" >
+&nbsp;№&nbsp;390</a>&nbsp;(37&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34192262" >
+&nbsp;№&nbsp;391</a>&nbsp;(38&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34060110" >
+&nbsp;№&nbsp;392</a>&nbsp;(36&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34228983" >
+&nbsp;№&nbsp;393</a>&nbsp;(39&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34080382" >
+&nbsp;№&nbsp;394</a>&nbsp;(40&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34082522" >
+&nbsp;№&nbsp;395</a>&nbsp;(39&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34110255" >
+&nbsp;№&nbsp;396</a>&nbsp;(41&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34107576" >
+&nbsp;№&nbsp;397</a>&nbsp;(39&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34212728" >
+&nbsp;№&nbsp;398</a>&nbsp;(40&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34192263" >
+&nbsp;№&nbsp;399</a>&nbsp;(41&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34193527" >
+&nbsp;№&nbsp;400</a>&nbsp;(64&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34212270" >
+&nbsp;№&nbsp;401</a>&nbsp;(37&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2014" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2014', 'issimg2014')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2014', 'issimg2014')">2014</span></font></b></td></tr>
+<tbody ID="issueyear2014" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33950214" >
+&nbsp;№&nbsp;378</a>&nbsp;(39&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33950749" >
+&nbsp;№&nbsp;379</a>&nbsp;(37&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33954524" >
+&nbsp;№&nbsp;380</a>&nbsp;(38&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33957279" >
+&nbsp;№&nbsp;381</a>&nbsp;(38&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33963943" >
+&nbsp;№&nbsp;382</a>&nbsp;(39&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33987126" >
+&nbsp;№&nbsp;383</a>&nbsp;(35&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33973729" >
+&nbsp;№&nbsp;384</a>&nbsp;(34&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33985572" >
+&nbsp;№&nbsp;385</a>&nbsp;(37&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34033705" >
+&nbsp;№&nbsp;386</a>&nbsp;(37&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34033706" >
+&nbsp;№&nbsp;387</a>&nbsp;(40&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34038212" >
+&nbsp;№&nbsp;388</a>&nbsp;(43&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34049233" >
+&nbsp;№&nbsp;389</a>&nbsp;(44&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2013" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2013', 'issimg2013')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2013', 'issimg2013')">2013</span></font></b></td></tr>
+<tbody ID="issueyear2013" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33819523" >
+&nbsp;№&nbsp;366</a>&nbsp;(43&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33819631" >
+&nbsp;№&nbsp;367</a>&nbsp;(41&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33820531" >
+&nbsp;№&nbsp;368</a>&nbsp;(40&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33826302" >
+&nbsp;№&nbsp;369</a>&nbsp;(40&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33828034" >
+&nbsp;№&nbsp;370</a>&nbsp;(37&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33830191" >
+&nbsp;№&nbsp;371</a>&nbsp;(39&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33833393" >
+&nbsp;№&nbsp;372</a>&nbsp;(41&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33835670" >
+&nbsp;№&nbsp;373</a>&nbsp;(38&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34110254" >
+&nbsp;№&nbsp;374</a>&nbsp;(41&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33860019" >
+&nbsp;№&nbsp;375</a>&nbsp;(42&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33909318" >
+&nbsp;№&nbsp;376</a>&nbsp;(37&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33919844" >
+&nbsp;№&nbsp;377</a>&nbsp;(39&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2012" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2012', 'issimg2012')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2012', 'issimg2012')">2012</span></font></b></td></tr>
+<tbody ID="issueyear2012" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33729999" >
+&nbsp;№&nbsp;354</a>&nbsp;(46&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33730842" >
+&nbsp;№&nbsp;355</a>&nbsp;(38&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33733538" >
+&nbsp;№&nbsp;356</a>&nbsp;(38&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33734574" >
+&nbsp;№&nbsp;357</a>&nbsp;(44&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33734695" >
+&nbsp;№&nbsp;358</a>&nbsp;(52&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33738571" >
+&nbsp;№&nbsp;359</a>&nbsp;(47&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33743442" >
+&nbsp;№&nbsp;360</a>&nbsp;(45&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33745726" >
+&nbsp;№&nbsp;361</a>&nbsp;(41&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33747808" >
+&nbsp;№&nbsp;362</a>&nbsp;(43&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33757933" >
+&nbsp;№&nbsp;363</a>&nbsp;(47&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33767041" >
+&nbsp;№&nbsp;364</a>&nbsp;(47&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33789339" >
+&nbsp;№&nbsp;365</a>&nbsp;(43&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2011" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2011', 'issimg2011')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2011', 'issimg2011')">2011</span></font></b></td></tr>
+<tbody ID="issueyear2011" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33657644" >
+&nbsp;№&nbsp;342</a>&nbsp;(46&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33657645" >
+&nbsp;№&nbsp;343</a>&nbsp;(44&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33657646" >
+&nbsp;№&nbsp;344</a>&nbsp;(47&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33659487" >
+&nbsp;№&nbsp;345</a>&nbsp;(46&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33662648" >
+&nbsp;№&nbsp;346</a>&nbsp;(42&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33663360" >
+&nbsp;№&nbsp;347</a>&nbsp;(45&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33663853" >
+&nbsp;№&nbsp;348</a>&nbsp;(41&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33666783" >
+&nbsp;№&nbsp;349</a>&nbsp;(44&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33681206" >
+&nbsp;№&nbsp;350</a>&nbsp;(46&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33695832" >
+&nbsp;№&nbsp;351</a>&nbsp;(41&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33725467" >
+&nbsp;№&nbsp;352</a>&nbsp;(51&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33726118" >
+&nbsp;№&nbsp;353</a>&nbsp;(45&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2010" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2010', 'issimg2010')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2010', 'issimg2010')">2010</span></font></b></td></tr>
+<tbody ID="issueyear2010" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33652181" >
+&nbsp;№&nbsp;330</a>&nbsp;(50&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33651678" >
+&nbsp;№&nbsp;331</a>&nbsp;(50&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33651679" >
+&nbsp;№&nbsp;332</a>&nbsp;(46&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33651680" >
+&nbsp;№&nbsp;333</a>&nbsp;(42&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33651681" >
+&nbsp;№&nbsp;334</a>&nbsp;(46&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33651857" >
+&nbsp;№&nbsp;335</a>&nbsp;(39&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33651858" >
+&nbsp;№&nbsp;336</a>&nbsp;(45&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33652524" >
+&nbsp;№&nbsp;337</a>&nbsp;(45&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33652525" >
+&nbsp;№&nbsp;338</a>&nbsp;(53&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33651682" >
+&nbsp;№&nbsp;339</a>&nbsp;(45&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33651683" >
+&nbsp;№&nbsp;340</a>&nbsp;(53&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33657815" title='Тема выпуска: Декабрь'>
+&nbsp;№&nbsp;341</a>&nbsp;(56&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2009" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2009', 'issimg2009')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2009', 'issimg2009')">2009</span></font></b></td></tr>
+<tbody ID="issueyear2009" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33404871" >
+&nbsp;№&nbsp;318</a>&nbsp;(52&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33404874" >
+&nbsp;№&nbsp;319</a>&nbsp;(52&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33414861" >
+&nbsp;№&nbsp;320</a>&nbsp;(45&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33414862" >
+&nbsp;№&nbsp;321</a>&nbsp;(49&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33404878" >
+&nbsp;№&nbsp;322</a>&nbsp;(61&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33404881" >
+&nbsp;№&nbsp;323</a>&nbsp;(86&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33414864" >
+&nbsp;№&nbsp;324</a>&nbsp;(93&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33404883" >
+&nbsp;№&nbsp;325</a>&nbsp;(51&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33414868" >
+&nbsp;№&nbsp;326</a>&nbsp;(49&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33453020" >
+&nbsp;№&nbsp;327</a>&nbsp;(55&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33454625" >
+&nbsp;№&nbsp;328</a>&nbsp;(53&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33453029" >
+&nbsp;№&nbsp;329</a>&nbsp;(64&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2008" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2008', 'issimg2008')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2008', 'issimg2008')">2008</span></font></b></td></tr>
+<tbody ID="issueyear2008" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33196244" >
+&nbsp;№&nbsp;306</a>&nbsp;(37&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33266380" >
+&nbsp;№&nbsp;307</a>&nbsp;(44&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33201105" >
+&nbsp;№&nbsp;308</a>&nbsp;(46&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33215593" >
+&nbsp;№&nbsp;309</a>&nbsp;(44&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33266381" >
+&nbsp;№&nbsp;310</a>&nbsp;(42&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33266382" >
+&nbsp;№&nbsp;311</a>&nbsp;(46&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33269360" >
+&nbsp;№&nbsp;312</a>&nbsp;(40&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33273003" >
+&nbsp;№&nbsp;313</a>&nbsp;(47&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33273004" >
+&nbsp;№&nbsp;314</a>&nbsp;(45&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33301408" >
+&nbsp;№&nbsp;315</a>&nbsp;(48&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33274315" >
+&nbsp;№&nbsp;316</a>&nbsp;(49&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33275400" >
+&nbsp;№&nbsp;317</a>&nbsp;(60&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2007" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2007', 'issimg2007')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2007', 'issimg2007')">2007</span></font></b></td></tr>
+<tbody ID="issueyear2007" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33333346" >
+&nbsp;№&nbsp;294</a>&nbsp;(52&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33335110" >
+&nbsp;№&nbsp;295</a>&nbsp;(48&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33335111" >
+&nbsp;№&nbsp;296</a>&nbsp;(42&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33335099" >
+&nbsp;№&nbsp;297</a>&nbsp;(46&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33335100" >
+&nbsp;№&nbsp;298</a>&nbsp;(56&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33335101" >
+&nbsp;№&nbsp;299</a>&nbsp;(52&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33335114" >
+&nbsp;№&nbsp;300-1</a>&nbsp;(51&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33335112" >
+&nbsp;№&nbsp;300-2</a>&nbsp;(70&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33335113" >
+&nbsp;№&nbsp;300-3</a>&nbsp;(23&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33335115" >
+&nbsp;№&nbsp;301</a>&nbsp;(56&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33335116" >
+&nbsp;№&nbsp;302</a>&nbsp;(57&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33335117" >
+&nbsp;№&nbsp;303</a>&nbsp;(58&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33335118" >
+&nbsp;№&nbsp;304</a>&nbsp;(51&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33335119" >
+&nbsp;№&nbsp;305</a>&nbsp;(57&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=52129885" title='Тема выпуска: Материалы международных, всероссийских и региональных научных конференций, симпозиумов, школ, проводимых в ТГУ. ДОКЛАДЫ VI Сибирской научной школы-семинара с международным участием «Компьютерная безопасность и криптография» - SIBECRYPT07'>
+&nbsp;№&nbsp;S23</a>&nbsp;(8&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2006" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2006', 'issimg2006')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2006', 'issimg2006')">2006</span></font></b></td></tr>
+<tbody ID="issueyear2006" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33333335" >
+&nbsp;№&nbsp;290</a>&nbsp;(71&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33333336" >
+&nbsp;№&nbsp;291</a>&nbsp;(54&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33333337" >
+&nbsp;№&nbsp;292-1</a>&nbsp;(48&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33699781" >
+&nbsp;№&nbsp;292-2</a>&nbsp;(35&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33333338" >
+&nbsp;№&nbsp;293</a>&nbsp;(34&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34539734" title='Тема выпуска: Информационные технологии и математическое моделирование-2005'>
+&nbsp;№&nbsp;S16</a>&nbsp;(18&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=45718349" title='Тема выпуска: Бюллетень оператив­ной научной информации №94. Ноябрь. ВОПРОСЫ ОТЕЧЕСТВЕННОЙ ИСТОРИИ'>
+&nbsp;№&nbsp;S17</a>&nbsp;(2&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34543774" title='Тема выпуска: Приложение. Доклады VI Всероссийской конференции с международным участием "Новые информационные технологии в исследовании сложных структур" - ICAM06 (Шушенское, Национальный парк "Шушенский бор", 5 - 8 сентября 2006 г.)'>
+&nbsp;№&nbsp;S18</a>&nbsp;(25&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34540764" title='Тема выпуска: Материалы международных, всероссийских и региональных научных конференций, симпозиумов, школ, проводимых в ТГУ. Информационные технологии и математическое моделирование-2005'>
+&nbsp;№&nbsp;S19</a>&nbsp;(24&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=38193054" title='Тема выпуска: Материалы научных конференций, симпозиумов, школ, проводимых в ТГУ'>
+&nbsp;№&nbsp;S21</a>&nbsp;(15&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2005" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2005', 'issimg2005')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2005', 'issimg2005')">2005</span></font></b></td></tr>
+<tbody ID="issueyear2005" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33314761" title='Тема выпуска: Серия "Физика". Специальный выпуск, посвященный 50-летию организации в ТГУ научного и образовательного направлений по физике полупроводников'>
+&nbsp;№&nbsp;285</a>&nbsp;(23&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33314762" title='Тема выпуска: Серия "Психология"'>
+&nbsp;№&nbsp;286</a>&nbsp;(25&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33316748" title='Тема выпуска: Серия "Философия. Социология. Политология. Культурология"'>
+&nbsp;№&nbsp;287</a>&nbsp;(37&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33333333" >
+&nbsp;№&nbsp;288</a>&nbsp;(31&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33333334" >
+&nbsp;№&nbsp;289</a>&nbsp;(24&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34543164" title='Тема выпуска: Приложение. Доклады IV Сибирской научной школы-семинара с международным участием "Проблемы компьютерной безопасности и криптография" - SIBECRYPT05 (Томск, ТГУ, 6-9 сентября 2005 г.)'>
+&nbsp;№&nbsp;S14</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=35260259" >
+&nbsp;№&nbsp;S15</a>&nbsp;(16&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2004" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2004', 'issimg2004')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2004', 'issimg2004')">2004</span></font></b></td></tr>
+<tbody ID="issueyear2004" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=42778142" title='Тема выпуска: Бюллетень оперативной научной информации'>
+&nbsp;№&nbsp;38</a>&nbsp;(1&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34539044" title='Тема выпуска: Приложение. Доклады V Всероссийской конференции с международным участием "Новые информационные технологии в исследовании сложных структур" - ICAM04 и III Сибирской научной-школы семинара с международным участием "Компьютерная безопасность и криптография" - SIBECRYPT04'>
+&nbsp;№&nbsp;S9-2</a>&nbsp;(15&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33698648" >
+&nbsp;№&nbsp;281</a>&nbsp;(37&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33698207" >
+&nbsp;№&nbsp;282</a>&nbsp;(60&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33698743" >
+&nbsp;№&nbsp;283</a>&nbsp;(40&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33662340" title='Тема выпуска: Серия "Математика. Кибернетика. Информатика"'>
+&nbsp;№&nbsp;284</a>&nbsp;(56&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=50420922" title='Тема выпуска: Приложение. Доклады III Международной конференции «Проблема вида и видообразования», Томск, ТГУ, 20-22 октября 2004 г.'>
+&nbsp;№&nbsp;S10</a>&nbsp;(1&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2003" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2003', 'issimg2003')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2003', 'issimg2003')">2003</span></font></b></td></tr>
+<tbody ID="issueyear2003" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34534818" title='Тема выпуска: Приложение. Серия: Экономика. Юридическая наука. По материалам "Всероссийской научно-практической конференции "Проблемы теории и практики уголовного процесса в свете нового УПК РФ"'>
+&nbsp;№&nbsp;S4</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=67321035" >
+&nbsp;№&nbsp;S5</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34540759" title='Тема выпуска: Приложение. Доклады II Сибирской научной школы-семинара с международным участием "Проблемы компьютерной безопасности и криптография" - SYBECRYPT0З (Томск, ТГУ, 9-12 сентября 2003 г.)'>
+&nbsp;№&nbsp;S6</a>&nbsp;(28&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=50731093" title='Тема выпуска: Биологические науки. Биолого-почвенный факультет: прошлое, настоящее и будущее: материалы научной конференции, посвященной 125-летию основания Томского государственного университета и 70-летию биолого-почвенного факультета, 23-24 апреля 2003 г.'>
+&nbsp;№&nbsp;S8</a>&nbsp;(3&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33699393" >
+&nbsp;№&nbsp;276</a>&nbsp;(36&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33699252" >
+&nbsp;№&nbsp;277</a>&nbsp;(42&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33664634" title='Тема выпуска: СПЕЦИАЛЬНЫЙ ВЫПУСК, посвященный 50-летию радиофизического факультета ТГУ'>
+&nbsp;№&nbsp;278</a>&nbsp;(38&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33688044" >
+&nbsp;№&nbsp;279</a>&nbsp;(35&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33664217" >
+&nbsp;№&nbsp;280</a>&nbsp;(81&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2002" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2002', 'issimg2002')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2002', 'issimg2002')">2002</span></font></b></td></tr>
+<tbody ID="issueyear2002" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34539063" title='Тема выпуска: Приложение. Доклады IV Всероссийской конференции с международным участием "Новые информационные технологии в исследовании сложных структур" и Сибирской научной-школы семинара "Проблемы компьютерной безопасности" (Томск, ТГУ, 10-13 сентября 2003 г.)'>
+&nbsp;№&nbsp;S1-1</a>&nbsp;(22&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=42643364" >
+&nbsp;№&nbsp;S2</a>&nbsp;(1&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33735515" >
+&nbsp;№&nbsp;275</a>&nbsp;(50&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2001" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2001', 'issimg2001')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2001', 'issimg2001')">2001</span></font></b></td></tr>
+<tbody ID="issueyear2001" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33733864" >
+&nbsp;№&nbsp;274</a>&nbsp;(26&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2000" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2000', 'issimg2000')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2000', 'issimg2000')">2000</span></font></b></td></tr>
+<tbody ID="issueyear2000" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34108240" >
+&nbsp;№&nbsp;269</a>&nbsp;(45&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34221435" >
+&nbsp;№&nbsp;271</a>&nbsp;(50&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg1999" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear1999', 'issimg1999')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear1999', 'issimg1999')">1999</span></font></b></td></tr>
+<tbody ID="issueyear1999" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34106544" >
+&nbsp;№&nbsp;267</a>&nbsp;(41&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34060283" >
+&nbsp;№&nbsp;268</a>&nbsp;(46&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg1998" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear1998', 'issimg1998')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear1998', 'issimg1998')">1998</span></font></b></td></tr>
+<tbody ID="issueyear1998" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34105784" >
+&nbsp;№&nbsp;266</a>&nbsp;(27&nbsp;ст.)</td></tr>
+
+</tbody>
+</table>
+
+</td></tr>
+
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="title_items.asp?id=8559" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="title_items.asp?id=8559" rel=nofollow>Список статей, опубликованных в данном журнале</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="cit_title_items.asp?id=8559" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="cit_title_items.asp?id=8559" rel=nofollow>Список публикаций, ссылающихся на статьи в журнале</a>
+</td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<a href="title_profile.asp?id=8559"><img src="/pic/stat.gif" width=12 height=13 hspace=4 border=0></a></td>
+<td width=85% align=left valign=middle><a href="title_profile.asp?id=8559">Анализ публикационной активности журнала</a>
+</td></tr>
+
+
+</table>
+</div>
+
+</div>
+
+</td></tr></table>
+</td></tr></table>
+</FORM>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+$(function() {
+$(".help").tooltip({
+	position: "top right",
+	offset: [-15, -100],
+	effect: "fade", 
+	fadeInSpeed: 400, 
+	fadeOutSpeed: 400, 
+	delay: 400,  
+	predelay: 400,
+	opacity: 1.0
+});
+});
+$(function() {
+$(".help1").tooltip({
+	position: "top right",
+	offset: [-15, -300],
+	effect: "fade", 
+	fadeInSpeed: 400, 
+	fadeOutSpeed: 400, 
+	delay: 400,  
+	predelay: 400,
+	opacity: 1.0
+});
+});
+</script>
+
+
+<br><br>
+<table width=970 height=40 border=0 cellpadding=0 cellspacing=0 id="footer">
+<tr align=center valign=middle class="menug">
+<td width=15% valign="bottom">
+
+</td>
+<td width=70%><font color=#00008f><span style="position: relative; top: 3px; right: 15px; color: #F26C4F;">*</span><a href="/copyright.asp">&copy; 2000-2026 ООО НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА. Все права защищены</a></font><span style="position: relative; top: 3px; left: 15px; color: #F26C4F;">*</span></td>
+<td width=15% valign="bottom">
+
+</td>
+</tr></table>
+
+<!-- Yandex.Metrika -->
+<div style="display:none;"><script type="text/javascript">
+(function(w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter171463 = new Ya.Metrika(171463);
+        } catch(e) {}
+    });
+})(window, 'yandex_metrika_callbacks');
+</script></div>
+<script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script>
+<noscript><div style="position:absolute"><img src="//mc.yandex.ru/watch/171463" alt="" /></div></noscript>
+<!-- /Yandex.Metrika -->
+
+
+
+
+<br><br><br>
+</td></tr></table>
+</html>

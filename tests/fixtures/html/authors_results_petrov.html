@@ -1,0 +1,2986 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="robots" content="noindex,nofollow">
+<title>Поиск авторов</title>
+
+<script type="text/javascript" src="/jquery.min.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="/autocomplete/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.easydrag.js"></script>
+<script type="text/javascript" src="/jquery.tools.min.js"></script>
+<script type="text/javascript" src="/elibrary.js"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/style_sm.css" type="text/css" media="screen">
+
+<style>
+#wiki_tooltip {
+  z-index: 9999;
+  position: absolute;
+  display: none;
+  top:0px;
+  left:0px;
+	background-color: #ffffff; 
+  padding: 0;
+  color: #000;
+	border: 0;
+	box-shadow: 1px 2px 3px #888; 
+	margin: 0; 
+}
+</style>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+$(function(){
+	$("[data-tooltip]").click(function (eventObject) {
+		$data_tooltip = $(this).attr("data-tooltip");
+		$url=$data_tooltip.replace('/wiki/', '/api/rest_v1/page/summary/');
+		$.get($url, function($wiki) {
+			if(typeof $wiki.thumbnail != 'undefined'){
+				$img_source = $wiki.thumbnail.source;
+				$img_width = $wiki.thumbnail.width;
+				$img_height = $wiki.thumbnail.height;
+				$shift = $img_height/2 + 100;
+				$data_html = '<table width=260 cellpadding=0 border=0 cellspacing=0><tr valigh=top><td width=260><a href="javascript:window.open(\'' + $data_tooltip + '\'); close_tooltip();"><img src="' + $img_source + '" width=260></a></td></tr><tr><td align=left valign=top><div class="menurd" style="padding: 10px 20px 0 20px; font-size: 9pt; width: 220px; text-align: left;"><a href="javascript:window.open(\'' + $data_tooltip + '\'); close_tooltip();">' + $wiki.extract_html + '</a></div></td></tr><tr><td align=right><img src="/images/cross.jpg" width=12 height=12 hspace=4 vspace=1 onClick="close_tooltip()"></td></tr></table>';
+			}
+			else {
+				$shift = 170;
+				$data_html = '<table width=260 cellpadding=0 border=0 cellspacing=0><tr><td  width=260 align=left valign=top><div class="menurd" style="padding: 10px 20px 0 20px; font-size: 9pt; width: 220px; text-align: left;"><a href="javascript:window.open(\'' + $data_tooltip + '\'); close_tooltip();">' + $wiki.extract_html + '</a></div></td></tr><tr><td align=right><img src="/images/cross.jpg" width=12 height=12 hspace=4 vspace=1 onClick="close_tooltip()"></td></tr></table>';
+			}
+			$("#wiki_tooltip").html($data_html)
+			.css({ 
+				"top" : eventObject.pageY - $shift,
+				"left" : eventObject.pageX + 25
+			})
+			.fadeIn();
+		});
+	});
+});
+
+$(document).on('keydown', function(event) {
+  if (event.key === "Escape") {
+    $("#wiki_tooltip").fadeOut();
+  }
+});
+
+function close_tooltip(){
+$("#wiki_tooltip").fadeOut();
+}
+
+but_blue_hover=new Image();
+but_blue_hover.src="/images/but_blue_hover.png";
+but_red_hover=new Image();
+but_red_hover.src="/images/but_red_hover.png";
+but_gray_hover=new Image();
+but_gray_hover.src="/images/but_gray_hover.png";
+
+var allowaddauthor=0;
+
+function RowSelect(row,sel){
+  var rbgc = sel==1 ? "#e8e8e8" : "#f5f5f5";
+  $('#'+row+' td').attr('bgColor', rbgc);
+}
+function select_all(){
+  $('input:checkbox[name^="tid"]').attr('checked', true);
+  $('tr[id^="a"] td').attr('bgColor', "#e8e8e8");
+}
+function deselect_all(){
+  $('input:checkbox[name^="tid"]').attr('checked', false);
+  $('tr[id^="a"] td').attr('bgColor', "#f5f5f5");
+}
+function reset_form(){
+  var frm = document.forms["results"];
+  frm.surname.value="";
+  frm.countryid.value="";
+  frm.regionid.value="";
+  frm.town.value="";
+  frm.townid.value="";
+  frm.orgid.value="";
+  frm.orgname.value="";
+  frm.rubriccode.value="";
+  frm.metrics.value="1";
+  frm.codetype.value="SPIN";
+  frm.codevalue.value="";
+  frm.authorboxid.value="";
+  frm.inaffil.checked=0;
+  frm.rubricinreg.checked=0;
+  frm.show_nopubl.checked=0;
+}
+function author_search(){
+  var frm = document.forms["results"];
+  frm.action="authors.asp";
+  frm.pagenum.value="";
+  frm.target="";
+  frm.submit()
+}
+function submit_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    author_search();
+	return false;
+  }
+} 
+function authors_search(){
+  var frm = document.forms["results"];
+  frm.authors_all.value="";
+  for (var i=0; i<frm.elements.length; i++){
+   if(frm.elements[i].id.substring(0,3)=="tid"){
+    if(frm.elements[i].checked){
+    frm.authors_all.value = frm.authors_all.value + document.getElementById(frm.elements[i].name.replace("tid","hid")).value + "|";}}}
+  if (frm.authors_all.value=="") {
+    alerts ("Не выделено ни одного автора!")}
+  else {
+  frm.action="querybox.asp";
+  frm.target="";
+  frm.submit()}
+}
+function authorbox_add(){
+  var frm = document.forms["results"];
+  var issel=0;
+  frm.authors_all.value="";
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       if (frm.elements[i].checked) {
+	     issel=issel+1;
+	     frm.authors_all.value = frm.authors_all.value + frm.elements[i].name.substring(3, frm.elements[i].name.length) + "|";
+	   }
+    }
+ }
+ if (issel==0) {
+    alerts ("Не выделено ни одного автора")}
+ else {
+    $.fancybox({
+      href : 'authorbox_select.asp?authors_all='+frm.authors_all.value ,
+      title : '',
+			padding : 20,     
+			width : 530,
+			height : 400,
+			overlayOpacity : 0.3,	
+			overlayColor : '#000',
+			speedIn : 500,
+			hideOnOverlayClick : false,
+			enableEscapeButton : true,
+			type : 'iframe'
+    });
+  }
+}
+function goto_page(pnum){
+  var frm = document.forms["results"];
+  frm.pagenum.value=pnum;
+  frm.action="authors.asp";
+  frm.target="";
+  frm.submit()
+}
+function show_help(topic){
+  anewwin=window.open("", "addwin", "resizable=yes,scrollbars=yes,height=300,width=500,top=0,left=0");
+  document.forms["results"].action=topic;
+  document.forms["results"].target="addwin";
+  document.forms["results"].submit()
+}
+function organizat_add(){
+    $.fancybox({
+      href : 'user_org_add3.asp' ,
+      title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 350,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+    });
+}
+
+
+
+function show_author_refs(iid, cat){
+
+  alerts("Для доступа к этой странице необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.forms["login"].login.focus();
+
+}
+
+function show_wiki_page(id, url){
+	url1=url.replace('/wiki/', '/api/rest_v1/page/summary/');
+	$.get(url1, function(wiki) {
+		var wikitag=$('#wikipage');
+		wikitag.removeData('tooltip').unbind();
+		var tagtext='<a href="'+url+'" target="_blank">'+wiki.extract_html+'</a>';
+		wikitag.attr('title', tagtext);
+		wikitag.tooltip({
+			position: "top right",
+			offset: [-15, -200],
+			effect: "fade", 
+			fadeInSpeed: 400, 
+			fadeOutSpeed: 400, 
+			delay: 400,  
+			predelay: 400,
+			opacity: 1.0,
+			cancelDefault: true
+		});
+	})
+}
+
+$(document).ready(function() { 
+
+function liFormat (row, i, num) {
+	var result = row[0];
+	return result;
+}
+function selectTown(li) {
+  document.forms['results'].town.value=li.extra[3];
+  document.forms['results'].townid.value=li.extra[0];
+  document.forms['results'].countryid.value=li.extra[1];
+  document.forms['results'].regionid.value=li.extra[2];
+}
+
+$("#town").autocomplete("town_autocomplete2.asp", { 
+  delay:200, 
+  minChars:2, 
+  matchSubset:false, 
+  matchContains:false, 
+  selectFirst:true, 
+  formatItem:liFormat, 
+  maxItemsToShow:10, 
+  onItemSelect:selectTown,
+	extraParams: {scountry: function(){ return $("#countryid").val(); } }
+  }); 
+
+});
+
+</SCRIPT>
+</head>
+
+
+
+<body> 
+<table width=100% cellpadding=0 cellspacing=0 border=0>
+<tr><td width=100% align=center valign=top>
+
+<table  cellpadding=0 cellspacing=0 border=0>
+<tr><td width=170 align=left valign=top id="leftcol">
+
+<table border=0 cellspacing=0 cellpadding=0 width=150>
+
+<tr><td><a href="/defaultx.asp"><img src="/images/welcome1.jpg" width=150 title="НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА eLIBRARY.RU" border=0 vspace=15></a></td></tr>
+
+
+<tr><td><a href="/defaultx.asp"><img id="elibrary_logo" src="/images/elibrary_logo2.svg" width=150 height=39 border=0 vspace=10 title="eLIBRARY.RU - НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА"></a></td></tr>
+<script language="JavaScript">
+if (supportsSVG) {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo2.svg";}
+else {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo.gif";}
+</script>
+<tr><td><img src="/pic/1pix.gif" vspace=10></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_search(){
+if (document.forms["search"].ftext.value.length > 1) {
+  var frm = document.forms["search"];
+  frm.action="/query_results.asp";
+  frm.target="";
+  frm.submit();
+  }
+else {
+  alert("Введите не менее двух символов");
+  }
+}
+function search_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_search();
+	return false;
+  }
+} 
+</SCRIPT>
+<FORM method=post name="search" onSubmit="return false">
+<input type="hidden" name="where_fulltext" value="on">
+<input type="hidden" name="where_name" value="on">
+<input type="hidden" name="where_abstract" value="on">
+<input type="hidden" name="where_keywords" value="on">
+<input type="hidden" name="where_affiliation" value="">
+<input type="hidden" name="where_references" value="">
+<input type="hidden" name="type_article" value="on">
+<input type="hidden" name="type_disser" value="on">
+<input type="hidden" name="type_book" value="on">
+<input type="hidden" name="type_report" value="on">
+<input type="hidden" name="type_conf" value="on">
+<input type="hidden" name="type_patent" value="on">
+<input type="hidden" name="type_preprint" value="on">
+<input type="hidden" name="type_grant" value="on">
+<input type="hidden" name="type_dataset" value="on">
+<input type="hidden" name="search_freetext" value="">
+<input type="hidden" name="search_morph" value="on">
+<input type="hidden" name="search_fulltext" value="">
+<input type="hidden" name="search_open" value="">
+<input type="hidden" name="search_results" value="">
+<input type="hidden" name="titles_all" value="">
+<input type="hidden" name="authors_all" value="">
+<input type="hidden" name="rubrics_all" value="">
+<input type="hidden" name="queryboxid" value="">
+<input type="hidden" name="itemboxid" value="">
+<input type="hidden" name="begin_year" value="">
+<input type="hidden" name="end_year" value="">
+<input type="hidden" name="issues" value="all">
+<input type="hidden" name="orderby" value="rank">
+<input type="hidden" name="order" value="rev">
+<input type="hidden" name="changed" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_search').slideToggle(500, function(){didScroll = true;})" title="Поиск в Научной электронной библиотеке">ПОИСК</span></b></font>
+</td></tr>
+</table>
+<div ID="win_search" class="collapsed">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=140 align=center valign=top>
+<div style="height: 10px;"></div>
+<div class="formfr" style="width:126px;"><input type=text id="ftext" name="ftext" value="" style="width:118px;" class="inputt" onKeyPress="search_enter(event);"></div>
+<div style="height: 11px;"></div>
+
+<div class="butblue" style="width: 52px;" onClick="check_search()">Найти</div>
+
+</td></tr>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+</table>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/querybox.asp?scope=newquery">Расширенный поиск</a></td></tr>
+
+
+<tr><td colspan=2><div style="height:3px;"></div></td></tr>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/neural_search.asp">Нейропоиск</a></td></tr>
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+
+</FORM>
+
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_all(){
+  if (document.forms["login"].login.value==""){
+    alert("Не указано имя пользователя!");
+	return false;
+	}
+  else if (document.forms["login"].password.value==""){
+    alert("Не указан пароль!");
+	return false;
+	}
+  else{
+    var frm = document.forms["login"];
+    frm.action="/start_session.asp";
+    frm.target="";
+    frm.submit();
+   }
+}
+function login_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_all();
+	return false;
+  }
+} 
+function sso_orgs(){
+  var frm = document.forms["results"];
+  $.fancybox({
+    href : 'sso_orgs.asp' ,
+    title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 200,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+  });
+}
+function show_hide_password(target){
+	var input = document.getElementById('password');
+	if (input.getAttribute('type') == 'password') {
+		target.classList.add('view');
+		input.setAttribute('type', 'text');
+	} 
+	else {
+		target.classList.remove('view');
+		input.setAttribute('type', 'password');
+	}
+	return false;
+}
+</SCRIPT>
+
+<FORM method=post name="login" onSubmit="return false">
+<input type=hidden name="rpage" value=https://elibrary.ru/authors.asp?codetype=SPIN&rubriccode=&sortorder=2&authors_all=&townid=&pagenum=&authorbox_name=&authorboxid=&selid=&orgname=&orgid=&regionid=&orgadminid=&countryid=&surname=Петров&codevalue=&order=1&town=&metrics=1>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_login').slideToggle(500, function(){didScroll = true;})" title="Вход в библиотеку для зарегистрированных пользователей">ВХОД</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_login" class="expanded">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Имя пользователя<br>&nbsp;или адрес эл. почты:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<div class="formfr" style="width:126px;"><input type=text id="login" name="login" value="" style="width:118px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"></div>
+</td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Пароль:</font></td></tr>
+<tr><td align=center width=100%>
+<div class="formfr" style="width:126px;"><input type=password id="password" name="password" value="" style="width:102px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"><a href="#" class="password-control" onclick="return show_hide_password(this);"></a></div>
+</td></tr>
+
+<tr><td align=center width=100%>
+
+<div style="height: 9px;"></div>
+<div class="butred" style="width: 52px;" onClick="check_all()">Вход</div>
+<div style="height: 9px;"></div>
+
+</td></tr></table>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr valign=middle class="menub"><td align=center width=30><input type=checkbox name="knowme"></td><td align=left width=101>Запомнить меня</td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/access_terms.asp">Правила доступа</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/author_info.asp?isnew=1&rpage=https%3A%2F%2Felibrary%2Eru%2Fauthors%2Easp%3Fcodetype%3DSPIN%26rubriccode%3D%26sortorder%3D2%26authors%5Fall%3D%26townid%3D%26pagenum%3D%26authorbox%5Fname%3D%26authorboxid%3D%26selid%3D%26orgname%3D%26orgid%3D%26regionid%3D%26orgadminid%3D%26countryid%3D%26surname%3D%D0%9F%D0%B5%D1%82%D1%80%D0%BE%D0%B2%26codevalue%3D%26order%3D1%26town%3D%26metrics%3D1">Регистрация</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/pass_request.asp">Забыли пароль?</a></td></tr>
+
+
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:sso_orgs()">Вход через Вашу организацию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+</td></tr>
+</FORM>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_goto').slideToggle(500, function(){didScroll = true;})" title="Быстрый переход на популярные страницы сайта">НАВИГАТОР</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_goto" class="expanded">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=4 cellpadding=0 width=140>
+
+<tr valign=top><td width=25 align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left width=115><a href="/titles.asp">ЖУРНАЛЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/books.asp">КНИГИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/patents.asp">ПАТЕНТЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/querybox.asp">ПОИСК</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/authors.asp">АВТОРЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/orgs.asp">ОРГАНИЗАЦИИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/keywords.asp">КЛЮЧЕВЫЕ СЛОВА</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/rubrics.asp">РУБРИКАТОР</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/region_compare.asp">РЕГИОНЫ</a></td></tr>
+
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=25 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=115 valign=top><a href="/defaultx.asp">Начальная страница</a></td></tr></table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function end_session(){
+
+  document.forms["session"].saveuser.value="1";
+
+  document.forms["session"].action="/end_session.asp";
+  document.forms["session"].target="";
+  document.forms["session"].submit()
+}
+</SCRIPT>
+<FORM action="/end_session.asp" method=POST name="session">
+<input type="hidden" name="saveuser" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_session').slideToggle(500, function(){didScroll = true;})" title="Информация о текущей сессии пользователя">СЕССИЯ</span></b></font>
+</td></tr>
+</table>
+
+
+<div ID="win_session" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>Имя пользователя:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>Незарегистрированный пользователь</font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Начало работы:</font></td></tr>
+
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>13.10.2026 14:43</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Время работы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>00:14</font></td></tr>
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="/project_user_office.asp">Личный кабинет</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:end_session()">Закрыть сессию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+</FORM>
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_contact').slideToggle(500, function(){didScroll = true;})" title="Контактная информация Научной электронной библиотеки">КОНТАКТЫ</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_contact" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Служба поддержки:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 1<br></font>
+<font color=#00008f><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font></td></tr>
+</td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям журналов:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 2<br></font>
+<font color=#00008f><a href="mailto:publish@elibrary.ru">publish@elibrary.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям книг:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 3<br></font>
+<font color=#00008f><a href="mailto:book@elibrary.ru">book@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Space для издательств:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:info@sciencespace.ru">info@sciencespace.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Index для организаций:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:org@scienceindex.ru">org@scienceindex.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Доступ к API:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:api@elibrary.ru">api@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Подписчикам:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 6<br></font>
+<font color=#00008f><a href="mailto:sales.team@elibrary.ru">sales.team@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Конференции, семинары:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 7<br></font>
+<font color=#00008f><a href="mailto:conf@elibrary.ru">conf@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Почтовый адрес:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="/contact_new.asp">117246, г. Москва,
+Научный проезд, д. 14А, стр. 3, таунхаус 1</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Веб-сайт:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://elibrary.ru">https://elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Telegram-канал:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://t.me/elibrary_ru_official" target=_blank>t.me/elibrary_ru_official</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Размещение рекламы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:reklama@elibrary.ru">reklama@elibrary.ru</a></font></td></tr>
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/contact_new.asp">Схема проезда</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="https://support.elibrary.ru">Задать вопрос</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/vacancy.asp">Вакансии</a></td></tr>
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<div style="width: 140px;" class="help-panel">
+<table width=140 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=15% align=right valign=top>
+<img src="/images/but_orange_i.gif" width=15 height=15 hspace=0 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>По всем вопросам, связанным с работой в системе Science Index, обращайтесь, пожалуйста, в службу поддержки:<br><br>
++7 (495) 544-2494<br><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font>
+</td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+
+
+</table>
+
+</td><td align=left valign=top>
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr><td width=600 align=left valign=top>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+<tr><td width=100% align=left valign=top>
+
+<div class="header-panel">
+<div style="margin: 0; border: 0; padding: 0 0 5px 0; text-align: center; font-size: 9pt;"><font color=#5674b9><b>ПОИСК АВТОРОВ</b></font></div>
+</div>
+
+</td></tr></table>
+
+</td><td width=200 align=right valign=middle id="rightcol">
+<a href="/project_risc.asp"><img id="scienceindex_logo2" src="/images/scienceindex_logo2.svg" width=173 height=49 border=0 hspace=5 title="Информационно-аналитическая система SCIENCE INDEX"></a></td></tr>
+<script language="JavaScript">
+if (supportsSVG) {
+  document.getElementById("scienceindex_logo2").src="/images/scienceindex_logo2.svg";}
+else {
+  document.getElementById("scienceindex_logo2").src="/images/scienceindex_logo2.png";}
+</script>
+<tr><td align=left valign=top>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+
+<FORM method=post name="results" onSubmit="return false">
+<input type="hidden" name="authors_all" value="">
+<input type="hidden" name="pagenum" value="">
+<input type="hidden" name="authorbox_name" value="">
+<input type="hidden" name="selid" value="">
+<input type="hidden" name="orgid" value="">
+<input type="hidden" name="orgadminid" value="">
+<input type="hidden" name="townid" id="townid" value="">
+<input type="hidden" name="regionid" id="regionid" value="">
+
+<tr><td width=100% align=left valign=top>
+
+<div class="form-panel">
+
+<div style="margin:0 0 4px 0; border:0; padding:0;">
+<font color=#F26C4F><b><span class="expandable" onClick="$('#show_param').slideToggle(500, function(){didScroll = true;})" title="Показать/скрыть параметры поиска">ПАРАМЕТРЫ</span></b></font>
+</div>
+
+<div id="show_param" class="expanded">
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td width=210 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Фамилия:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Укажите фамилию автора на русском языке, или фамилию и имя, или фамилию, имя и отчество, или фамилию и инициалы</p>'></td><td width=15></td><td colspan=3 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Персональный идентификатор автора:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Для поиска конкретного автора укажите его персональный идентификатор в одной из распространенных систем идентификации авторов</p>'></td></tr>
+<tr align=left valign=top>
+<td width=210><div class="formfr"><input type="text" id="surname" name="surname" value="Петров" style="width:198px" class="inputt" onKeyPress="submit_enter(event)"></div></td>
+<td width=15></td>
+<td width=122><div class="formfr"><select name="codetype" id="codetype" style="width:118px" class="input" onKeyPress="submit_enter(event)">
+<option value="SPIN" selected>SPIN-код:
+<option value="ORCID" >ORCID:
+<option value="ResearcherID" >ResearcherID:
+<option value="ScopusID" >Scopus Author ID:
+<option value="ArXivID" >ArXiv Author ID:
+<option value="RSCI" >РИНЦ Author ID:
+</select></div></td>
+<td width=5></td>
+<td width=150><div class="formfr"><input type="text" id="codevalue" name="codevalue" value="" style="width:128px" class="inputt" onKeyPress="submit_enter(event)"></div></td>
+</tr>
+</table>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td width=210 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Страна:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>При поиске по стране будут найдены все авторы, у которых выбранная страна указана в регистрационной анкете, или работающие в организации, расположенной в этой стране</p>'></td><td width=15></td><td width=283 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Город:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>При поиске по городу будут найдены все авторы, у которых выбранный город указан в регистрационной анкете, или работающие в организации, расположенной в этом городе</p>'></td></tr>
+<tr align=left valign=top>
+<td><div class="formfr"><select name="countryid" id="countryid" style="width:206px" class="input" onKeyPress="submit_enter(event)" onChange='$("#town").val(""); $("#townid").val(""); $("#regionid").val(""); document.getElementById("town").focus();'>
+<option value="" selected>
+
+<option value="RUS" >Россия&nbsp;&nbsp;(1084120)
+
+<option value="ABH" >Абхазия&nbsp;&nbsp;(81)
+
+<option value="AUS" >Австралия&nbsp;&nbsp;(31)
+
+<option value="AUT" >Австрия&nbsp;&nbsp;(38)
+
+<option value="AZE" >Азербайджан&nbsp;&nbsp;(2471)
+
+<option value="ALB" >Албания&nbsp;&nbsp;(5)
+
+<option value="DZA" >Алжир&nbsp;&nbsp;(9)
+
+<option value="AGO" >Ангола&nbsp;&nbsp;(5)
+
+<option value="ARM" >Армения&nbsp;&nbsp;(1477)
+
+<option value="AFG" >Афганистан&nbsp;&nbsp;(6)
+
+<option value="BLR" >Беларусь&nbsp;&nbsp;(26478)
+
+<option value="BEL" >Бельгия&nbsp;&nbsp;(26)
+
+<option value="BGR" >Болгария&nbsp;&nbsp;(1043)
+
+<option value="BIH" >Босния и Герцеговина&nbsp;&nbsp;(9)
+
+<option value="BRA" >Бразилия&nbsp;&nbsp;(13)
+
+<option value="GBR" >Великобритания&nbsp;&nbsp;(123)
+
+<option value="HUN" >Венгрия&nbsp;&nbsp;(37)
+
+<option value="VNM" >Вьетнам&nbsp;&nbsp;(118)
+
+<option value="GHA" >Гана&nbsp;&nbsp;(6)
+
+<option value="DEU" >Германия&nbsp;&nbsp;(311)
+
+<option value="HKG" >Гонконг&nbsp;&nbsp;(5)
+
+<option value="GRC" >Греция&nbsp;&nbsp;(26)
+
+<option value="GEO" >Грузия&nbsp;&nbsp;(1932)
+
+<option value="DNK" >Дания&nbsp;&nbsp;(11)
+
+<option value="EGY" >Египет&nbsp;&nbsp;(26)
+
+<option value="ISR" >Израиль&nbsp;&nbsp;(131)
+
+<option value="IND" >Индия&nbsp;&nbsp;(20)
+
+<option value="IDN" >Индонезия&nbsp;&nbsp;(9)
+
+<option value="JOR" >Иордания&nbsp;&nbsp;(7)
+
+<option value="IRQ" >Ирак&nbsp;&nbsp;(32)
+
+<option value="IRN" >Иран&nbsp;&nbsp;(42)
+
+<option value="IRL" >Ирландия&nbsp;&nbsp;(7)
+
+<option value="ESP" >Испания&nbsp;&nbsp;(54)
+
+<option value="ITA" >Италия&nbsp;&nbsp;(82)
+
+<option value="YEM" >Йемен&nbsp;&nbsp;(6)
+
+<option value="KAZ" >Казахстан&nbsp;&nbsp;(10766)
+
+<option value="CAN" >Канада&nbsp;&nbsp;(56)
+
+<option value="CYP" >Кипр&nbsp;&nbsp;(9)
+
+<option value="KGZ" >Киргизия&nbsp;&nbsp;(7687)
+
+<option value="CHN" >Китай&nbsp;&nbsp;(630)
+
+<option value="COL" >Колумбия&nbsp;&nbsp;(7)
+
+<option value="LVA" >Латвия&nbsp;&nbsp;(369)
+
+<option value="LBN" >Ливан&nbsp;&nbsp;(8)
+
+<option value="LTU" >Литва&nbsp;&nbsp;(388)
+
+<option value="MYS" >Малайзия&nbsp;&nbsp;(6)
+
+<option value="MLI" >Мали&nbsp;&nbsp;(5)
+
+<option value="MEX" >Мексика&nbsp;&nbsp;(20)
+
+<option value="MDA" >Молдова&nbsp;&nbsp;(1095)
+
+<option value="MNG" >Монголия&nbsp;&nbsp;(60)
+
+<option value="NGA" >Нигерия&nbsp;&nbsp;(4)
+
+<option value="NLD" >Нидерланды&nbsp;&nbsp;(37)
+
+<option value="NOR" >Норвегия&nbsp;&nbsp;(25)
+
+<option value="ARE" >Объединенные Арабские Эмираты&nbsp;&nbsp;(15)
+
+<option value="PAK" >Пакистан&nbsp;&nbsp;(6)
+
+<option value="PER" >Перу&nbsp;&nbsp;(6)
+
+<option value="POL" >Польша&nbsp;&nbsp;(120)
+
+<option value="PRT" >Португалия&nbsp;&nbsp;(13)
+
+<option value="KOR" >Республика Корея&nbsp;&nbsp;(32)
+
+<option value="ROU" >Румыния&nbsp;&nbsp;(19)
+
+<option value="MKD" >Северная Македония&nbsp;&nbsp;(4)
+
+<option value="SRB" >Сербия&nbsp;&nbsp;(72)
+
+<option value="SGP" >Сингапур&nbsp;&nbsp;(6)
+
+<option value="SYR" >Сирия&nbsp;&nbsp;(27)
+
+<option value="SVK" >Словакия&nbsp;&nbsp;(39)
+
+<option value="USA" >США&nbsp;&nbsp;(464)
+
+<option value="TJK" >Таджикистан&nbsp;&nbsp;(8005)
+
+<option value="THA" >Таиланд&nbsp;&nbsp;(7)
+
+<option value="TUN" >Тунис&nbsp;&nbsp;(4)
+
+<option value="TKM" >Туркмения&nbsp;&nbsp;(266)
+
+<option value="TUR" >Турция&nbsp;&nbsp;(78)
+
+<option value="UZB" >Узбекистан&nbsp;&nbsp;(5619)
+
+<option value="UKR" >Украина&nbsp;&nbsp;(18936)
+
+<option value="FIN" >Финляндия&nbsp;&nbsp;(73)
+
+<option value="FRA" >Франция&nbsp;&nbsp;(110)
+
+<option value="HRV" >Хорватия&nbsp;&nbsp;(11)
+
+<option value="MNE" >Черногория&nbsp;&nbsp;(6)
+
+<option value="CZE" >Чехия&nbsp;&nbsp;(66)
+
+<option value="CHE" >Швейцария&nbsp;&nbsp;(51)
+
+<option value="SWE" >Швеция&nbsp;&nbsp;(47)
+
+<option value="ECU" >Эквадор&nbsp;&nbsp;(9)
+
+<option value="EST" >Эстония&nbsp;&nbsp;(267)
+
+<option value="OST" >Южная Осетия&nbsp;&nbsp;(32)
+
+<option value="ZAF" >Южно-Африканская Республика&nbsp;&nbsp;(8)
+
+<option value="JPN" >Япония&nbsp;&nbsp;(39)
+
+</select></div></td>
+<td></td>
+
+<td><div class="formfr"><input type="text" id="town" name="town" value="" style="width:273px" class="inputt" onChange='$("#townid").val(""); $("#regionid").val("");'></div></td>
+</tr>
+</table>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td colspan=2 align=left valign=top>
+<table width=514 cellspacing=0 cellpadding=0 border=0>
+<tr valign=middle class="menus">
+<td width=114 align=left>
+<font color=#00008f>&nbsp;&nbsp;Организация:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Нажмите на кнопку "Выбрать" справа и найдите нужную организацию в нормативном списке организаций РИНЦ. В результатах поиска будут отобраны авторы, у которых эта организация указана в качестве основного места работы. Если установить опцию "Искать в аффилиациях авторов в публикациях", будут отобраны также авторы, имеющие хотя бы одну публикацию с указанием данной организации в качестве места работы автора</p>'>
+</td>
+<td align=center width=15><input type=checkbox name="inaffil" id="inaffil" ></td><td align=left width=305>- Искать в аффилиациях авторов в публикациях</td>
+<td width=80></td>
+</tr></table>
+</tr>
+<tr align=left valign=top>
+<td width=428><div class="formfr"><textarea id="orgname" name="orgname" READONLY rows=2  wrap=virtual style="width:419px;  height:28px; " class="inputt"></textarea></div></td>
+<td width=80 align=right valign=top>
+<div class="butblue" style="width: 67px;" onClick="organizat_add()">Выбрать</div>
+</td>
+</tr></table>
+
+<div style="height:5px;"></div>
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td width=514 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Референтная группа или персональная группа авторов:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Можно выбрать авторов из референтной группы. Можно также создать одну или несколько персональных групп авторов, которые использовать в качестве референтных групп.</p>'></td></tr>
+<tr><td align=left valign=top>
+<div class="formfr"><select id="authorboxid" name="authorboxid" style="width:510px" class="input">
+<option value="" selected>
+
+<option value="r2" >Выдающиеся профессора МГУ (2052)
+
+<option value="r1" >Профессора МГУ (4393)
+
+<option value="r3" >Заслуженные профессора МГУ (1034)
+
+<option value="r4" >Члены РАН за всю историю существования (2488)
+
+<option value="r5" >Актуальный список членов РАН (858)
+
+</select></div></td></tr>
+</table>
+
+<div style="height:5px;"></div>
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td align=left valign=top>
+<table width=373 cellspacing=0 cellpadding=0 border=0>
+<tr valign=middle class="menus">
+<td width=114 align=left>
+<font color=#00008f>&nbsp;&nbsp;Тематика:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Поиск авторов, у которых основная рубрика публикаций соответствует выбранному тематическому направлению. Основная рубрика автора определяется по рубрикам публикаций из списка работ автора. При установке опции "Учитывать рубрики из анкеты автора" добавляются также тематические направления, указанные автором в регистрационной анкете (не более трех направлений). В этом случае автор может оказаться в списках сразу по нескольким направлениям</p>'>
+</td>
+<td align=center width=15><input type=checkbox name="rubricinreg" id="rubricinreg" ></td><td align=left width=244>- Учитывать рубрики из анкеты автора</td>
+</tr></table>
+</td>
+<td width=15></td>
+<td width=120 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;Показатели:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>По какой базе данных рассчитываются показатели (число публикаций, число цитирований и индекс Хирша), которые показываются в списке авторов, и по которым проводится сортировка</p>'></td>
+</tr>
+
+<tr><td align=left valign=top><div class="formfr"><select id="rubriccode" name="rubriccode" style="width:369px" class="input">
+<option value="" selected>
+
+<option value="500000" >Автоматика. Вычислительная техника&nbsp;&nbsp;(16001)
+
+<option value="410000" >Астрономия&nbsp;&nbsp;(2786)
+
+<option value="340000" >Биология&nbsp;&nbsp;(57076)
+
+<option value="620000" >Биотехнология&nbsp;&nbsp;(680)
+
+<option value="720000" >Внешняя торговля&nbsp;&nbsp;(482)
+
+<option value="710000" >Внутренняя торговля. Туристско-экскурсионное обслуживание&nbsp;&nbsp;(565)
+
+<option value="700000" >Водное хозяйство&nbsp;&nbsp;(1585)
+
+<option value="780000" >Военное дело&nbsp;&nbsp;(3437)
+
+<option value="390000" >География&nbsp;&nbsp;(3249)
+
+<option value="360000" >Геодезия. Картография&nbsp;&nbsp;(1603)
+
+<option value="380000" >Геология&nbsp;&nbsp;(16728)
+
+<option value="370000" >Геофизика&nbsp;&nbsp;(11021)
+
+<option value="520000" >Горное дело&nbsp;&nbsp;(11126)
+
+<option value="100000" >Государство и право. Юридические науки&nbsp;&nbsp;(47270)
+
+<option value="050000" >Демография&nbsp;&nbsp;(375)
+
+<option value="750000" >Жилищно-коммунальное хозяйство. Домоводство. Бытовое...&nbsp;&nbsp;(161)
+
+<option value="200000" >Информатика&nbsp;&nbsp;(6255)
+
+<option value="180000" >Искусство. Искусствоведение&nbsp;&nbsp;(7353)
+
+<option value="030000" >История. Исторические науки&nbsp;&nbsp;(27083)
+
+<option value="280000" >Кибернетика&nbsp;&nbsp;(8018)
+
+<option value="230000" >Комплексное изучение отдельных стран и регионов&nbsp;&nbsp;(372)
+
+<option value="260000" >Комплексные проблемы общественных наук&nbsp;&nbsp;(36)
+
+<option value="890000" >Космические исследования&nbsp;&nbsp;(1291)
+
+<option value="130000" >Культура. Культурология&nbsp;&nbsp;(4941)
+
+<option value="640000" >Легкая промышленность&nbsp;&nbsp;(1925)
+
+<option value="660000" >Лесная и деревообрабатывающая промышленность&nbsp;&nbsp;(1319)
+
+<option value="170000" >Литература. Литературоведение. Устное народное творчество&nbsp;&nbsp;(8908)
+
+<option value="190000" >Массовая коммуникация. Журналистика. Средства массовой...&nbsp;&nbsp;(2670)
+
+<option value="270000" >Математика&nbsp;&nbsp;(19311)
+
+<option value="550000" >Машиностроение&nbsp;&nbsp;(30581)
+
+<option value="760000" >Медицина и здравоохранение&nbsp;&nbsp;(137739)
+
+<option value="530000" >Металлургия&nbsp;&nbsp;(8226)
+
+<option value="900000" >Метрология&nbsp;&nbsp;(897)
+
+<option value="300000" >Механика&nbsp;&nbsp;(9676)
+
+<option value="140000" >Народное образование. Педагогика&nbsp;&nbsp;(76311)
+
+<option value="120000" >Науковедение&nbsp;&nbsp;(763)
+
+<option value="000000" >Общественные науки в целом&nbsp;&nbsp;(551)
+
+<option value="430000" >Общие и комплексные проблемы естественных и точных наук&nbsp;&nbsp;(66)
+
+<option value="810000" >Общие и комплексные проблемы технических и прикладных наук...&nbsp;&nbsp;(6564)
+
+<option value="820000" >Организация и управление&nbsp;&nbsp;(553)
+
+<option value="870000" >Охрана окружающей среды. Экология человека&nbsp;&nbsp;(6400)
+
+<option value="860000" >Охрана труда&nbsp;&nbsp;(795)
+
+<option value="850000" >Патентное дело. Изобретательство. Рационализаторство&nbsp;&nbsp;(92)
+
+<option value="650000" >Пищевая промышленность&nbsp;&nbsp;(8346)
+
+<option value="600000" >Полиграфия. Репрография. Фотокинотехника&nbsp;&nbsp;(160)
+
+<option value="110000" >Политика и Политические науки&nbsp;&nbsp;(7872)
+
+<option value="590000" >Приборостроение&nbsp;&nbsp;(1458)
+
+<option value="800000" >Прочие отрасли экономики&nbsp;&nbsp;(39)
+
+<option value="150000" >Психология&nbsp;&nbsp;(16214)
+
+<option value="210000" >Религия. Атеизм. Свободомыслие&nbsp;&nbsp;(1263)
+
+<option value="690000" >Рыбное хозяйство. Аквакультура&nbsp;&nbsp;(1651)
+
+<option value="490000" >Связь&nbsp;&nbsp;(2955)
+
+<option value="680000" >Сельское и лесное хозяйство&nbsp;&nbsp;(51923)
+
+<option value="040000" >Социология&nbsp;&nbsp;(8938)
+
+<option value="840000" >Стандартизация&nbsp;&nbsp;(106)
+
+<option value="830000" >Статистика&nbsp;&nbsp;(126)
+
+<option value="670000" >Строительство. Архитектура&nbsp;&nbsp;(18324)
+
+<option value="420000" >Теория управления&nbsp;&nbsp;(2)
+
+<option value="730000" >Транспорт&nbsp;&nbsp;(10746)
+
+<option value="290000" >Физика&nbsp;&nbsp;(64206)
+
+<option value="770000" >Физическая культура и спорт&nbsp;&nbsp;(17032)
+
+<option value="020000" >Философия&nbsp;&nbsp;(10279)
+
+<option value="610000" >Химическая технология. Химическая промышленность&nbsp;&nbsp;(8378)
+
+<option value="310000" >Химия&nbsp;&nbsp;(51303)
+
+<option value="060000" >Экономика. Экономические науки&nbsp;&nbsp;(106773)
+
+<option value="470000" >Электроника. Радиотехника&nbsp;&nbsp;(11291)
+
+<option value="450000" >Электротехника&nbsp;&nbsp;(5158)
+
+<option value="440000" >Энергетика&nbsp;&nbsp;(14131)
+
+<option value="580000" >Ядерная техника&nbsp;&nbsp;(995)
+
+<option value="160000" >Языкознание&nbsp;&nbsp;(33687)
+
+</select></div></td>
+<td></td>
+<td><div class="formfr"><select name="metrics" style="width:116px" class="input" onKeyPress="submit_enter(event)">
+<option value="0" >по ядру РИНЦ
+<option value="1" selected>по РИНЦ
+<option value="2" >по elibrary.ru
+</select></div></td>
+</tr>
+</table>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr><td align=right width=24><input type=checkbox name="show_nopubl" id="show_nopubl" ></td><td align=left width=484>- показывать только авторов, имеющих публикации&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Если Вы хотите выводить в результатах поиска только авторов, имеющих хотя бы одну публикацию (в ядре РИНЦ, в РИНЦ или на elibrary.ru), установите эту опцию</p>'></td></tr>
+</table>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td width=170 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Сортировка:</font></td><td width=15></td><td width=139 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Порядок:</font></td><td width=15></td><td width=80></td><td width=80></td></tr>
+<tr align=left valign=top>
+<td><div class="formfr"><select id="sortorder" name="sortorder" style="width:166px" class="input" onChange='var ord = document.forms["results"].order; switch(this.value) {case "0" : ord.value="0"; break; case "1" : ord.value="1"; break; case "2" : ord.value="1"; break; case "3" : ord.value="1"; break; case "4" : ord.value="0"; document.forms["results"].metrics.value="0"; break;}' onKeyPress="submit_enter(event)">
+<option value="0" >по фамилии
+<option value="1" >по числу публикаций
+<option value="2" selected>по числу цитирований
+<option value="3" >по индексу Хирша
+
+</select></div></td>
+<td></td>
+<td><div class="formfr"><select id="order" name="order" style="width:135px" class="input" onKeyPress="submit_enter(event)">
+<option value="0" >по возрастанию
+<option value="1" selected>по убыванию
+</select></div></td>
+<td></td>
+<td align=left valign=middle>
+<div class="butblue" style="width: 67px;" onClick="reset_form()">Очистить</div>
+</td>
+<td align=right valign=middle>
+<div class="butred" style="width: 67px;" onClick="author_search()">Поиск</div>
+</td>
+</tr>
+</table>
+<div style="height:4px;"></div>
+
+</div>
+</div>
+<div style="height:12px;"></div>
+
+<div style="width: 540px; margin: 10px 0 10px 10px; border: 0; padding: 10px 0px 7px 0px; text-align: center;" >
+<table width=540 cellspacing=3 cellpadding=0 border=0>
+<tr><td width=40 align=right valign=top><img src="images/but_orange_i.gif" width=15 height=15 hspace=3 border=0></td><td width=491 align=left valign=top class="redref"><font color=#00008f>Всего найдено авторов: <b><font color=#ff0000>4342</font></b> из <b>1170544</b>. &nbsp;&nbsp;&nbsp;Показано на данной странице: с <b>1</b> по <b>100</b>.</font></td></tr></table>
+</div>
+
+<table width=580 cellspacing=0 cellpadding=3 id="restab" style="border-spacing: 0px 4px;">
+<tr align=center valign=middle height=15>
+<td width=34 class="midtext"><font color=#000000>&nbsp;<b>№</b></font></td>
+<td width=24>&nbsp;</td>
+<td width=364 class="midtext"><font color=#000000><b>Автор</b></font></td>
+<td width=54 align=left class="midtext"><span title="Число публикаций автора в РИНЦ"><font color=#000000><b>Публ.</b></font></span></td>
+<td width=24 class="midtext"><span title="Число цитирований публикаций автора из РИНЦ"><font color=#000000><b>Цит.</b></font></span></td>
+<td width=44 class="midtext"><span title="Индекс Хирша автора в РИНЦ"><font color=#000000><b>Хирш</b></font></span></td></tr>
+<tr><td colspan=6>
+<div style="width: 574px;" class="table-line"></div>
+</td></tr>
+<tr><td colspan=6 height=0></td></tr>
+
+<tr valign=top id="a3771" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>1.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid3771" id="tid3771"  onClick='if (document.getElementById("tid3771").checked) {RowSelect("a3771",1)} else {RowSelect("a3771",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Владимир&nbsp; Алексеевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Институт физики высоких энергий им. А.А. Логунова НИЦ "Курчатовский институт" (Протвино)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=3771&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">1069</a><a href="author_profile.asp?id=3771" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(3771, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">86835</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">119</div></td></tr>
+
+
+
+<input type="hidden" id="hid3771" name="hid3771" value="Петров В А">
+
+<tr valign=top id="a23911" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>2.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid23911" id="tid23911"  onClick='if (document.getElementById("tid23911").checked) {RowSelect("a23911",1)} else {RowSelect("a23911",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Виктор&nbsp; Юрьевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Петербургский институт ядерной физики им. Б.П. Константинова (Гатчина)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=23911&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">373</a><a href="author_profile.asp?id=23911" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(23911, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">21483</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">74</div></td></tr>
+
+
+
+<input type="hidden" id="hid23911" name="hid23911" value="Петров В Ю">
+
+<tr valign=top id="a20587" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>3.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid20587" id="tid20587"  onClick='if (document.getElementById("tid20587").checked) {RowSelect("a20587",1)} else {RowSelect("a20587",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Михаил&nbsp; Петрович</b></font>
+<br>
+Физико-технический институт им. А.Ф. Иоффе РАН (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=20587&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">574</a><a href="author_profile.asp?id=20587" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(20587, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">16960</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >63</div></td></tr>
+
+
+
+<input type="hidden" id="hid20587" name="hid20587" value="Петров М П">
+
+<tr valign=top id="a1173040" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>4.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid1173040" id="tid1173040"  onClick='if (document.getElementById("tid1173040").checked) {RowSelect("a1173040",1)} else {RowSelect("a1173040",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петровский&nbsp; Артур&nbsp; Владимирович</b></font><img id="wikipage1173040" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петровский,_Артур_Владимирович">
+<br>
+Университет Российской академии образования (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=1173040&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">223</a><a href="author_profile.asp?id=1173040" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(1173040, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">16488</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >51</div></td></tr>
+
+
+
+<input type="hidden" id="hid1173040" name="hid1173040" value="Петровский А В">
+
+<tr valign=top id="a48343" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>5.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid48343" id="tid48343"  onClick='if (document.getElementById("tid48343").checked) {RowSelect("a48343",1)} else {RowSelect("a48343",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петровский&nbsp; Павел&nbsp; Васильевич</b></font>
+<br>
+Институт элементоорганических соединений им. А.Н. Несмеянова РАН (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=48343&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">1046</a><a href="author_profile.asp?id=48343" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(48343, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">13803</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >44</div></td></tr>
+
+
+
+<input type="hidden" id="hid48343" name="hid48343" value="Петровский П В">
+
+<tr valign=top id="a78524" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>6.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid78524" id="tid78524"  onClick='if (document.getElementById("tid78524").checked) {RowSelect("a78524",1)} else {RowSelect("a78524",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Рэм&nbsp; Викторович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span><img id="wikipage78524" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петров,_Рэм_Викторович">
+<br>
+Государственный научный центр "Институт иммунологии" ФМБА (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=78524&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">616</a><a href="author_profile.asp?id=78524" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(78524, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">11690</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">39</div></td></tr>
+
+
+
+<input type="hidden" id="hid78524" name="hid78524" value="Петров Р В">
+
+<tr valign=top id="a155132" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>7.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid155132" id="tid155132"  onClick='if (document.getElementById("tid155132").checked) {RowSelect("a155132",1)} else {RowSelect("a155132",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петровский&nbsp; Вадим&nbsp; Артурович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Национальный исследовательский университет "Высшая школа экономики" (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=155132&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">243</a><a href="author_profile.asp?id=155132" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(155132, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">10666</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">42</div></td></tr>
+
+
+
+<input type="hidden" id="hid155132" name="hid155132" value="Петровский В А">
+
+<tr valign=top id="a21863" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>8.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid21863" id="tid21863"  onClick='if (document.getElementById("tid21863").checked) {RowSelect("a21863",1)} else {RowSelect("a21863",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Олег&nbsp; Федорович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span><img id="wikipage21863" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петров,_Олег_Фёдорович">
+<br>
+Объединенный институт высоких температур РАН (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=21863&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">539</a><a href="author_profile.asp?id=21863" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(21863, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">10500</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">48</div></td></tr>
+
+
+
+<input type="hidden" id="hid21863" name="hid21863" value="Петров О Ф">
+
+<tr valign=top id="a613080" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>9.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid613080" id="tid613080"  onClick='if (document.getElementById("tid613080").checked) {RowSelect("a613080",1)} else {RowSelect("a613080",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Марина&nbsp; Михайловна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Красноярский государственный медицинский университет им. проф. В.Ф. Войно-Ясенецкого (Красноярск)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=613080&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">965</a><a href="author_profile.asp?id=613080" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(613080, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">9906</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">40</div></td></tr>
+
+
+
+<input type="hidden" id="hid613080" name="hid613080" value="Петрова М М">
+
+<tr valign=top id="a407438" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>10.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid407438" id="tid407438"  onClick='if (document.getElementById("tid407438").checked) {RowSelect("a407438",1)} else {RowSelect("a407438",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Галина&nbsp; Вениаминовна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Национальный медицинский исследовательский центр радиологии Минздрава России (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=407438&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">164</a><a href="author_profile.asp?id=407438" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(407438, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">9574</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">37</div></td></tr>
+
+
+
+<input type="hidden" id="hid407438" name="hid407438" value="Петрова Г В">
+
+<tr valign=top id="a1222871" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>11.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid1222871" id="tid1222871"  onClick='if (document.getElementById("tid1222871").checked) {RowSelect("a1222871",1)} else {RowSelect("a1222871",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петровская&nbsp; Лариса&nbsp; Андреевна</b></font><img id="wikipage1222871" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петровская,_Лариса_Андреевна">
+<br>
+Московский государственный университет им. М.В. Ломоносова (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=1222871&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">94</a><a href="author_profile.asp?id=1222871" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(1222871, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">9371</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >28</div></td></tr>
+
+
+
+<input type="hidden" id="hid1222871" name="hid1222871" value="Петровская Л А">
+
+<tr valign=top id="a664590" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>12.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid664590" id="tid664590"  onClick='if (document.getElementById("tid664590").checked) {RowSelect("a664590",1)} else {RowSelect("a664590",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Алексей&nbsp; Анатольевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Университет Уэйна (Детройт, США) (Детройт)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=664590&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">149</a><a href="author_profile.asp?id=664590" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(664590, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">8934</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">38</div></td></tr>
+
+
+
+<input type="hidden" id="hid664590" name="hid664590" value="Петров А А">
+
+<tr valign=top id="a17490" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>13.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid17490" id="tid17490"  onClick='if (document.getElementById("tid17490").checked) {RowSelect("a17490",1)} else {RowSelect("a17490",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Вячеслав&nbsp; Сергеевич</b></font>
+<br>
+Институт физики высоких энергий им. А.А. Логунова НИЦ "Курчатовский институт" (Протвино)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=17490&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">60</a><a href="author_profile.asp?id=17490" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(17490, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">8424</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >14</div></td></tr>
+
+
+
+<input type="hidden" id="hid17490" name="hid17490" value="Петров В С">
+
+<tr valign=top id="a231150" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>14.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid231150" id="tid231150"  onClick='if (document.getElementById("tid231150").checked) {RowSelect("a231150",1)} else {RowSelect("a231150",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Максим&nbsp; Сергеевич</b></font>
+<br>
+Приволжский исследовательский медицинский университет (Нижний Новгород)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=231150&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">274</a><a href="author_profile.asp?id=231150" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(231150, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">8282</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >44</div></td></tr>
+
+
+
+<input type="hidden" id="hid231150" name="hid231150" value="Петров М С">
+
+<tr valign=top id="a141152" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>15.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid141152" id="tid141152"  onClick='if (document.getElementById("tid141152").checked) {RowSelect("a141152",1)} else {RowSelect("a141152",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петровский&nbsp; Александр&nbsp; Владимирович</b></font>
+<br>
+Кубанский государственный технологический университет (Краснодар)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=141152&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">62</a><a href="author_profile.asp?id=141152" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(141152, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">8256</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >33</div></td></tr>
+
+
+
+<input type="hidden" id="hid141152" name="hid141152" value="Петровский А В">
+
+<tr valign=top id="a769487" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>16.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid769487" id="tid769487"  onClick='if (document.getElementById("tid769487").checked) {RowSelect("a769487",1)} else {RowSelect("a769487",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Владимир&nbsp; Александрович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Российский национальный исследовательский медицинский университет им. Н.И. Пирогова (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=769487&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">117</a><a href="author_profile.asp?id=769487" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(769487, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">7631</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">22</div></td></tr>
+
+
+
+<input type="hidden" id="hid769487" name="hid769487" value="Петров В А">
+
+<tr valign=top id="a713900" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>17.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid713900" id="tid713900"  onClick='if (document.getElementById("tid713900").checked) {RowSelect("a713900",1)} else {RowSelect("a713900",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Юрий&nbsp; Алексеевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Ростовский государственный медицинский университет (Ростов-на-Дону)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=713900&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">515</a><a href="author_profile.asp?id=713900" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(713900, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">7347</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">46</div></td></tr>
+
+
+
+<input type="hidden" id="hid713900" name="hid713900" value="Петров Ю А">
+
+<tr valign=top id="a148296" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>18.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid148296" id="tid148296"  onClick='if (document.getElementById("tid148296").checked) {RowSelect("a148296",1)} else {RowSelect("a148296",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Владимир&nbsp; Иванович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span><img id="wikipage148296" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петров,_Владимир_Иванович_(фармаколог)">
+<br>
+Волгоградский государственный медицинский университет (Волгоград)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=148296&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">796</a><a href="author_profile.asp?id=148296" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(148296, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">7331</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">36</div></td></tr>
+
+
+
+<input type="hidden" id="hid148296" name="hid148296" value="Петров В И">
+
+<tr valign=top id="a77425" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>19.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid77425" id="tid77425"  onClick='if (document.getElementById("tid77425").checked) {RowSelect("a77425",1)} else {RowSelect("a77425",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Юрий&nbsp; Александрович</b></font>
+<br>
+Центральный экономико-математический институт РАН (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=77425&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">123</a><a href="author_profile.asp?id=77425" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(77425, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">7258</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >26</div></td></tr>
+
+
+
+<input type="hidden" id="hid77425" name="hid77425" value="Петров Ю А">
+
+<tr valign=top id="a40990" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>20.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid40990" id="tid40990"  onClick='if (document.getElementById("tid40990").checked) {RowSelect("a40990",1)} else {RowSelect("a40990",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Дмитрий&nbsp; Сергеевич</b></font>
+<br>
+Национальный исследовательский центр "Курчатовский институт" (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=40990&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">70</a><a href="author_profile.asp?id=40990" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(40990, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">6540</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >33</div></td></tr>
+
+
+
+<input type="hidden" id="hid40990" name="hid40990" value="Петров Д С">
+
+<tr valign=top id="a136634" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>21.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid136634" id="tid136634"  onClick='if (document.getElementById("tid136634").checked) {RowSelect("a136634",1)} else {RowSelect("a136634",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Геннадий&nbsp; Александрович</b></font>
+<br>
+Петербургский институт ядерной физики им. Б.П. Константинова (Гатчина)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=136634&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">119</a><a href="author_profile.asp?id=136634" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(136634, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">6522</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >22</div></td></tr>
+
+
+
+<input type="hidden" id="hid136634" name="hid136634" value="Петров Г А">
+
+<tr valign=top id="a37211" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>22.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid37211" id="tid37211"  onClick='if (document.getElementById("tid37211").checked) {RowSelect("a37211",1)} else {RowSelect("a37211",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Владимир&nbsp; Михайлович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Новгородский государственный университет им. Ярослава Мудрого (Великий Новгород)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=37211&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">225</a><a href="author_profile.asp?id=37211" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(37211, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">6465</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">37</div></td></tr>
+
+
+
+<input type="hidden" id="hid37211" name="hid37211" value="Петров В М">
+
+<tr valign=top id="a46328" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>23.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid46328" id="tid46328"  onClick='if (document.getElementById("tid46328").checked) {RowSelect("a46328",1)} else {RowSelect("a46328",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Лев&nbsp; Алексеевич</b></font>
+<br>
+Уральский государственный лесотехнический университет (Екатеринбург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=46328&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">285</a><a href="author_profile.asp?id=46328" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(46328, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">5647</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >40</div></td></tr>
+
+
+
+<input type="hidden" id="hid46328" name="hid46328" value="Петров Л А">
+
+<tr valign=top id="a548111" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>24.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid548111" id="tid548111"  onClick='if (document.getElementById("tid548111").checked) {RowSelect("a548111",1)} else {RowSelect("a548111",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Евгений&nbsp; Олегович</b></font>
+<br>
+Всероссийский научно-исследовательский геологический институт им. А.П. Карпинского (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=548111&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">90</a><a href="author_profile.asp?id=548111" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(548111, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">5530</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >16</div></td></tr>
+
+
+
+<input type="hidden" id="hid548111" name="hid548111" value="Петров Е О">
+
+<tr valign=top id="a38378" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>25.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid38378" id="tid38378"  onClick='if (document.getElementById("tid38378").checked) {RowSelect("a38378",1)} else {RowSelect("a38378",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Владимир&nbsp; Анатольевич</b></font>
+<br>
+Объединенный институт ядерных исследований (Дубна)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=38378&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">43</a><a href="author_profile.asp?id=38378" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(38378, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">5502</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >27</div></td></tr>
+
+
+
+<input type="hidden" id="hid38378" name="hid38378" value="Петров В А">
+
+<tr valign=top id="a60289" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>26.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid60289" id="tid60289"  onClick='if (document.getElementById("tid60289").checked) {RowSelect("a60289",1)} else {RowSelect("a60289",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петровский&nbsp; Сергей&nbsp; Владимирович</b></font>
+<br>
+Институт океанологии им. П.П. Ширшова РАН (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=60289&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">148</a><a href="author_profile.asp?id=60289" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(60289, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">5250</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >39</div></td></tr>
+
+
+
+<input type="hidden" id="hid60289" name="hid60289" value="Петровский С В">
+
+<tr valign=top id="a704104" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>27.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid704104" id="tid704104"  onClick='if (document.getElementById("tid704104").checked) {RowSelect("a704104",1)} else {RowSelect("a704104",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Валерий&nbsp; Петрович</b></font>
+<br>
+Санкт-Петербургский государственный педиатрический медицинский университет (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=704104&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">199</a><a href="author_profile.asp?id=704104" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(704104, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">5208</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >22</div></td></tr>
+
+
+
+<input type="hidden" id="hid704104" name="hid704104" value="Петров В П">
+
+<tr valign=top id="a693620" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>28.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid693620" id="tid693620"  onClick='if (document.getElementById("tid693620").checked) {RowSelect("a693620",1)} else {RowSelect("a693620",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Владислав&nbsp; Евгеньевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Московский государственный психолого-педагогический университет (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=693620&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">749</a><a href="author_profile.asp?id=693620" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(693620, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">5127</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">42</div></td></tr>
+
+
+
+<input type="hidden" id="hid693620" name="hid693620" value="Петров В Е">
+
+<tr valign=top id="a24391" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>29.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid24391" id="tid24391"  onClick='if (document.getElementById("tid24391").checked) {RowSelect("a24391",1)} else {RowSelect("a24391",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Владимир&nbsp; Никифорович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Санкт-Петербургский политехнический университет Петра Великого (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=24391&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">148</a><a href="author_profile.asp?id=24391" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(24391, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">5018</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">39</div></td></tr>
+
+
+
+<input type="hidden" id="hid24391" name="hid24391" value="Петров В Н">
+
+<tr valign=top id="a208118" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>30.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid208118" id="tid208118"  onClick='if (document.getElementById("tid208118").checked) {RowSelect("a208118",1)} else {RowSelect("a208118",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Татьяна&nbsp; Владимировна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Федеральный научно-клинический центр физико-химической медицины им. акад. Ю.М. Лопухина ФМБА (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=208118&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">118</a><a href="author_profile.asp?id=208118" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(208118, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">4987</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">36</div></td></tr>
+
+
+
+<input type="hidden" id="hid208118" name="hid208118" value="Петрова Т В">
+
+<tr valign=top id="a630644" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>31.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid630644" id="tid630644"  onClick='if (document.getElementById("tid630644").checked) {RowSelect("a630644",1)} else {RowSelect("a630644",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Александр&nbsp; Михайлович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Финансовый университет при Правительстве РФ (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=630644&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">367</a><a href="author_profile.asp?id=630644" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(630644, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">4959</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">40</div></td></tr>
+
+
+
+<input type="hidden" id="hid630644" name="hid630644" value="Петров А М">
+
+<tr valign=top id="a162224" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>32.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid162224" id="tid162224"  onClick='if (document.getElementById("tid162224").checked) {RowSelect("a162224",1)} else {RowSelect("a162224",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Валерий&nbsp; Семенович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Северо-Кавказский федеральный научный центр садоводства, виноградарства, виноделия (Краснодар)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=162224&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">575</a><a href="author_profile.asp?id=162224" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(162224, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">4885</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">30</div></td></tr>
+
+
+
+<input type="hidden" id="hid162224" name="hid162224" value="Петров В С">
+
+<tr valign=top id="a620867" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>33.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid620867" id="tid620867"  onClick='if (document.getElementById("tid620867").checked) {RowSelect("a620867",1)} else {RowSelect("a620867",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Александр&nbsp; Евгеньевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Российский экономический университет им. Г.В. Плеханова (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=620867&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">85</a><a href="author_profile.asp?id=620867" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(620867, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">4612</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">22</div></td></tr>
+
+
+
+<input type="hidden" id="hid620867" name="hid620867" value="Петров А Е">
+
+<tr valign=top id="a6766" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>34.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid6766" id="tid6766"  onClick='if (document.getElementById("tid6766").checked) {RowSelect("a6766",1)} else {RowSelect("a6766",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Юрий&nbsp; Викторович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span><img id="wikipage6766" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петров,_Юрий_Викторович">
+<br>
+Санкт-Петербургский государственный университет (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=6766&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">432</a><a href="author_profile.asp?id=6766" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(6766, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">4579</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">31</div></td></tr>
+
+
+
+<input type="hidden" id="hid6766" name="hid6766" value="Петров Ю В">
+
+<tr valign=top id="a126704" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>35.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid126704" id="tid126704"  onClick='if (document.getElementById("tid126704").checked) {RowSelect("a126704",1)} else {RowSelect("a126704",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Юрий&nbsp; Александрович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Институт российской истории РАН (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=126704&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">217</a><a href="author_profile.asp?id=126704" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(126704, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">4561</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">24</div></td></tr>
+
+
+
+<input type="hidden" id="hid126704" name="hid126704" value="Петров Ю А">
+
+<tr valign=top id="a202872" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>36.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid202872" id="tid202872"  onClick='if (document.getElementById("tid202872").checked) {RowSelect("a202872",1)} else {RowSelect("a202872",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Владимир&nbsp; Иванович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span><img id="wikipage202872" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петров,_Владимир_Иванович_(лесовод)">
+<br>
+Федеральный научный центр агроэкологии, комплексных мелиораций и защитного лесоразведения РАН (Волгоград)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=202872&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">113</a><a href="author_profile.asp?id=202872" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(202872, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">4460</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">22</div></td></tr>
+
+
+
+<input type="hidden" id="hid202872" name="hid202872" value="Петров В И">
+
+<tr valign=top id="a187043" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>37.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid187043" id="tid187043"  onClick='if (document.getElementById("tid187043").checked) {RowSelect("a187043",1)} else {RowSelect("a187043",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Марина&nbsp; Владимировна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Федеральный научно-клинический центр реаниматологии и реабилитологии (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=187043&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">353</a><a href="author_profile.asp?id=187043" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(187043, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">4272</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">22</div></td></tr>
+
+
+
+<input type="hidden" id="hid187043" name="hid187043" value="Петрова М В">
+
+<tr valign=top id="a34278" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>38.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid34278" id="tid34278"  onClick='if (document.getElementById("tid34278").checked) {RowSelect("a34278",1)} else {RowSelect("a34278",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Попова&nbsp; (Петрова)&nbsp; Наталья&nbsp; Анатольевна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Томский государственный архитектурно-строительный университет (Томск)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=34278&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">709</a><a href="author_profile.asp?id=34278" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(34278, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">4238</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">30</div></td></tr>
+
+
+
+<input type="hidden" id="hid34278" name="hid34278" value="Попова Н А">
+
+<tr valign=top id="a566294" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>39.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid566294" id="tid566294"  onClick='if (document.getElementById("tid566294").checked) {RowSelect("a566294",1)} else {RowSelect("a566294",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Алефтина&nbsp; Петровна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Всероссийский научно-исследовательский институт авиационных материалов НИЦ "Курчатовский институт" (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=566294&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">416</a><a href="author_profile.asp?id=566294" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(566294, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">4224</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">25</div></td></tr>
+
+
+
+<input type="hidden" id="hid566294" name="hid566294" value="Петрова А П">
+
+<tr valign=top id="a48378" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>40.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid48378" id="tid48378"  onClick='if (document.getElementById("tid48378").checked) {RowSelect("a48378",1)} else {RowSelect("a48378",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Александр&nbsp; Иванович</b></font>
+<br>
+Институт теоретической и экспериментальной биофизики РАН (Пущино)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=48378&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">57</a><a href="author_profile.asp?id=48378" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(48378, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">4167</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >23</div></td></tr>
+
+
+
+<input type="hidden" id="hid48378" name="hid48378" value="Петров А И">
+
+<tr valign=top id="a407440" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>41.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid407440" id="tid407440"  onClick='if (document.getElementById("tid407440").checked) {RowSelect("a407440",1)} else {RowSelect("a407440",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Галина&nbsp; Владиславовна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Российский университет транспорта (МИИТ) (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=407440&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">265</a><a href="author_profile.asp?id=407440" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(407440, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">4026</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">32</div></td></tr>
+
+
+
+<input type="hidden" id="hid407440" name="hid407440" value="Петрова Г В">
+
+<tr valign=top id="a234469" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>42.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid234469" id="tid234469"  onClick='if (document.getElementById("tid234469").checked) {RowSelect("a234469",1)} else {RowSelect("a234469",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Евгений&nbsp; Владимирович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Томский государственный архитектурно-строительный университет (Томск)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=234469&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">350</a><a href="author_profile.asp?id=234469" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(234469, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">4017</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">23</div></td></tr>
+
+
+
+<input type="hidden" id="hid234469" name="hid234469" value="Петров Е В">
+
+<tr valign=top id="a31524" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>43.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid31524" id="tid31524"  onClick='if (document.getElementById("tid31524").checked) {RowSelect("a31524",1)} else {RowSelect("a31524",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Александр&nbsp; Александрович</b></font>
+<br>
+Физико-технический институт им. А.Ф. Иоффе РАН (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=31524&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">354</a><a href="author_profile.asp?id=31524" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(31524, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3957</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >21</div></td></tr>
+
+
+
+<input type="hidden" id="hid31524" name="hid31524" value="Петров А А">
+
+<tr valign=top id="a136774" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>44.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid136774" id="tid136774"  onClick='if (document.getElementById("tid136774").checked) {RowSelect("a136774",1)} else {RowSelect("a136774",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Александр&nbsp; Николаевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Санкт-Петербургский государственный экономический университет (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=136774&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">146</a><a href="author_profile.asp?id=136774" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(136774, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3943</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">30</div></td></tr>
+
+
+
+<input type="hidden" id="hid136774" name="hid136774" value="Петров А Н">
+
+<tr valign=top id="a218196" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>45.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid218196" id="tid218196"  onClick='if (document.getElementById("tid218196").checked) {RowSelect("a218196",1)} else {RowSelect("a218196",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Олег&nbsp; Владимирович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Всероссийский научно-исследовательский геологический институт им. А.П. Карпинского (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=218196&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">448</a><a href="author_profile.asp?id=218196" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(218196, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3908</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">26</div></td></tr>
+
+
+
+<input type="hidden" id="hid218196" name="hid218196" value="Петров О В">
+
+<tr valign=top id="a661927" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>46.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid661927" id="tid661927"  onClick='if (document.getElementById("tid661927").checked) {RowSelect("a661927",1)} else {RowSelect("a661927",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петровский&nbsp; Николай&nbsp; Валерьевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Первый Московский государственный медицинский университет им. И.М. Сеченова (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=661927&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">132</a><a href="author_profile.asp?id=661927" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(661927, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3810</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">24</div></td></tr>
+
+
+
+<input type="hidden" id="hid661927" name="hid661927" value="Петровский Н В">
+
+<tr valign=top id="a159639" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>47.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid159639" id="tid159639"  onClick='if (document.getElementById("tid159639").checked) {RowSelect("a159639",1)} else {RowSelect("a159639",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Сергей&nbsp; Юрьевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Национальный медицинский исследовательский центр глазных болезней им. Гельмгольца (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=159639&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">334</a><a href="author_profile.asp?id=159639" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(159639, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3775</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">27</div></td></tr>
+
+
+
+<input type="hidden" id="hid159639" name="hid159639" value="Петров С Ю">
+
+<tr valign=top id="a51194" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>48.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid51194" id="tid51194"  onClick='if (document.getElementById("tid51194").checked) {RowSelect("a51194",1)} else {RowSelect("a51194",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Александр&nbsp; Николаевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Петербургский институт ядерной физики им. Б.П. Константинова (Гатчина)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=51194&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">111</a><a href="author_profile.asp?id=51194" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(51194, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3730</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">31</div></td></tr>
+
+
+
+<input type="hidden" id="hid51194" name="hid51194" value="Петров А Н">
+
+<tr valign=top id="a640461" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>49.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid640461" id="tid640461"  onClick='if (document.getElementById("tid640461").checked) {RowSelect("a640461",1)} else {RowSelect("a640461",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; (Сорина)&nbsp; Елена&nbsp; Алексеевна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Российский государственный социальный университет (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=640461&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">417</a><a href="author_profile.asp?id=640461" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(640461, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3693</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">22</div></td></tr>
+
+
+
+<input type="hidden" id="hid640461" name="hid640461" value="Петрова Е А">
+
+<tr valign=top id="a1451" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>50.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid1451" id="tid1451"  onClick='if (document.getElementById("tid1451").checked) {RowSelect("a1451",1)} else {RowSelect("a1451",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Василий&nbsp; Викторович</b></font>
+<br>
+Московский государственный лингвистический университет (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=1451&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">56</a><a href="author_profile.asp?id=1451" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(1451, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3670</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >22</div></td></tr>
+
+
+
+<input type="hidden" id="hid1451" name="hid1451" value="Петров В В">
+
+<tr valign=top id="a407378" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>51.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid407378" id="tid407378"  onClick='if (document.getElementById("tid407378").checked) {RowSelect("a407378",1)} else {RowSelect("a407378",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Павел&nbsp; Карпович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Удмуртский государственный университет (Ижевск)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=407378&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">203</a><a href="author_profile.asp?id=407378" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(407378, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3595</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">30</div></td></tr>
+
+
+
+<input type="hidden" id="hid407378" name="hid407378" value="Петров П К">
+
+<tr valign=top id="a1358" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>52.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid1358" id="tid1358"  onClick='if (document.getElementById("tid1358").checked) {RowSelect("a1358",1)} else {RowSelect("a1358",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Владимир&nbsp; Михайлович</b></font>
+<br>
+Государственный институт искусствознания (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=1358&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">144</a><a href="author_profile.asp?id=1358" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(1358, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3583</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >24</div></td></tr>
+
+
+
+<input type="hidden" id="hid1358" name="hid1358" value="Петров В М">
+
+<tr valign=top id="a217662" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>53.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid217662" id="tid217662"  onClick='if (document.getElementById("tid217662").checked) {RowSelect("a217662",1)} else {RowSelect("a217662",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Людмила&nbsp; Николаевна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span><img id="wikipage217662" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петрова,_Людмила_Николаевна_(учёный)">
+<br>
+Ставропольский государственный аграрный университет (Ставрополь)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=217662&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">108</a><a href="author_profile.asp?id=217662" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(217662, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3400</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">22</div></td></tr>
+
+
+
+<input type="hidden" id="hid217662" name="hid217662" value="Петрова Л Н">
+
+<tr valign=top id="a111143" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>54.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid111143" id="tid111143"  onClick='if (document.getElementById("tid111143").checked) {RowSelect("a111143",1)} else {RowSelect("a111143",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; (Крышкина)&nbsp; Наталия&nbsp; Николаевна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Санкт-Петербургский государственный университет (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=111143&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">575</a><a href="author_profile.asp?id=111143" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(111143, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3393</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">24</div></td></tr>
+
+
+
+<input type="hidden" id="hid111143" name="hid111143" value="Петрова Н Н">
+
+<tr valign=top id="a64654" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>55.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid64654" id="tid64654"  onClick='if (document.getElementById("tid64654").checked) {RowSelect("a64654",1)} else {RowSelect("a64654",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Лариса&nbsp; Вениаминовна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Уфимский государственный нефтяной технический университет (Уфа)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=64654&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">242</a><a href="author_profile.asp?id=64654" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(64654, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3251</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">37</div></td></tr>
+
+
+
+<input type="hidden" id="hid64654" name="hid64654" value="Петрова Л В">
+
+<tr valign=top id="a23720" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>56.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid23720" id="tid23720"  onClick='if (document.getElementById("tid23720").checked) {RowSelect("a23720",1)} else {RowSelect("a23720",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Юрий&nbsp; Васильевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Институт теоретической физики им. Л.Д. Ландау РАН (Черноголовка)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=23720&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">137</a><a href="author_profile.asp?id=23720" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(23720, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3244</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">32</div></td></tr>
+
+
+
+<input type="hidden" id="hid23720" name="hid23720" value="Петров Ю В">
+
+<tr valign=top id="a156831" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>57.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid156831" id="tid156831"  onClick='if (document.getElementById("tid156831").checked) {RowSelect("a156831",1)} else {RowSelect("a156831",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Александр&nbsp; Сергеевич</b></font>
+<br>
+Московский государственный университет им. М.В. Ломоносова (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=156831&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">81</a><a href="author_profile.asp?id=156831" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(156831, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3218</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >25</div></td></tr>
+
+
+
+<input type="hidden" id="hid156831" name="hid156831" value="Петров А С">
+
+<tr valign=top id="a626155" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>58.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid626155" id="tid626155"  onClick='if (document.getElementById("tid626155").checked) {RowSelect("a626155",1)} else {RowSelect("a626155",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Дмитрий&nbsp; Анатольевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Санкт-Петербургский государственный университет (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=626155&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">273</a><a href="author_profile.asp?id=626155" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(626155, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3124</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">26</div></td></tr>
+
+
+
+<input type="hidden" id="hid626155" name="hid626155" value="Петров Д А">
+
+<tr valign=top id="a632544" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>59.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid632544" id="tid632544"  onClick='if (document.getElementById("tid632544").checked) {RowSelect("a632544",1)} else {RowSelect("a632544",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Поздеева&nbsp; (Петрова)&nbsp; Надежда&nbsp; Александровна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Национальный медицинский исследовательский центр "МНТК "Микрохирургия глаза" им. акад. С.Н. Федорова" (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=632544&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">452</a><a href="author_profile.asp?id=632544" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(632544, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3074</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">17</div></td></tr>
+
+
+
+<input type="hidden" id="hid632544" name="hid632544" value="Поздеева Н А">
+
+<tr valign=top id="a666029" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>60.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid666029" id="tid666029"  onClick='if (document.getElementById("tid666029").checked) {RowSelect("a666029",1)} else {RowSelect("a666029",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Александр&nbsp; Васильевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Национальный исследовательский Нижегородский государственный университет им. Н.И. Лобачевского (Нижний Новгород)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=666029&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">110</a><a href="author_profile.asp?id=666029" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(666029, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">3019</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">15</div></td></tr>
+
+
+
+<input type="hidden" id="hid666029" name="hid666029" value="Петров А В">
+
+<tr valign=top id="a748333" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>61.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid748333" id="tid748333"  onClick='if (document.getElementById("tid748333").checked) {RowSelect("a748333",1)} else {RowSelect("a748333",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Никита&nbsp; Васильевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Московский государственный университет им. М.В. Ломоносова (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=748333&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">144</a><a href="author_profile.asp?id=748333" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(748333, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2988</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">27</div></td></tr>
+
+
+
+<input type="hidden" id="hid748333" name="hid748333" value="Петров Н В">
+
+<tr valign=top id="a38492" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>62.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid38492" id="tid38492"  onClick='if (document.getElementById("tid38492").checked) {RowSelect("a38492",1)} else {RowSelect("a38492",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Альберт&nbsp; Юрьевич</b></font>
+<br>
+Томский государственный педагогический университет (Томск)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=38492&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">187</a><a href="author_profile.asp?id=38492" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(38492, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2986</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >30</div></td></tr>
+
+
+
+<input type="hidden" id="hid38492" name="hid38492" value="Петров А Ю">
+
+<tr valign=top id="a236272" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>63.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid236272" id="tid236272"  onClick='if (document.getElementById("tid236272").checked) {RowSelect("a236272",1)} else {RowSelect("a236272",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Владимир&nbsp; Александрович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Национальный медицинский исследовательский центр радиологии Минздрава России (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=236272&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">161</a><a href="author_profile.asp?id=236272" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(236272, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2982</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">16</div></td></tr>
+
+
+
+<input type="hidden" id="hid236272" name="hid236272" value="Петров В А">
+
+<tr valign=top id="a15405" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>64.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid15405" id="tid15405"  onClick='if (document.getElementById("tid15405").checked) {RowSelect("a15405",1)} else {RowSelect("a15405",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Валентин&nbsp; Владимирович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Санкт-Петербургский государственный университет (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=15405&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">179</a><a href="author_profile.asp?id=15405" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(15405, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2976</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">22</div></td></tr>
+
+
+
+<input type="hidden" id="hid15405" name="hid15405" value="Петров В В">
+
+<tr valign=top id="a726398" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>65.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid726398" id="tid726398"  onClick='if (document.getElementById("tid726398").checked) {RowSelect("a726398",1)} else {RowSelect("a726398",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Михаил&nbsp; Игоревич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Национальный исследовательский университет ИТМО (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=726398&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">173</a><a href="author_profile.asp?id=726398" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(726398, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2956</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">27</div></td></tr>
+
+
+
+<input type="hidden" id="hid726398" name="hid726398" value="Петров М И">
+
+<tr valign=top id="a1297048" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>66.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid1297048" id="tid1297048"  onClick='if (document.getElementById("tid1297048").checked) {RowSelect("a1297048",1)} else {RowSelect("a1297048",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петровский&nbsp; Борис&nbsp; Васильевич</b></font><img id="wikipage1297048" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петровский,_Борис_Васильевич">
+<br>
+Министерство здравоохранения РФ (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=1297048&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">205</a><a href="author_profile.asp?id=1297048" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(1297048, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2845</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >22</div></td></tr>
+
+
+
+<input type="hidden" id="hid1297048" name="hid1297048" value="Петровский Б В">
+
+<tr valign=top id="a51" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>67.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid51" id="tid51"  onClick='if (document.getElementById("tid51").checked) {RowSelect("a51",1)} else {RowSelect("a51",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петровский&nbsp; Алексей&nbsp; Борисович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Федеральный исследовательский центр "Информатика и управление" РАН (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=51&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">260</a><a href="author_profile.asp?id=51" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(51, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2732</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">18</div></td></tr>
+
+
+
+<input type="hidden" id="hid51" name="hid51" value="Петровский А Б">
+
+<tr valign=top id="a72645" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>68.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid72645" id="tid72645"  onClick='if (document.getElementById("tid72645").checked) {RowSelect("a72645",1)} else {RowSelect("a72645",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Татьяна&nbsp; Эдуардовна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Правительство РФ (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=72645&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">148</a><a href="author_profile.asp?id=72645" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(72645, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2680</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">17</div></td></tr>
+
+
+
+<input type="hidden" id="hid72645" name="hid72645" value="Петрова Т Э">
+
+<tr valign=top id="a26564" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>69.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid26564" id="tid26564"  onClick='if (document.getElementById("tid26564").checked) {RowSelect("a26564",1)} else {RowSelect("a26564",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Юрий&nbsp; Викторович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Физико-технический институт им. А.Ф. Иоффе РАН (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=26564&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">304</a><a href="author_profile.asp?id=26564" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(26564, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2677</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">27</div></td></tr>
+
+
+
+<input type="hidden" id="hid26564" name="hid26564" value="Петров Ю В">
+
+<tr valign=top id="a938083" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>70.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid938083" id="tid938083"  onClick='if (document.getElementById("tid938083").checked) {RowSelect("a938083",1)} else {RowSelect("a938083",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Сергей&nbsp; Борисович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Национальный медицинский исследовательский центр онкологии им. Н.Н. Петрова (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=938083&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">308</a><a href="author_profile.asp?id=938083" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(938083, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2670</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">20</div></td></tr>
+
+
+
+<input type="hidden" id="hid938083" name="hid938083" value="Петров С Б">
+
+<tr valign=top id="a718312" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>71.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid718312" id="tid718312"  onClick='if (document.getElementById("tid718312").checked) {RowSelect("a718312",1)} else {RowSelect("a718312",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Юрий&nbsp; Николаевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Нижегородский институт развития образования (Нижний Новгород)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=718312&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">312</a><a href="author_profile.asp?id=718312" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(718312, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2642</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">28</div></td></tr>
+
+
+
+<input type="hidden" id="hid718312" name="hid718312" value="Петров Ю Н">
+
+<tr valign=top id="a153077" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>72.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid153077" id="tid153077"  onClick='if (document.getElementById("tid153077").checked) {RowSelect("a153077",1)} else {RowSelect("a153077",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Чернышева&nbsp; (Петрова)&nbsp; Лариса&nbsp; Владимировна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Физико-технический институт им. А.Ф. Иоффе РАН (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=153077&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">163</a><a href="author_profile.asp?id=153077" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(153077, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2599</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">25</div></td></tr>
+
+
+
+<input type="hidden" id="hid153077" name="hid153077" value="Чернышева Л В">
+
+<tr valign=top id="a1227637" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>73.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid1227637" id="tid1227637"  onClick='if (document.getElementById("tid1227637").checked) {RowSelect("a1227637",1)} else {RowSelect("a1227637",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петровский&nbsp; Иван&nbsp; Георгиевич</b></font><img id="wikipage1227637" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петровский,_Иван_Георгиевич">
+<br>
+Московский государственный университет им. М.В. Ломоносова (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=1227637&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">28</a><a href="author_profile.asp?id=1227637" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(1227637, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2557</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >15</div></td></tr>
+
+
+
+<input type="hidden" id="hid1227637" name="hid1227637" value="Петровский И Г">
+
+<tr valign=top id="a163110" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>74.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid163110" id="tid163110"  onClick='if (document.getElementById("tid163110").checked) {RowSelect("a163110",1)} else {RowSelect("a163110",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Алексей&nbsp; Михайлович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Казанский государственный медицинский университет (Казань)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=163110&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">219</a><a href="author_profile.asp?id=163110" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(163110, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2543</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">29</div></td></tr>
+
+
+
+<input type="hidden" id="hid163110" name="hid163110" value="Петров А М">
+
+<tr valign=top id="a4033" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>75.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid4033" id="tid4033"  onClick='if (document.getElementById("tid4033").checked) {RowSelect("a4033",1)} else {RowSelect("a4033",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Александр&nbsp; Александрович</b></font><img id="wikipage4033" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петров,_Александр_Александрович_(математик)">
+<br>
+Федеральный исследовательский центр "Информатика и управление" РАН (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=4033&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">85</a><a href="author_profile.asp?id=4033" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(4033, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2440</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >18</div></td></tr>
+
+
+
+<input type="hidden" id="hid4033" name="hid4033" value="Петров А А">
+
+<tr valign=top id="a14501" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>76.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid14501" id="tid14501"  onClick='if (document.getElementById("tid14501").checked) {RowSelect("a14501",1)} else {RowSelect("a14501",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Александр&nbsp; Георгиевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Институт проблем механики им. А.Ю. Ишлинского РАН (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=14501&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">381</a><a href="author_profile.asp?id=14501" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(14501, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2439</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">22</div></td></tr>
+
+
+
+<input type="hidden" id="hid14501" name="hid14501" value="Петров А Г">
+
+<tr valign=top id="a407548" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>77.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid407548" id="tid407548"  onClick='if (document.getElementById("tid407548").checked) {RowSelect("a407548",1)} else {RowSelect("a407548",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Ольга&nbsp; Григорьевна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Уральский государственный аграрный университет (Екатеринбург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=407548&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">496</a><a href="author_profile.asp?id=407548" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(407548, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2436</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">18</div></td></tr>
+
+
+
+<input type="hidden" id="hid407548" name="hid407548" value="Петрова О Г">
+
+<tr valign=top id="a292996" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>78.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid292996" id="tid292996"  onClick='if (document.getElementById("tid292996").checked) {RowSelect("a292996",1)} else {RowSelect("a292996",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Гагаринская&nbsp; (Петрова)&nbsp; Галина&nbsp; Павловна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Приволжский государственный университет путей сообщения (Самара)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=292996&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">334</a><a href="author_profile.asp?id=292996" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(292996, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2418</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">19</div></td></tr>
+
+
+
+<input type="hidden" id="hid292996" name="hid292996" value="Гагаринская Г П">
+
+<tr valign=top id="a18281" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>79.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid18281" id="tid18281"  onClick='if (document.getElementById("tid18281").checked) {RowSelect("a18281",1)} else {RowSelect("a18281",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Вадим&nbsp; Александрович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+МИРЭА - Российский технологический университет (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=18281&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">220</a><a href="author_profile.asp?id=18281" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(18281, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2411</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">19</div></td></tr>
+
+
+
+<input type="hidden" id="hid18281" name="hid18281" value="Петров В А">
+
+<tr valign=top id="a828969" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>80.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid828969" id="tid828969"  onClick='if (document.getElementById("tid828969").checked) {RowSelect("a828969",1)} else {RowSelect("a828969",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Сергей&nbsp; Викторович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Московский педагогический государственный университет (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=828969&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">182</a><a href="author_profile.asp?id=828969" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(828969, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2407</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">23</div></td></tr>
+
+
+
+<input type="hidden" id="hid828969" name="hid828969" value="Петров С В">
+
+<tr valign=top id="a9347" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>81.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid9347" id="tid9347"  onClick='if (document.getElementById("tid9347").checked) {RowSelect("a9347",1)} else {RowSelect("a9347",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Игорь&nbsp; Борисович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span><img id="wikipage9347" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петров,_Игорь_Борисович">
+<br>
+Московский физико-технический институт (национальный исследовательский университет) (Долгопрудный)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=9347&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">302</a><a href="author_profile.asp?id=9347" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(9347, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2389</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">23</div></td></tr>
+
+
+
+<input type="hidden" id="hid9347" name="hid9347" value="Петров И Б">
+
+<tr valign=top id="a203798" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>82.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid203798" id="tid203798"  onClick='if (document.getElementById("tid203798").checked) {RowSelect("a203798",1)} else {RowSelect("a203798",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Евгений&nbsp; Петрович</b></font>
+<br>
+Институт физики им. Б.И. Степанова НАН Беларуси (Минск)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=203798&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">68</a><a href="author_profile.asp?id=203798" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(203798, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2358</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >24</div></td></tr>
+
+
+
+<input type="hidden" id="hid203798" name="hid203798" value="Петров Е П">
+
+<tr valign=top id="a73228" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>83.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid73228" id="tid73228"  onClick='if (document.getElementById("tid73228").checked) {RowSelect("a73228",1)} else {RowSelect("a73228",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Орехова&nbsp; (Петрова)&nbsp; Елена&nbsp; Владимировна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Московский государственный психолого-педагогический университет (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=73228&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">95</a><a href="author_profile.asp?id=73228" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(73228, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2356</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">23</div></td></tr>
+
+
+
+<input type="hidden" id="hid73228" name="hid73228" value="Орехова Е В">
+
+<tr valign=top id="a59306" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>84.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid59306" id="tid59306"  onClick='if (document.getElementById("tid59306").checked) {RowSelect("a59306",1)} else {RowSelect("a59306",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Виктор&nbsp; Анатольевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Институт физики Земли им. О.Ю. Шмидта РАН (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=59306&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">172</a><a href="author_profile.asp?id=59306" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(59306, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2355</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">19</div></td></tr>
+
+
+
+<input type="hidden" id="hid59306" name="hid59306" value="Петров В А">
+
+<tr valign=top id="a615130" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>85.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid615130" id="tid615130"  onClick='if (document.getElementById("tid615130").checked) {RowSelect("a615130",1)} else {RowSelect("a615130",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Мария&nbsp; Сергеевна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Главное медицинское управление Управления делами Президента РФ (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=615130&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">167</a><a href="author_profile.asp?id=615130" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(615130, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2337</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">21</div></td></tr>
+
+
+
+<input type="hidden" id="hid615130" name="hid615130" value="Петрова М С">
+
+<tr valign=top id="a196843" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>86.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid196843" id="tid196843"  onClick='if (document.getElementById("tid196843").checked) {RowSelect("a196843",1)} else {RowSelect("a196843",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Константин&nbsp; Александрович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Федеральный исследовательский центр "Казанский научный центр РАН" (Казань)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=196843&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">219</a><a href="author_profile.asp?id=196843" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(196843, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2322</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">26</div></td></tr>
+
+
+
+<input type="hidden" id="hid196843" name="hid196843" value="Петров К А">
+
+<tr valign=top id="a184626" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>87.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid184626" id="tid184626"  onClick='if (document.getElementById("tid184626").checked) {RowSelect("a184626",1)} else {RowSelect("a184626",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Анатолий&nbsp; Арсеньевич</b></font>
+<br>
+Санкт-Петербургский государственный электротехнический университет "ЛЭТИ" им. В.И. Ульянова (Ленина) (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=184626&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">85</a><a href="author_profile.asp?id=184626" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(184626, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2310</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >20</div></td></tr>
+
+
+
+<input type="hidden" id="hid184626" name="hid184626" value="Петров А А">
+
+<tr valign=top id="a816197" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>88.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid816197" id="tid816197"  onClick='if (document.getElementById("tid816197").checked) {RowSelect("a816197",1)} else {RowSelect("a816197",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Валентина&nbsp; Ивановна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Российский экономический университет им. Г.В. Плеханова (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=816197&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">85</a><a href="author_profile.asp?id=816197" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(816197, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2309</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">25</div></td></tr>
+
+
+
+<input type="hidden" id="hid816197" name="hid816197" value="Петрова В И">
+
+<tr valign=top id="a100897" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>89.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid100897" id="tid100897"  onClick='if (document.getElementById("tid100897").checked) {RowSelect("a100897",1)} else {RowSelect("a100897",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Евгений&nbsp; Аполлонович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Байкальский музей СО РАН (Листвянка)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=100897&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">125</a><a href="author_profile.asp?id=100897" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(100897, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2302</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">24</div></td></tr>
+
+
+
+<input type="hidden" id="hid100897" name="hid100897" value="Петров Е А">
+
+<tr valign=top id="a84002" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>90.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid84002" id="tid84002"  onClick='if (document.getElementById("tid84002").checked) {RowSelect("a84002",1)} else {RowSelect("a84002",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петровский&nbsp; Владислав&nbsp; Владимирович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Ботанический институт им. В.Л. Комарова РАН (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=84002&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">146</a><a href="author_profile.asp?id=84002" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(84002, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2250</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">22</div></td></tr>
+
+
+
+<input type="hidden" id="hid84002" name="hid84002" value="Петровский В В">
+
+<tr valign=top id="a768931" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>91.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid768931" id="tid768931"  onClick='if (document.getElementById("tid768931").checked) {RowSelect("a768931",1)} else {RowSelect("a768931",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Александр&nbsp; Михайлович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Самарский государственный аграрный университет (Самара)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=768931&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">175</a><a href="author_profile.asp?id=768931" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(768931, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2225</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">20</div></td></tr>
+
+
+
+<input type="hidden" id="hid768931" name="hid768931" value="Петров А М">
+
+<tr valign=top id="a91509" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>92.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid91509" id="tid91509"  onClick='if (document.getElementById("tid91509").checked) {RowSelect("a91509",1)} else {RowSelect("a91509",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Королева&nbsp; (Петрова)&nbsp; Ирина&nbsp; Станиславовна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Центральный научно-исследовательский институт эпидемиологии Роспотребнадзора (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=91509&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">264</a><a href="author_profile.asp?id=91509" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(91509, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2191</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">22</div></td></tr>
+
+
+
+<input type="hidden" id="hid91509" name="hid91509" value="Королева И С">
+
+<tr valign=top id="a95852" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>93.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid95852" id="tid95852"  onClick='if (document.getElementById("tid95852").checked) {RowSelect("a95852",1)} else {RowSelect("a95852",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Анатолий&nbsp; Александрович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Зоологический институт РАН (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=95852&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">91</a><a href="author_profile.asp?id=95852" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(95852, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2164</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">17</div></td></tr>
+
+
+
+<input type="hidden" id="hid95852" name="hid95852" value="Петров А А">
+
+<tr valign=top id="a109732" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>94.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid109732" id="tid109732"  onClick='if (document.getElementById("tid109732").checked) {RowSelect("a109732",1)} else {RowSelect("a109732",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Лариса&nbsp; Евгеньевна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Екатеринбургская академия современного искусства (Институт) (Екатеринбург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=109732&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">205</a><a href="author_profile.asp?id=109732" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(109732, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2152</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">19</div></td></tr>
+
+
+
+<input type="hidden" id="hid109732" name="hid109732" value="Петрова Л Е">
+
+<tr valign=top id="a345133" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>95.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid345133" id="tid345133"  onClick='if (document.getElementById("tid345133").checked) {RowSelect("a345133",1)} else {RowSelect("a345133",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Ковалева&nbsp; (Петрова)&nbsp; Ирина&nbsp; Валериевна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Алтайский государственный аграрный университет (Барнаул)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=345133&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">357</a><a href="author_profile.asp?id=345133" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(345133, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2151</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">18</div></td></tr>
+
+
+
+<input type="hidden" id="hid345133" name="hid345133" value="Ковалева И В">
+
+<tr valign=top id="a675734" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>96.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid675734" id="tid675734"  onClick='if (document.getElementById("tid675734").checked) {RowSelect("a675734",1)} else {RowSelect("a675734",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Андрей&nbsp; Николаевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span><img id="wikipage675734" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петров,_Андрей_Николаевич_(учёный)">
+<br>
+Всероссийский научно-исследовательский институт молочной промышленности (Москва)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=675734&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">286</a><a href="author_profile.asp?id=675734" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(675734, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2146</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">22</div></td></tr>
+
+
+
+<input type="hidden" id="hid675734" name="hid675734" value="Петров А Н">
+
+<tr valign=top id="a613079" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>97.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid613079" id="tid613079"  onClick='if (document.getElementById("tid613079").checked) {RowSelect("a613079",1)} else {RowSelect("a613079",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Николай&nbsp; Владимирович</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Национальный исследовательский университет ИТМО (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=613079&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">297</a><a href="author_profile.asp?id=613079" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(613079, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2120</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">23</div></td></tr>
+
+
+
+<input type="hidden" id="hid613079" name="hid613079" value="Петров Н В">
+
+<tr valign=top id="a407525" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>98.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid407525" id="tid407525"  onClick='if (document.getElementById("tid407525").checked) {RowSelect("a407525",1)} else {RowSelect("a407525",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петрова&nbsp; Наталия&nbsp; Гурьевна</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Первый Санкт-Петербургский государственный медицинский университет им. акад. И.П. Павлова (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=407525&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">279</a><a href="author_profile.asp?id=407525" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(407525, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2102</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">17</div></td></tr>
+
+
+
+<input type="hidden" id="hid407525" name="hid407525" value="Петрова Н Г">
+
+<tr valign=top id="a22810" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div ><b>99.</b></div></font><br></td>
+<td align=center><div ><input type=checkbox name="tid22810" id="tid22810"  onClick='if (document.getElementById("tid22810").checked) {RowSelect("a22810",1)} else {RowSelect("a22810",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петровский&nbsp; Гурий&nbsp; Тимофеевич</b></font><img id="wikipage22810" src="images/wiki1.png" width=16 height=9 border=0 hspace=3 vspace=0 data-tooltip="https://ru.wikipedia.org/wiki/Петровский,_Гурий_Тимофеевич">
+<br>
+Государственный оптический институт им. С.И. Вавилова (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div ><a href="author_items.asp?authorid=22810&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">293</a><a href="author_profile.asp?id=22810" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div ><a href="javascript:show_author_refs(22810, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2091</a></div></td><td nowrap align=center class="midtext select-tr-right"><div >18</div></td></tr>
+
+
+
+<input type="hidden" id="hid22810" name="hid22810" value="Петровский Г Т">
+
+<tr valign=top id="a53238" bgcolor=#f5f5f5>
+<td align=center class="midtext select-tr-left"><font color=#00008f><div style="margin-top:8px;"><b>100.</b></div></font><br></td>
+<td align=center><div style="margin-top:7px;"><input type=checkbox name="tid53238" id="tid53238"  onClick='if (document.getElementById("tid53238").checked) {RowSelect("a53238",1)} else {RowSelect("a53238",0)}'></div></td>
+<td align=left class="midtext"><font color=#00008f><b>Петров&nbsp; Александр&nbsp; Анатольевич</b></font><span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br>
+Санкт-Петербургский государственный университет (Санкт-Петербург)
+</td>
+
+
+<td nowrap align=right class="midtext"><div style="margin-top:8px;"><a href="author_items.asp?authorid=53238&show_refs=1" target=_blank title="Список публикаций данного автора в РИНЦ">171</a><a href="author_profile.asp?id=53238" title="Анализ публикационной активности автора"><img src="/pic/stat.gif" width=12 height=13 hspace=10 border=0></a></div></td>
+<td nowrap align=center class="midtext"><div style="margin-top:8px;"><a href="javascript:show_author_refs(53238, 'risc')" title="Список цитирований работ данного автора из публикаций, входящих в РИНЦ">2083</a></div></td><td nowrap align=center class="midtext select-tr-right"><div style="margin-top:8px;">14</div></td></tr>
+
+
+
+<input type="hidden" id="hid53238" name="hid53238" value="Петров А А">
+
+</table>
+
+
+<div style="width:578px; height:24px; border:#7f9db9 1px solid;padding:0;margin:20px 0 0 0; text-align:left; border-radius: 12px;" id="pages">
+<table width=578 height=24 cellspacing=1 cellpadding=3 border=0>
+<tr align=center valign=middle class="menurb">
+<td width=15% nowrap><a href="javascript:goto_page(1)">В&nbsp;начало</a></td>
+<td width=10% class="mouse-hovergr" nowrap><font color=#aaaaaa><<</font></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#e8e8e8 nowrap><font color=#F26C4F>1</font></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(2)">2</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(3)">3</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(4)">4</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(5)">5</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(6)">6</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(7)">7</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(8)">8</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(9)">9</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(10)">10</a></td>
+
+<td width=10% class="mouse-hovergr" nowrap><a title="Следующая страница" href="javascript:goto_page(2)">&gt;&gt;</a></td>
+<td width=15% nowrap><a href="javascript:goto_page(44)">В&nbsp;конец</a></td>
+</tr>
+</table>
+</div>
+
+<br>
+</td></tr>
+</table>
+
+<SCRIPT LANGUAGE="JavaScript">
+$(function() {
+$(".help").tooltip({
+	position: "top right",
+	offset: [-15, -100],
+	effect: "fade", 
+	fadeInSpeed: 800, 
+	fadeOutSpeed: 400, 
+	delay: 400,  
+	predelay: 400,
+	opacity: 1.0
+});
+});
+</script>
+<div id="wiki_tooltip"></div>
+
+</td>
+<td align=right valign=top>
+
+<div id="panel_default" style="position: relative; width: 200px; height:0; margin: 0; border: 1px; padding: 0"></div>
+<div id="panel" style="position: relative; width: 200px; margin: 0; border: 0; padding: 0">
+
+<div style="width: 190px;" class="right-panel">
+
+<table width=190 cellspacing=0 cellpadding=3 border=0>
+
+<tr><td colspan=2 align=center valign=top><font color=#F26C4F><b>ИНСТРУМЕНТЫ</b></font><div style="height:5px;"></div></td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:goto_page(2)"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:goto_page(2)">Следующая страница</a>
+</td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:select_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:select_all()">Выделить всех авторов на этой странице</a>
+</td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:deselect_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:deselect_all()">Снять выделение</a>
+</td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:authorbox_add()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:authorbox_add()">Добавить выделенных авторов в группу</a></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="authorbox_.asp"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><font color=#00008f><a href="authorbox_.asp">Группы авторов</a></font>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:authors_search()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:authors_search()">Искать в публикациях выделенных авторов</a></td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<a href="/projects/science_index/author_tutorial.asp"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><font color=#00008f><a href="/projects/science_index/author_tutorial.asp">Инструкция для авторов</a></font>
+</td></tr>
+
+
+
+
+</table>
+</div>
+
+</div>
+</FORM>
+
+</td></tr></table>
+</td></tr></table>
+
+<br><br>
+<table width=970 height=40 border=0 cellpadding=0 cellspacing=0 id="footer">
+<tr align=center valign=middle class="menug">
+<td width=15% valign="bottom">
+
+</td>
+<td width=70%><font color=#00008f><span style="position: relative; top: 3px; right: 15px; color: #F26C4F;">*</span><a href="/copyright.asp">&copy; 2000-2026 ООО НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА. Все права защищены</a></font><span style="position: relative; top: 3px; left: 15px; color: #F26C4F;">*</span></td>
+<td width=15% valign="bottom">
+
+</td>
+</tr></table>
+
+<!-- Yandex.Metrika -->
+<div style="display:none;"><script type="text/javascript">
+(function(w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter171463 = new Ya.Metrika(171463);
+        } catch(e) {}
+    });
+})(window, 'yandex_metrika_callbacks');
+</script></div>
+<script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script>
+<noscript><div style="position:absolute"><img src="//mc.yandex.ru/watch/171463" alt="" /></div></noscript>
+<!-- /Yandex.Metrika -->
+
+
+
+
+<br><br><br>
+</td></tr></table>
+</html>

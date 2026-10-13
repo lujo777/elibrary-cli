@@ -1,0 +1,1497 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="robots" content="noarchive">
+<title>Вычислительные технологии / информация о журнале</title>
+
+<script type="text/javascript" src="/jquery.min.js"></script>
+<script type="text/javascript" src="/jquery.tools.min.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.easydrag.js"></script>
+<script type="text/javascript" src="/elibrary.js"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/style_sm.css" type="text/css" media="screen">
+
+<SCRIPT LANGUAGE="JavaScript">
+
+but_blue_hover=new Image();
+but_blue_hover.src="/images/but_blue_hover.png";
+but_red_hover=new Image();
+but_red_hover.src="/images/but_red_hover.png";
+but_gray_hover=new Image();
+but_gray_hover.src="/images/but_gray_hover.png";
+
+w_down=new Image();
+w_down.src="/pic/w_show.gif";
+w_up=new Image();
+w_up.src="/pic/w_hide.gif";
+ws_down=new Image();
+ws_down.src="/images/or_er2_down.gif";
+ws_up=new Image();
+ws_up.src="/images/or_close2.gif";
+
+var selRow;
+var row_color;
+function onRowClick(row){
+  if(row != selRow){
+     if (selRow != null){
+        selRow.bgColor = row_color;
+     }
+  selRow = row;
+  row_color = row.bgColor;
+  selRow.bgColor="#e8e8e8";
+  }
+}
+function hideShow(elem,parent) {
+  var child =  document.getElementById(elem);
+  child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+  if (parent.className == "win_expandable") parent.src = child.className == "collapsed" ? w_down.src : w_up.src;
+}
+
+function newquery(){
+  document.forms["results"].action="querybox.asp";
+  document.forms["results"].target="";
+  document.forms["results"].submit()
+}
+function show_help(topic){
+  anewwin=window.open("", "addwin", "resizable=yes,scrollbars=yes,height=300,width=500,top=0,left=0");
+  document.forms["results"].action=topic;
+  document.forms["results"].target="addwin";
+  document.forms["results"].submit()
+}
+function show_titlefile(mfnum){
+
+  alerts("Для просмотра файла необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+
+
+function new_article(filenum){
+
+  alerts("Для отправки рукописи в журнал необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function titlebox_add(){
+	$.fancybox({
+		href : 'titlebox_select.asp?titles_all=8610|' ,
+		title : '',
+		padding : 20,     
+		width : 530,
+		height : 400,
+		overlayOpacity : 0.3,	
+		overlayColor : '#000',
+		speedIn : 500,
+		hideOnOverlayClick : false,
+		enableEscapeButton : true,
+		type : 'iframe'
+	});
+}
+
+</SCRIPT>
+</head>
+
+<body onLoad='document.all.loading.style.display="none"; document.all.thepage.style.display=""'>
+
+<div id="loading" style="position:absolute; width:100%; text-align:center; top:300px;">
+Пожалуйста, подождите, <br>пока Ваш запрос будет обработан
+<br><img src="/pic/query_wait.gif" border=0 width=31 height=31 vspace=5></div>
+
+<div id="thepage" style="display: none">
+<table width=100% cellpadding=0 cellspacing=0 border=0>
+<tr><td width=100% align=center valign=top>
+
+
+<table  cellpadding=0 cellspacing=0 border=0>
+<tr><td width=170 align=left valign=top id="leftcol">
+
+<table border=0 cellspacing=0 cellpadding=0 width=150>
+
+<tr><td><a href="/defaultx.asp"><img src="/images/welcome1.jpg" width=150 title="НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА eLIBRARY.RU" border=0 vspace=15></a></td></tr>
+
+
+<tr><td><a href="/defaultx.asp"><img id="elibrary_logo" src="/images/elibrary_logo2.svg" width=150 height=39 border=0 vspace=10 title="eLIBRARY.RU - НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА"></a></td></tr>
+
+
+<tr><td><div style="height:10px;"></div></td></tr>
+<tr><td width=150 align=center valign=top>
+<img src="/titles/8610/JCT 30.1.png" border=0 width=130 style="behavior: url(/pie/PIE.htc); box-shadow: 1px 2px 3px #888;" hspace=0>
+</td></tr>
+<tr><td><div style="height:10px;"></div></td></tr>
+
+
+<script language="JavaScript">
+if (supportsSVG) {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo2.svg";}
+else {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo.gif";}
+</script>
+
+<tr><td><div style="height:10px;"></div></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_search(){
+if (document.forms["search"].ftext.value.length > 1) {
+  var frm = document.forms["search"];
+  frm.action="/query_results.asp";
+  frm.target="";
+  frm.submit();
+  }
+else {
+  alert("Введите не менее двух символов");
+  }
+}
+function search_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_search();
+	return false;
+  }
+} 
+</SCRIPT>
+<FORM method=post name="search" onSubmit="return false">
+<input type="hidden" name="where_fulltext" value="on">
+<input type="hidden" name="where_name" value="on">
+<input type="hidden" name="where_abstract" value="on">
+<input type="hidden" name="where_keywords" value="on">
+<input type="hidden" name="where_affiliation" value="">
+<input type="hidden" name="where_references" value="">
+<input type="hidden" name="type_article" value="on">
+<input type="hidden" name="type_disser" value="on">
+<input type="hidden" name="type_book" value="on">
+<input type="hidden" name="type_report" value="on">
+<input type="hidden" name="type_conf" value="on">
+<input type="hidden" name="type_patent" value="on">
+<input type="hidden" name="type_preprint" value="on">
+<input type="hidden" name="type_grant" value="on">
+<input type="hidden" name="type_dataset" value="on">
+<input type="hidden" name="search_freetext" value="">
+<input type="hidden" name="search_morph" value="on">
+<input type="hidden" name="search_fulltext" value="">
+<input type="hidden" name="search_open" value="">
+<input type="hidden" name="search_results" value="">
+<input type="hidden" name="titles_all" value="">
+<input type="hidden" name="authors_all" value="">
+<input type="hidden" name="rubrics_all" value="">
+<input type="hidden" name="queryboxid" value="">
+<input type="hidden" name="itemboxid" value="">
+<input type="hidden" name="begin_year" value="">
+<input type="hidden" name="end_year" value="">
+<input type="hidden" name="issues" value="all">
+<input type="hidden" name="orderby" value="rank">
+<input type="hidden" name="order" value="rev">
+<input type="hidden" name="changed" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_search').slideToggle(500, function(){didScroll = true;})" title="Поиск в Научной электронной библиотеке">ПОИСК</span></b></font>
+</td></tr>
+</table>
+<div ID="win_search" class="collapsed">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=140 align=center valign=top>
+<div style="height: 10px;"></div>
+<div class="formfr" style="width:126px;"><input type=text id="ftext" name="ftext" value="" style="width:118px;" class="inputt" onKeyPress="search_enter(event);"></div>
+<div style="height: 11px;"></div>
+
+<div class="butblue" style="width: 52px;" onClick="check_search()">Найти</div>
+
+</td></tr>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+</table>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/querybox.asp?scope=newquery">Расширенный поиск</a></td></tr>
+
+
+<tr><td colspan=2><div style="height:3px;"></div></td></tr>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/neural_search.asp">Нейропоиск</a></td></tr>
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+
+</FORM>
+
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_all(){
+  if (document.forms["login"].login.value==""){
+    alert("Не указано имя пользователя!");
+	return false;
+	}
+  else if (document.forms["login"].password.value==""){
+    alert("Не указан пароль!");
+	return false;
+	}
+  else{
+    var frm = document.forms["login"];
+    frm.action="/start_session.asp";
+    frm.target="";
+    frm.submit();
+   }
+}
+function login_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_all();
+	return false;
+  }
+} 
+function sso_orgs(){
+  var frm = document.forms["results"];
+  $.fancybox({
+    href : 'sso_orgs.asp' ,
+    title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 200,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+  });
+}
+function show_hide_password(target){
+	var input = document.getElementById('password');
+	if (input.getAttribute('type') == 'password') {
+		target.classList.add('view');
+		input.setAttribute('type', 'text');
+	} 
+	else {
+		target.classList.remove('view');
+		input.setAttribute('type', 'password');
+	}
+	return false;
+}
+</SCRIPT>
+
+<FORM method=post name="login" onSubmit="return false">
+<input type=hidden name="rpage" value=https://elibrary.ru/title_about_new.asp?id=8610>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_login').slideToggle(500, function(){didScroll = true;})" title="Вход в библиотеку для зарегистрированных пользователей">ВХОД</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_login" class="expanded">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Имя пользователя<br>&nbsp;или адрес эл. почты:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<div class="formfr" style="width:126px;"><input type=text id="login" name="login" value="" style="width:118px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"></div>
+</td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Пароль:</font></td></tr>
+<tr><td align=center width=100%>
+<div class="formfr" style="width:126px;"><input type=password id="password" name="password" value="" style="width:102px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"><a href="#" class="password-control" onclick="return show_hide_password(this);"></a></div>
+</td></tr>
+
+<tr><td align=center width=100%>
+
+<div style="height: 9px;"></div>
+<div class="butred" style="width: 52px;" onClick="check_all()">Вход</div>
+<div style="height: 9px;"></div>
+
+</td></tr></table>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr valign=middle class="menub"><td align=center width=30><input type=checkbox name="knowme"></td><td align=left width=101>Запомнить меня</td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/access_terms.asp">Правила доступа</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/author_info.asp?isnew=1&rpage=https%3A%2F%2Felibrary%2Eru%2Ftitle%5Fabout%5Fnew%2Easp%3Fid%3D8610">Регистрация</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/pass_request.asp">Забыли пароль?</a></td></tr>
+
+
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:sso_orgs()">Вход через Вашу организацию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+</td></tr>
+</FORM>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_goto').slideToggle(500, function(){didScroll = true;})" title="Быстрый переход на популярные страницы сайта">НАВИГАТОР</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_goto" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=4 cellpadding=0 width=140>
+
+<tr valign=top><td width=25 align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left width=115><a href="/titles.asp">ЖУРНАЛЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/books.asp">КНИГИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/patents.asp">ПАТЕНТЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/querybox.asp">ПОИСК</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/authors.asp">АВТОРЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/orgs.asp">ОРГАНИЗАЦИИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/keywords.asp">КЛЮЧЕВЫЕ СЛОВА</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/rubrics.asp">РУБРИКАТОР</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/region_compare.asp">РЕГИОНЫ</a></td></tr>
+
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=25 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=115 valign=top><a href="/defaultx.asp">Начальная страница</a></td></tr></table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function end_session(){
+
+  document.forms["session"].saveuser.value="1";
+
+  document.forms["session"].action="/end_session.asp";
+  document.forms["session"].target="";
+  document.forms["session"].submit()
+}
+</SCRIPT>
+<FORM action="/end_session.asp" method=POST name="session">
+<input type="hidden" name="saveuser" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_session').slideToggle(500, function(){didScroll = true;})" title="Информация о текущей сессии пользователя">СЕССИЯ</span></b></font>
+</td></tr>
+</table>
+
+
+<div ID="win_session" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>Имя пользователя:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>Незарегистрированный пользователь</font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Начало работы:</font></td></tr>
+
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>13.10.2026 14:43</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Время работы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>00:19</font></td></tr>
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="/project_user_office.asp">Личный кабинет</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:end_session()">Закрыть сессию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+</FORM>
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_contact').slideToggle(500, function(){didScroll = true;})" title="Контактная информация Научной электронной библиотеки">КОНТАКТЫ</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_contact" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Служба поддержки:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 1<br></font>
+<font color=#00008f><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font></td></tr>
+</td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям журналов:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 2<br></font>
+<font color=#00008f><a href="mailto:publish@elibrary.ru">publish@elibrary.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям книг:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 3<br></font>
+<font color=#00008f><a href="mailto:book@elibrary.ru">book@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Space для издательств:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:info@sciencespace.ru">info@sciencespace.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Index для организаций:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:org@scienceindex.ru">org@scienceindex.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Доступ к API:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:api@elibrary.ru">api@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Подписчикам:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 6<br></font>
+<font color=#00008f><a href="mailto:sales.team@elibrary.ru">sales.team@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Конференции, семинары:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 7<br></font>
+<font color=#00008f><a href="mailto:conf@elibrary.ru">conf@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Почтовый адрес:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="/contact_new.asp">117246, г. Москва,
+Научный проезд, д. 14А, стр. 3, таунхаус 1</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Веб-сайт:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://elibrary.ru">https://elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Telegram-канал:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://t.me/elibrary_ru_official" target=_blank>t.me/elibrary_ru_official</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Размещение рекламы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:reklama@elibrary.ru">reklama@elibrary.ru</a></font></td></tr>
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/contact_new.asp">Схема проезда</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="https://support.elibrary.ru">Задать вопрос</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/vacancy.asp">Вакансии</a></td></tr>
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<div style="width: 140px;" class="help-panel">
+<table width=140 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=15% align=right valign=top>
+<img src="/images/but_orange_i.gif" width=15 height=15 hspace=0 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>По всем вопросам, связанным с работой в системе Science Index, обращайтесь, пожалуйста, в службу поддержки:<br><br>
++7 (495) 544-2494<br><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font>
+</td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+
+
+</table>
+
+</td><td align=left valign=top>
+
+<FORM method=post name="results" onSubmit="return false">
+<input type="hidden" name="id" value="8610">
+<input type="hidden" name="mfnum" value="">
+<input type="hidden" name="addmode" value="8">
+<input type="hidden" name="qwd" value="8610">
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr><td width=600 align=left valign=top>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+<tr><td width=100% align=left valign=top>
+
+<div class="header-panel">
+<div style="margin: 0; border: 0; padding: 0 0 5px 0; text-align: center; font-size: 9pt;"><font color=#5674b9><b>ИНФОРМАЦИЯ ОБ ИЗДАНИИ</b></font></div>
+</div>
+
+</td></tr></table>
+
+</td><td width=200 align=right valign=middle id="rightcol">
+
+
+<table width=200 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=12% align=right valign=top>
+<a href="https://t.me/elibrary_ru_official/106" target=_blank><img src="/images/telegram.svg" width=24 height=24 border=0></a></td>
+<td width=88% align=left valign=middle><font color=#00008f><a href="https://t.me/elibrary_ru_official/106" target=_blank>Система быстрого поиска по идентификаторам на eLIBRARY.RU</a></font>
+</td></tr>
+</table>
+</td></tr>
+
+
+<tr><td align=left valign=top>
+
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+
+<tr><td width=100% align=left valign=top>
+
+
+<table width=550 cellspacing=0 cellpadding=3 border=0>
+<tr valign=middle>
+<td width=7%></td>
+<td width=43% align=left>eLIBRARY ID:&nbsp;<a href="title_about_new.asp?id=8610">8610</a></td>
+<td width=48% align=right>Язык описания:&nbsp;<font color=#000000>русский, <a href='title_about_new.asp?id=8610&langid=2'>английский</a></font></td>
+<td width=2%></td>
+</tr>
+</table>
+
+<div style="height:8px;"></div>
+<table width=550 cellspacing=0 cellpadding=3 border=0>
+<tr align=center valign=middle>
+<td width=4></td>
+<td width=534><span class='bigtext' style='color: #F26C4F'><b>ВЫЧИСЛИТЕЛЬНЫЕ ТЕХНОЛОГИИ</b></span>
+</td></tr>
+</table>
+<div style="height:8px;"></div>
+
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>ОСНОВНЫЕ ХАРАКТЕРИСТИКИ:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+<div style="height: 3px;">&nbsp;</div>
+
+<table width=100% border=0 cellspacing=0 cellpadding=3>
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p><b>Периодическое издание</b> - издание, выходящее регулярно с заранее известной периодичностью (журнал или сборники статей или материалов конференций, выходящие на периодической основе).</p><p><b>Продолжающееся непериодическое издание</b> - издание публикаций (монографий, сборников), выходящих под общим заглавием на непериодической основе, по мере накопления материала.</p><p><b>Многотомное непериодическое издание</b> - однократно выходящее многотомное издание, продолжение которого не предполагается.</p>'>&nbsp;&nbsp;Тип сериального издания:&nbsp;<font color=#00008f>периодическое издание</font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается тип отдельных элементов (выпусков) сериального издания. Если в рамках серии могут выходить издания разных типов, указывается тип, который встречается чаще всего.</p>'>&nbsp;&nbsp;Элементы сериального издания:&nbsp;<font color=#00008f>выпуск журнала</font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help3" title='<p>Указывается вид издания по его содержанию и назначению. Если в рамках издания могут публиковаться материалы разного вида, указывается вид, который встречается чаще всего.<p><b>Научное</b> - издание, содержащее публикации о теоретических и прикладных исследованиях, предназначенное для научных работников.</p><p><b>Производственно-практическое</b> - издание, содержащее публикации по технологии, технике, экономике, организации производства или практической деятельности, методические разработки, предназначенное для работников определенной отрасли.</p><p><b>Научно-популярное</b> - издание, содержащее публикации об основах наук, научных исследованиях и технологических достижениях, предназначенное для широкого распространения знаний и самообразования.</p><p><b>Литературно-художественное</b> - издание, содержащее произведения художественной литературы, а также публицистические и критические статьи и материалы.</p><p><b>Общественно-политическое</b> - издание, содержащее публикации актуальной общественно-политической тематики, предназначенное для широкого круга читателей.</p><p><b>Информационно-аналитическое</b> - издание, содержащее нормативную информацию, комментарии экспертов, исследования и аналитические обзоры по различным вопросам.</p><p><b>Учебно-методическое</b> - издание, предназначенное для обучения и подготовки специалистов.</p><p><b>Справочное</b> - энциклопедии, словари, справочники и т.д.</p><p><b>Реферативное</b> - издание, содержащее библиографическую информацию, аннотации или рефераты.</p>'>&nbsp;&nbsp;Назначение издания:&nbsp;<font color=#00008f>научное</font></td>
+</tr>
+
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается, в каком виде выпускается и распространяется издание.</p>'>&nbsp;&nbsp;Способ распространения:&nbsp;<font color=#00008f>в печатном и электронном виде</font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Под открытым доступом понимается возможность свободной (бесплатной) загрузки полных текстов статей или выпусков издания.</p>'>&nbsp;&nbsp;Доступ к полным текстам:&nbsp;<font color=#00008f>текущие выпуски в платном доступе, архивные выпуски - в открытом</font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается основной источник финансирования издания.</p>'>&nbsp;&nbsp;Основной источник финансирования:&nbsp;<font color=#00008f>учредитель</font></td>
+</tr>
+
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Издание считается мультидисциплинарным, если оно охватывает более трех научных направлений верхнего уровня ГРНТИ, при этом публикуемые статьи не связаны друг с другом тематически, методологически или общим предметом исследования.</p>'>&nbsp;&nbsp;Мультидисциплинарность:&nbsp;<font color=#00008f>не является мультидисциплинарным</font></td>
+</tr>
+
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается, на каком языке или языках принимаются и публикуются статьи в издании. Если языков несколько, первым указывается язык, на котором публикуется основная часть научных статей.</p>'>&nbsp;&nbsp;Язык публикаций:&nbsp;<font color=#00008f>русский, английский</font></td>
+</tr>
+
+</table>
+</td></tr></table>
+
+
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>УЧРЕДИТЕЛИ:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/org_profile.asp?id=34">Федеральный исследовательский центр информационных и вычислительных технологий</a></font>
+ (Новосибирск)<br>
+
+</td></tr></table>
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>МЕСТО РАСПОЛОЖЕНИЯ РЕДАКЦИИ:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/org_profile.asp?id=34">Федеральный исследовательский центр информационных и вычислительных технологий</a></font>
+ (Новосибирск)<br>
+
+</td></tr></table>
+
+
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>СВЕДЕНИЯ ОБ ИЗДАНИИ:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+<div style="height: 3px;">&nbsp;</div>
+
+<table width=100% border=0 cellspacing=0 cellpadding=3>
+
+<tr align=left valign=bottom>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>ISSN печатной версии издания.</p>'>&nbsp;&nbsp;ISSN печатной версии:&nbsp;<font color=#00008f><a href="https://portal.issn.org/resource/ISSN/1560-7534" target=_blank rel=nofollow>1560-7534</a></font></td>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>ISSN электронной версии издания.</p>'>&nbsp;&nbsp;ISSN электронной версии:&nbsp;<font color=#00008f><a href="https://portal.issn.org/resource/ISSN/2313-691X" target=_blank rel=nofollow>2313-691X</a></font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается текущая периодичность издания - среднее или планируемое число выпусков в год.</p>'>&nbsp;&nbsp;Число выпусков в год:&nbsp;<font color=#00008f>6</font></td>
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Если издание переименовывалось, указывается год начала выпуска издания под самым первым названием. Для сериальных непериодических изданий указывается год первого выпуска (тома).</p>'>&nbsp;&nbsp;Год основания:&nbsp;<font color=#00008f>1995</font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается среднее число статей в выпуске издания.</p>'>&nbsp;&nbsp;Число статей в выпуске:&nbsp;<font color=#00008f>9</font></td>
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается период, в течение которого издание выходило под данным названием. Если указан год окончания выпуска, то издание в настоящее время уже не выходит.</p>'>&nbsp;&nbsp;Период выпуска:&nbsp;<font color=#00008f>1996-...</font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается среднее число страниц в выпуске издания.</p>'>&nbsp;&nbsp;Число страниц в выпуске:&nbsp;<font color=#00008f>135</font></td>
+
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается диапазон годовых комплектов выпусков издания, размещенных на платформе eLIBRARY.RU на основании договоров с издателями.</p>'>&nbsp;&nbsp;Архив на eLIBRARY.RU:&nbsp;<font color=#00008f>1996-2026</font></td>
+</tr>
+
+
+<tr align=left valign=bottom>
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Общее число публикаций из данного издания в Научной электронной библиотеке.</p>'>&nbsp;&nbsp;Всего статей на eLIBRARY.RU:&nbsp;<a href="title_items.asp?id=8610" rel=nofollow>2275</a></td>
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Общее число выпусков данного издания в Научной электронной библиотеке. При этом выпуски могут быть неполными.</p>'>&nbsp;&nbsp;Всего выпусков на eLIBRARY.RU:&nbsp;<a href="contents.asp?titleid=8610">222</a></td>
+</tr>
+
+
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается номер свидетельства и дата регистрации СМИ в Роскомнадзоре.</p>'>&nbsp;&nbsp;Свидетельство о регистрации СМИ:&nbsp;<font color=#00008f><a href="https://rkn.gov.ru/mass-communications/reestr/media/?id=204912" target=_blank rel=nofollow>№ 013787 от 05.06.1995</a></font></td>
+</tr>
+
+
+</table>
+</td></tr></table>
+
+
+
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>РЕДАКЦИОННАЯ ПОЛИТИКА:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+<div style="height: 3px;"></div>
+<p align='justify'>Вычислительные и информационные технологии играют важную роль в развитии науки и ее приложений, позволяя решать широкий спектр фундаментальных и прикладных задач. Они включают вычислительные методы и алгоритмы, методы математического и численного моделирования, обработки и интеллектуального анализа данных и информационных потоков, средства для хранения, организации и предоставления доступа к информации и данным, другие инструменты для решения современных научных задач.<p align='justify'>Вычислительные и информационные технологии находят применение в самых различных областях науки, включая такие традиционные области как инженерия, механика сплошной среды, оптика, физика плазмы и другие разделы физики, а также химию, астрономию и астрофизику, геологию и геофизику, биологию и науки о жизни, социологию, экономические науки и др. Они используются при сборе, хранении и обработке больших объемов данных с различных сенсоров и сенсорных сетей, в том числе данных дистанционного зондирования Земли, при анализе структурированной и неструктурированной текстовой и мультимедийной информации, гигантские объемы которой курсируют в сети Интернет.<p align='justify'>Журнал принимает оригинальные научные рукописи на русском и английском языках, содержащие новые научные результаты и достижения, а также обзорные статьи о современном состоянии и новых задачах в области математического моделирования, вычислительных методов и алгоритмов, информационных технологий и технологий хранения, обработки и представления данных и информационных потоков.
+</td></tr></table>
+
+
+
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>ИНДЕКСАЦИЯ:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+<div style="height: 3px;">&nbsp;</div>
+
+<table width=100% border=0 cellspacing=0 cellpadding=3>
+
+<tr align=left valign=bottom>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Заключено или нет лицензионное соглашение с правообладателем на размещение издания на eLIBRARY.RU</p>'>&nbsp;&nbsp;eLIBRARY.RU:&nbsp;<font color=#00008f>да (договор&nbsp;290-10/2022)</font></td>
+
+<td></td>
+</tr>
+
+<tr align=left valign=bottom>
+
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Индексируется или нет данное издание в <a href="titles.asp?risc=0" rel=nofollow>Российском индексе научного цитирования</a>. Некоторые категории изданий (например, реферативные, научно-популярные, информационные журналы) могут быть размещены на платформе elibrary.ru, но не учитываются в РИНЦ. Также не учитываются журналы и сборники, не удовлетворяющие критериям включения изданий в РИНЦ или исключенные из РИНЦ за нарушение научной или издательской этики.</p><p>Если издание соответствует требованиям РИНЦ по качеству, но не имеет договора с НЭБ на поставку информации в РИНЦ, или имеет договор, но не поставляет данные более года, то для такого издания не рассчитываются импакт-фактор и другие показатели. При этом отдельные статьи из этого издания, добавленные через систему Science Index, учитываются при расчете показателей ученых и научных организаций, как входящие в РИНЦ.</p>'>&nbsp;&nbsp;РИНЦ:&nbsp;<font color=#00008f>да</font></td>
+
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Входит или нет данное издание в <a href="titles.asp?rsci=on" rel=nofollow>Russian Science Citation Index</a>.</p>'>&nbsp;&nbsp;RSCI:&nbsp;<font color=#00008f>да</font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Учитывается или нет данное издание в ядре РИНЦ. <a href="titles.asp?corerisc=on" rel=nofollow>Ядро РИНЦ</a> включает все статьи, опубликованные в журналах, индексируемых в базах данных Web of Science Core Collection, Scopus или Russian Science Citation Index (RSCI).</p>'>&nbsp;&nbsp;Ядро РИНЦ:&nbsp;<font color=#00008f>да</font></td>
+
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Включен или нет в <a href="titles.asp?doaj=on" rel=nofollow>Directory of Open Access Journals (DOAJ)</a>.</p>'>&nbsp;&nbsp;DOAJ:&nbsp;<font color=#00008f>нет</font></td>
+</tr>
+
+
+<tr align=left valign=bottom>
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Возможны три варианта включения издания в Web of Science Core Collection:<br>1) Издание может входить в Web of Science Core Collection <a href="titles.asp?wos=1" rel=nofollow>самостоятельно</a>;<br>2) В Web of Science Core Collection может входить его <a href="titles.asp?wos=2" rel=nofollow>переводная версия</a>;<br>3) <a href="titles.asp?wos=3" rel=nofollow>Отдельные статьи</a> из оригинальной версии издания переводятся и включаются в Web of Science Core Collection в виде составного журнала.</p>'>&nbsp;&nbsp;Web of Science:&nbsp;<font color=#00008f>нет</font></td>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Квартиль журнала в Web of Science.</p>'>&nbsp;&nbsp;Квартиль в Web of Science:&nbsp;<font color=#00008f>нет</font></td>
+</tr>
+
+
+<tr align=left valign=bottom>
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Возможны три варианта включения издания в Scopus:<br>1) Издание может входить в Scopus <a href="titles.asp?scopus=1" rel=nofollow>самостоятельно</a>;<br>2) В Scopus может входить его <a href="titles.asp?scopus=2" rel=nofollow>переводная версия</a>;<br>3) <a href="titles.asp?scopus=3" rel=nofollow>Отдельные статьи</a> из оригинальной версии издания переводятся и включаются в Scopus в виде составного журнала.</p>'>&nbsp;&nbsp;Scopus:&nbsp;<font color=#00008f>да</font></td>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Квартиль журнала в Scopus (Scimago).</p>'>&nbsp;&nbsp;Квартиль в Scopus:&nbsp;<font color=#00008f><a href="titles.asp?scopus=7" rel=nofollow>4</a></font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Включено или нет данное издание в <a href="titles.asp?white=01" rel=nofollow>Белый список</a>.</p>'>&nbsp;&nbsp;Белый список:&nbsp;<font color=#00008f>да</font></td>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Уровень журнала в Белом списке.</p>'>&nbsp;&nbsp;Уровень в Белом списке:&nbsp;<font color=#00008f><a href="titles.asp?white=05" rel=nofollow>4</a></font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Включено или нет данное издание в <a href="titles.asp?white=07" rel=nofollow>Единый государственный перечень научных изданий</a>.</p>'>&nbsp;&nbsp;ЕГПНИ:&nbsp;<font color=#00008f>да</font></td>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Уровень журнала в ЕГПНИ.</p>'>&nbsp;&nbsp;Уровень в ЕГПНИ:&nbsp;<font color=#00008f><a href="titles.asp?white=09" rel=nofollow>2</a></font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Включено или нет данное издание в <a href="titles.asp?vak=1" rel=nofollow>Перечень рецензируемых научных изданий</a>, в которых должны быть опубликованы основные научные результаты диссертаций на соискание ученой степени кандидата или доктора наук.</p>'>&nbsp;&nbsp;Перечень ВАК РФ:&nbsp;<font color=#00008f>да</font></td>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Категория журнала в Перечне ВАК.</p>'>&nbsp;&nbsp;Категория в Перечне ВАК:&nbsp;<font color=#00008f>нет</font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Участвует ли данный журнал в рейтинге российских научных журналов Science Index</p>'>&nbsp;&nbsp;Рейтинг Science Index:&nbsp;<font color=#00008f>да</font></td>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Процентиль журнала в рейтинге Science Index</p>'>&nbsp;&nbsp;Процентиль в рейтинге Science Index:&nbsp;<font color=#00008f><a href="titles.asp?risc=3" rel=nofollow>14</a></font></td>
+</tr>
+
+
+<tr align=left valign=bottom>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Заключено или нет соглашение с CrossRef на регистрацию DOI.</p>'>&nbsp;&nbsp;CrossRef:&nbsp;<font color=#00008f>да</font></td>
+
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Префикс издательства или данного издания в DOI.</p>'>&nbsp;&nbsp;Префикс DOI:&nbsp;<font color=#00008f><a href="https://apps.crossref.org/myCrossref/?report=missingmetadata&datatype=j&prefix=10.25743" target=_blank rel=nofollow>10.25743/ICT.</a></font></td>
+</tr>
+
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Полнотекстовые и библиографические базы данных, в которых индексируется издание.</p>'>&nbsp;&nbsp;Базы данных:&nbsp;<font color=#00008f>Scopus, AMS MathSciNet, Ulrich's Periodicals Directory, Web of Science: RSCI (Russian Science Citation Index at Web of Science), РИНЦ, Перечень ВАК РФ (список изданий, входящих в международные базы)</font></td>
+</tr>
+
+</table>
+</td></tr></table>
+
+
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>КОНТАКТНАЯ ИНФОРМАЦИЯ:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+<div style="height: 3px;">&nbsp;</div>
+
+<table width=100% border=0 cellspacing=0 cellpadding=3>
+
+<tr align=left valign=bottom>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Страна редакции издания.</p>'>&nbsp;&nbsp;Страна:&nbsp;<font color=#00008f>Россия</font></td>
+<td width=50%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Город редакции издания.</p>'>&nbsp;&nbsp;Город:&nbsp;<font color=#00008f>Новосибирск</font></td>
+</tr>
+
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Почтовый адрес редакции.</p>'>&nbsp;&nbsp;Адрес:&nbsp;<font color=#00008f>630090, г. Новосибирск, пр-т Академика Лаврентьева, 6</font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Официальный адрес электронной почты редакции.</p>'>&nbsp;&nbsp;Email:&nbsp;<font color=#00008f>jct@ict.nsc.ru</font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Телефон редакции.</p>'>&nbsp;&nbsp;Телефон:&nbsp;<font color=#00008f>+7(383) 334-91-23</font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Официальный сайт издания.</p>'>&nbsp;&nbsp;Сайт:&nbsp;<font color=#00008f><a href="http://www.ict.nsc.ru/jct/main" target="_blank">http://www.ict.nsc.ru/jct/main</a></font></td>
+</tr>
+
+
+</table>
+</td></tr></table>
+
+
+
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>ГЛАВНЫЙ РЕДАКТОР:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=4284">Федорук Михаил Петрович</a></font>
+<a href='mailto:person1@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='академик РАН'>
+<br>
+
+<font color=#00008f><a href="/org_profile.asp?id=34">Федеральный исследовательский центр информационных и вычислительных технологий</a></font>
+ (Новосибирск)<br>
+
+<font color=#00008f><a href="/org_profile.asp?id=214">Новосибирский национальный исследовательский государственный университет</a></font>
+ (Новосибирск)<br>
+
+</td></tr></table>
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>ЗАМЕСТИТЕЛИ ГЛАВНОГО РЕДАКТОРА:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=60351">Медведев Сергей Борисович</a></font>
+<a href='mailto:person2@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='д.ф.-м.н.'>
+<br>
+
+<font color=#00008f><a href="/org_profile.asp?id=34">Федеральный исследовательский центр информационных и вычислительных технологий</a></font>
+ (Новосибирск)<br>
+
+</td></tr></table>
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>ОТВЕТСТВЕННЫЙ СЕКРЕТАРЬ:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=10510">Барахнин Владимир Борисович</a></font>
+<a href='mailto:person3@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='д.т.н.'>
+<br>
+
+<font color=#00008f><a href="/org_profile.asp?id=34">Федеральный исследовательский центр информационных и вычислительных технологий</a></font>
+ (Новосибирск)<br>
+
+</td></tr></table>
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>РЕДАКЦИОННАЯ КОЛЛЕГИЯ:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=3369">Баутин Сергей Петрович</a></font>
+<a href='mailto:person4@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='professor'><br>
+
+<font color=#00008f>Снежинский физико-технический институт Национального исследовательского ядерного университета «МИФИ»</font>
+ (Снежинск)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f>Жумагулов Бакытжан Турсынович</font>
+<a href='mailto:person5@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='академик НИА РК'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=17537">Национальная инженерная академия Республики Казахстан</a></font>
+ (Алматы)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f>Калимолдаев Максат Нурадилович</font>
+<a href='mailto:person6@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='академик НАН РК'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=729">Национальная академия наук Республики Казахстан</a></font>
+ (Алматы)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f>Крейнович Владислав Яковлевич</font>
+<a href='mailto:person7@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='профессор'><br>
+
+<font color=#00008f>Техасский университет в Эль-Пасо
+</font>
+ (Техас)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=67004">Лаврентьев Михаил Михайлович</a></font>
+<a href='mailto:person8@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='член-корр. РАН'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=214">Новосибирский национальный исследовательский государственный университет</a></font>
+ (Новосибирск)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=10498">Марченко Михаил Александрович</a></font>
+<a href='mailto:person9@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='профессор РАН'><br>
+
+<font color=#00008f>Институт вычислительной математики и математической геофизики СО РАН</font>
+ (Новосибирск)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f>Милошевич Хранислав</font>
+<a href='mailto:person10@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='профессор'><br>
+
+<font color=#00008f>Университет Приштины в Косовской Митровице</font>
+ (Приштина)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=1096174">Мирзаев Ибрахим Мирзаевич</a></font>
+<a href='mailto:person11@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='профессор'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=2807">Институт механики и сейсмостойкости сооружений им. М.Т. Уразбаева АН Республики Узбекистан</a></font>
+ (Ташкент)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=1919">Москвичев Владимир Викторович</a></font>
+<a href='mailto:person12@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='профессор'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=34">Федеральный исследовательский центр информационных и вычислительных технологий</a></font>
+ (Новосибирск)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=19683">Панченко Владислав Яковлевич</a></font>
+<a href='mailto:person13@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='академик РАН'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=174">Федеральный научно-исследовательский центр "Кристаллография и Фотоника" Российской академии наук</a></font>
+ (Москва)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=17939">Потатуркин Олег Иосифович</a></font>
+<a href='mailto:person14@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='профессор'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=491">Институт автоматики и электрометрии СО РАН</a></font>
+ (Новосибирск)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f>Реш Михаэль</font>
+<a href='mailto:person15@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='профессор'><br>
+
+<font color=#00008f>Центр высокопроизводительных вычислений г.Штутгарта, Институт высокопроизводительных вычислений</font>
+ (Штутгарт)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=150060">Ронжин Андрей Леонидович</a></font>
+<a href='mailto:person16@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='профессор'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=489">Санкт-Петербургский Федеральный исследовательский центр РАН</a></font>
+ (Санкт-Петербург)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=106839">Рябко Борис Яковлевич</a></font>
+<a href='mailto:person17@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='профессор'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=34">Федеральный исследовательский центр информационных и вычислительных технологий</a></font>
+ (Новосибирск)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=7899">Садовский Владимир Михайлович</a></font>
+<a href='mailto:person18@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='чл.-корр. РАН'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=73">Институт вычислительного моделирования  ФИЦ КНЦ СО РАН</a></font>
+ (Красноярск)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=1872">Смагин Сергей Иванович</a></font>
+<a href='mailto:person19@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='академик РАН'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=13823">Хабаровский Федеральный исследовательский центр</a></font>
+ (Хабаровск)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=3028">Сойфер Виктор Александрович</a></font>
+<a href='mailto:person20@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='академик РАН'><br>
+
+<font color=#00008f>Самарский национальный исследовательский университет имени академика С.П. Королева</font>
+ (Самара)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=3331">Стемпковский Александр Леонидович</a></font>
+<a href='mailto:person21@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='академик РАН'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=174">Институт проблем проектирования в микроэлектронике РАН</a></font>
+ (Москва)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=2075">Тайманов Искандер Асанович</a></font>
+<a href='mailto:person22@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='академик РАН'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=19">Институт математики им. С.Л. Соболева СО РАН</a></font>
+ (Новосибирск)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f>Темирбеков Нурлан Муханович</font>
+<a href='mailto:person23@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='академик НИА РК'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=17537">Национальная инженерная академия Республики Казахстан</a></font>
+ (Алматы)<br>
+
+<font color=#00008f><a href="/org_profile.asp?id=729">Национальная академия наук Республики Казахстан</a></font>
+ (Алматы)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=4281">Черный Сергей Григорьевич</a></font>
+<a href='mailto:person24@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='профессор'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=34">Федеральный исследовательский центр информационных и вычислительных технологий</a></font>
+ (Новосибирск)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=14">Четверушкин Борис Николаевич</a></font>
+<a href='mailto:person25@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='академик РАН'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=375">Институт прикладной математики им. М.В. Келдыша РАН</a></font>
+ (Москва)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=6">Шайдуров Владимир Викторович</a></font>
+<a href='mailto:person26@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='академик РАН'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=73">Институт вычислительного моделирования  ФИЦ КНЦ СО РАН</a></font>
+ (Красноярск)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f><a href="/author_profile.asp?authorid=4359">Шарый Сергей Петрович</a></font>
+<a href='mailto:person27@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='профессор'><br>
+
+<font color=#00008f><a href="/org_profile.asp?id=34">Федеральный исследовательский центр информационных и вычислительных технологий</a></font>
+ (Новосибирск)<br>
+
+<div style="height: 5px;"></div>
+<font color=#00008f>Шрёдер Вольфганг</font>
+<a href='mailto:person28@example.org' rel=nofollow><img src='/images/mail1.gif' border=0 hspace=2 height=8 width=10 title='Написать письмо'></a><img src='/images/about_author.gif' border=0 hspace=2 height=10 width=9 class='help2 pointer' title='профессор'><br>
+
+<font color=#00008f>Рейнско-Вестфальский технический университет Ахена</font>
+ (Ахен)<br>
+
+</td></tr></table>
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>РЕЦЕНЗИРОВАНИЕ:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+<div style="height: 3px;">&nbsp;</div>
+
+<table width=100% border=0 cellspacing=0 cellpadding=3>
+<tr align=left valign=bottom>
+<td width=60%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается основной вид рецензирования поступающих в редакцию рукописей.</p><p><b>Двойное слепое рецензирование</b> - автор не известен рецензенту, рецензент неизвестен автору.</p><p><b>Одностороннее слепое рецензирование</b> - автор известен рецензенту, рецензент неизвестен автору.</p><p><b>Открытое рецензирование</b> - автор известен рецензенту и рецензент известен автору.</p><p><b>Рецензии открыто публикуются</b> - рецензент известен не только автору, его фамилия, а также сама рецензия открыто публикуются вместе со статьей.</p>'>&nbsp;&nbsp;Вид:&nbsp;<font color=#00008f>одностороннее слепое рецензирование</font></td>
+<td width=40%><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается среднее количество рецензентов на одну поступившую рукопись.</p>'>&nbsp;&nbsp;Число рецензентов:&nbsp;<font color=#00008f>2</font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается доля рукописей (в процентах), не принятых к публикации, по отношению ко всем рукописям, поступившим в редакцию.</p>'>&nbsp;&nbsp;Доля отклоненных рукописей:&nbsp;<font color=#00008f>24</font></td>
+<td><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается среднее время (в днях) с момента поступления рукописи в редакцию и до момента принятия ее в печать.</p>'>&nbsp;&nbsp;Срок публикации:&nbsp;<font color=#00008f>120&nbsp;дней</font></td>
+</tr>
+
+<tr align=left valign=bottom>
+<td colspan=2><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Указывается основной способ рецензирования поступающих в редакцию рукописей.</p>'>&nbsp;&nbsp;Рецензирование осуществляется:&nbsp;<font color=#00008f>внешними экспертами, отобранными редакцией</font></td>
+</tr>
+
+</table>
+</td></tr></table>
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>РУБРИКИ ГРНТИ:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+<div style="height: 3px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=3>
+
+<tr align=left valign=top>
+<td width=8%>200000.</td>
+<td width=92%>
+<font color=#00008f>Информатика</font></td>
+</tr>
+
+<tr align=left valign=top>
+<td width=8%>500000.</td>
+<td width=92%>
+<font color=#00008f>Автоматика. Вычислительная техника</font></td>
+</tr>
+
+<tr align=left valign=top>
+<td width=8%>270000.</td>
+<td width=92%>
+<font color=#00008f>Математика</font></td>
+</tr>
+
+</table>
+</td></tr></table>
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>РУБРИКИ OECD:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+<div style="height: 3px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=3>
+
+<tr align=left valign=top>
+<td width=5%>101.</td>
+<td width=95%>
+<font color=#00008f>Mathematics</font></td>
+</tr>
+
+<tr align=left valign=top>
+<td width=5%>102.</td>
+<td width=95%>
+<font color=#00008f>Computer and information sciences</font></td>
+</tr>
+
+</table>
+</td></tr></table>
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>СПЕЦИАЛЬНОСТИ ВАК:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+<div style="height: 3px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=3>
+
+<tr align=left valign=top>
+<td width=8%>010000.</td>
+<td width=92%>
+<font color=#00008f>Естественные науки</font></td>
+</tr>
+
+<tr align=left valign=top>
+<td width=8%>020300.</td>
+<td width=92%>
+<font color=#00008f>Информационные технологии и телекоммуникации</font></td>
+</tr>
+
+</table>
+</td></tr></table>
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>ОСНОВНЫЕ РАЗДЕЛЫ:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+<div style="height: 3px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=3>
+
+<tr align=left valign=bottom>
+<td width=100%>
+<font color=#00008f><a href="title_items.asp?id=8610&section=351749" target="_blank" rel=nofollow>Математическое моделирование</a></font>
+
+</td>
+</tr>
+
+<tr align=left valign=bottom>
+<td width=100%>
+<font color=#00008f><a href="title_items.asp?id=8610&section=351750" target="_blank" rel=nofollow>Вычислительные технологии</a></font>
+
+</td>
+</tr>
+
+<tr align=left valign=bottom>
+<td width=100%>
+<font color=#00008f><a href="title_items.asp?id=8610&section=351751" target="_blank" rel=nofollow>Информационные технологии</a></font>
+
+</td>
+</tr>
+
+</table>
+</td></tr></table>
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>ДОПОЛНИТЕЛЬНЫЕ ФАЙЛЫ:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+<div style="height: 3px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=3>
+
+<tr align=left valign=bottom>
+<td width=100%>
+Положение о порядке рецензирования: <font color=#00008f><a href="javascript:show_titlefile(2)" rel=nofollow>Положение о рецензировании статей ЖВТ.rtf</a></font>
+</td>
+</tr>
+
+<tr align=left valign=bottom>
+<td width=100%>
+Положение об издательской этике: <font color=#00008f><a href="javascript:show_titlefile(3)" rel=nofollow>Редакционная политика ЖВТ.rtf</a></font>
+</td>
+</tr>
+
+<tr align=left valign=bottom>
+<td width=100%>
+Свидетельство о регистрации СМИ: <font color=#00008f><a href="javascript:show_titlefile(4)" rel=nofollow>свид_рег_ЖВТ.pdf</a></font>
+</td>
+</tr>
+
+<tr align=left valign=bottom>
+<td width=100%>
+Выходные данные: <font color=#00008f><a href="javascript:show_titlefile(5)" rel=nofollow>02 tit_2021_1_s1.pdf</a></font>
+</td>
+</tr>
+
+<tr align=left valign=bottom>
+<td width=100%>
+Выходные данные: <font color=#00008f><a href="javascript:show_titlefile(6)" rel=nofollow>03 tit_2021_1_s2.pdf</a></font>
+</td>
+</tr>
+
+<tr align=left valign=bottom>
+<td width=100%>
+Правила для авторов: <font color=#00008f><a href="javascript:show_titlefile(7)" rel=nofollow>14 Author-2021_tematJCT_n.pdf</a></font>
+</td>
+</tr>
+
+<tr align=left valign=bottom>
+<td width=100%>
+Типовой авторский договор: <font color=#00008f><a href="javascript:show_titlefile(8)" rel=nofollow>License_contract_ru.pdf</a></font>
+</td>
+</tr>
+
+</table>
+</td></tr></table>
+
+<div style="height: 8px;"></div>
+<table width=550 border=0 cellspacing=0 cellpadding=3>
+<tr><td colspan=2 align=left>
+<font color=#000000>ИСТОРИЯ ПЕРЕИМЕНОВАНИЙ И ПЕРЕВОДА:</font></td></tr>
+<tr><td width=34>&nbsp;</td><td width=504 align=left valign=middle>
+<div style="height: 3px;"></div>
+<p align='justify'>Предшественником журнала являлся одноименный сборник трудов, выходивший в 1992-1995 гг., 13 выпусков которого пользовались популярностью как у читателей, так и у авторов.
+</td></tr></table>
+
+
+
+
+<div style="height:15px;"></div>
+<br>
+</td></tr></table>
+
+</td>
+<td align=right valign=top>
+
+<div id="panel_default" style="position: relative; width: 200px; height:0; margin: 0; border: 1px; padding: 0"></div>
+<div id="panel" style="position: relative; width: 200px; margin: 0; border: 0; padding: 0">
+
+<div style="width: 190px;" class="right-panel">
+
+<table width=190 cellspacing=0 cellpadding=3 border=0>
+
+<tr><td colspan=2 align=center valign=top><font color=#F26C4F><b>ИНСТРУМЕНТЫ</b></font>
+<div style="height: 8px;"></div></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="contents.asp?titleid=8610"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="contents.asp?titleid=8610">Оглавления выпусков журнала</a>
+
+<tr><td width=15% align=right valign=top>
+<a href="title_items.asp?id=8610" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="title_items.asp?id=8610" rel=nofollow>Список статей в журнале</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="querybox.asp?titles_all=8610|" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="querybox.asp?titles_all=8610|" rel=nofollow>Искать статьи в журнале</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="cit_title_items.asp?id=8610" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="cit_title_items.asp?id=8610" rel=nofollow>Список публикаций, ссылающихся на статьи в журнале</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:titlebox_add()" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:titlebox_add()" rel=nofollow>Добавить журнал в подборку</a></td></tr>
+
+
+
+<tr><td colspan=2><div style="height: 8px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="title_profile.asp?id=8610"><img src="/pic/stat.gif" width=12 height=13 hspace=4 border=0></a></td>
+<td width=85% align=left valign=middle><a href="title_profile.asp?id=8610">Анализ публикационной активности журнала</a>
+</td></tr>
+
+
+<tr><td colspan=2><div style="height: 8px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="titles.asp" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="titles.asp" rel=nofollow>Каталог журналов</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="titles_compare.asp"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="titles_compare.asp">Сравнение библиометрических показателей журналов</a>
+</td></tr>
+
+</table>
+</div>
+
+<img src="/pic/1pix.gif" vspace=10>
+
+<div style="width: 190px;" class="help-panel">
+<table width=190 cellspacing=0 cellpadding=3 border=0>
+
+
+<tr><td width=15% align=right valign=top>
+<img src="images/but_orange_!.gif" width=15 height=15 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Дата последнего изменения данных об издании: 10.03.2026</font></td></tr>
+
+<tr><td colspan=2><div style="height: 8px;"></div></td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<img src="/images/but_orange_i.gif" width=15 height=15 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>По вопросам, связанным с регистрацией изданий или внесением изменений в анкету, обращайтесь в службу поддержки:<br><br>
+<a href="mailto:biblio@elibrary.ru" rel=nofollow>biblio@elibrary.ru</a>
+<br>+7 (495) 544-24-94 доб.2
+</td></tr>
+
+</table>
+</div>
+
+</div>
+
+</td></tr></table>
+</td></tr></table>
+</FORM>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+$(function() {
+$(".help").tooltip({
+	position: "top right",
+	offset: [-15, -100],
+	effect: "fade", 
+	fadeInSpeed: 400, 
+	fadeOutSpeed: 400, 
+	delay: 400,  
+	predelay: 400,
+	opacity: 1.0
+});
+});
+$(function() {
+$(".help3").tooltip({
+	position: "top right",
+	offset: [210, 5],
+	effect: "fade", 
+	fadeInSpeed: 400, 
+	fadeOutSpeed: 400, 
+	delay: 400,  
+	predelay: 400,
+	opacity: 1.0
+});
+});
+$(function() {
+$(".help2").tooltip({
+	position: "top right",
+	offset: [30, 5],
+	effect: "fade", 
+	fadeInSpeed: 400, 
+	fadeOutSpeed: 400, 
+	delay: 400,  
+	predelay: 400,
+	opacity: 1.0
+});
+});
+</script>
+
+
+<br><br>
+<table width=970 height=40 border=0 cellpadding=0 cellspacing=0 id="footer">
+<tr align=center valign=middle class="menug">
+<td width=15% valign="bottom">
+
+</td>
+<td width=70%><font color=#00008f><span style="position: relative; top: 3px; right: 15px; color: #F26C4F;">*</span><a href="/copyright.asp">&copy; 2000-2026 ООО НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА. Все права защищены</a></font><span style="position: relative; top: 3px; left: 15px; color: #F26C4F;">*</span></td>
+<td width=15% valign="bottom">
+
+</td>
+</tr></table>
+
+<!-- Yandex.Metrika -->
+<div style="display:none;"><script type="text/javascript">
+(function(w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter171463 = new Ya.Metrika(171463);
+        } catch(e) {}
+    });
+})(window, 'yandex_metrika_callbacks');
+</script></div>
+<script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script>
+<noscript><div style="position:absolute"><img src="//mc.yandex.ru/watch/171463" alt="" /></div></noscript>
+<!-- /Yandex.Metrika -->
+
+
+
+
+<br><br><br>
+</td></tr></table>
+</html>

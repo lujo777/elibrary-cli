@@ -1,0 +1,140 @@
+{
+ "best_oa_location": {
+  "endpoint_id": null,
+  "evidence": "deprecated",
+  "host_type": "publisher",
+  "is_best": true,
+  "license": "cc-by-nc-nd",
+  "oa_date": "2023-10-17",
+  "pmh_id": null,
+  "repository_institution": null,
+  "updated": "deprecated",
+  "url": "https://journals.eco-vector.com/RMMArep/article/download/424450/pdf",
+  "url_for_landing_page": "https://doi.org/10.17816/rmmar424450",
+  "url_for_pdf": "https://journals.eco-vector.com/RMMArep/article/download/424450/pdf",
+  "version": "publishedVersion"
+ },
+ "data_standard": 2,
+ "doi": "10.17816/rmmar424450",
+ "doi_url": "https://doi.org/10.17816/rmmar424450",
+ "first_oa_location": {
+  "endpoint_id": null,
+  "evidence": "deprecated",
+  "host_type": "publisher",
+  "is_best": true,
+  "license": "cc-by-nc-nd",
+  "oa_date": "2023-10-17",
+  "pmh_id": null,
+  "repository_institution": null,
+  "updated": "deprecated",
+  "url": "https://journals.eco-vector.com/RMMArep/article/download/424450/pdf",
+  "url_for_landing_page": "https://doi.org/10.17816/rmmar424450",
+  "url_for_pdf": "https://journals.eco-vector.com/RMMArep/article/download/424450/pdf",
+  "version": "publishedVersion"
+ },
+ "genre": "journal-article",
+ "has_repository_copy": false,
+ "is_oa": true,
+ "is_paratext": false,
+ "journal_is_in_doaj": false,
+ "journal_is_oa": false,
+ "journal_issn_l": "2713-2315",
+ "journal_issns": "2713-2315,2713-2323",
+ "journal_name": "Russian Military Medical Academy Reports",
+ "oa_locations": [
+  {
+   "endpoint_id": null,
+   "evidence": "deprecated",
+   "host_type": "publisher",
+   "is_best": true,
+   "license": "cc-by-nc-nd",
+   "oa_date": "2023-10-17",
+   "pmh_id": null,
+   "repository_institution": null,
+   "updated": "deprecated",
+   "url": "https://journals.eco-vector.com/RMMArep/article/download/424450/pdf",
+   "url_for_landing_page": "https://doi.org/10.17816/rmmar424450",
+   "url_for_pdf": "https://journals.eco-vector.com/RMMArep/article/download/424450/pdf",
+   "version": "publishedVersion"
+  }
+ ],
+ "oa_locations_embargoed": [],
+ "oa_status": "hybrid",
+ "published_date": "2023-10-17",
+ "publisher": "ECO-Vector LLC",
+ "title": "Idiopathic omentum hemorrhage as a cause of hemoperitoneum",
+ "updated": "2026-09-09T13:38:15Z",
+ "year": 2023,
+ "z_authors": [
+  {
+   "author_position": "first",
+   "is_corresponding": false,
+   "raw_affiliation_strings": [
+    "Military Medical Academy; Saint Petersburg State Pediatric Medical University",
+    "Military Medical Academy",
+    "Saint Petersburg State Pediatric Medical University"
+   ],
+   "raw_author_name": "Vladimir V. Ryazanov"
+  },
+  {
+   "author_position": "middle",
+   "is_corresponding": false,
+   "raw_affiliation_strings": [
+    "Military Medical Academy; Saint Petersburg State Pediatric Medical University",
+    "Military Medical Academy",
+    "Saint Petersburg State Pediatric Medical University"
+   ],
+   "raw_author_name": "Gulnaz K. Sadykova"
+  },
+  {
+   "author_position": "middle",
+   "is_corresponding": false,
+   "raw_affiliation_strings": [
+    "Military Medical Academy"
+   ],
+   "raw_author_name": "Igor S. Zheleznyak"
+  },
+  {
+   "author_position": "middle",
+   "is_corresponding": false,
+   "raw_affiliation_strings": [
+    "Military Medical Academy"
+   ],
+   "raw_author_name": "Victor V. Ipatov"
+  },
+  {
+   "author_position": "middle",
+   "is_corresponding": false,
+   "raw_affiliation_strings": [
+    "Saint Petersburg State Pediatric Medical University"
+   ],
+   "raw_author_name": "Ilya S. Khodkevich"
+  },
+  {
+   "author_position": "middle",
+   "is_corresponding": false,
+   "raw_affiliation_strings": [
+    "Saint Petersburg State Pediatric Medical University"
+   ],
+   "raw_author_name": "Roman A. Postanogov"
+  },
+  {
+   "author_position": "middle",
+   "is_corresponding": false,
+   "raw_affiliation_strings": [
+    "Military Medical Academy; Almazov National Medical Research Centre",
+    "Almazov National Medical Research Centre",
+    "Military Medical Academy"
+   ],
+   "raw_author_name": "Gennadiy G. Romanov"
+  },
+  {
+   "author_position": "last",
+   "is_corresponding": false,
+   "raw_affiliation_strings": [
+    "Military Medical Academy"
+   ],
+   "raw_author_name": "Anastasiya Ya. Latysheva"
+  }
+ ]
+}

@@ -1,0 +1,3481 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="robots" content="noindex,nofollow">
+<title>Иванов Юрий Федорович - Список публикаций</title>
+
+<script type="text/javascript" src="/jquery.min.js"></script>
+<script type="text/javascript" src="/jquery.tools.min.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.easydrag.js"></script>
+<script type="text/javascript" src="/elibrary1.js"></script>
+<script type="text/javascript" src="/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/style_sm.css" type="text/css" media="screen">
+
+<SCRIPT LANGUAGE="JavaScript">
+
+but_blue_hover=new Image();
+but_blue_hover.src="/images/but_blue_hover.png";
+but_red_hover=new Image();
+but_red_hover.src="/images/but_red_hover.png";
+but_gray_hover=new Image();
+but_gray_hover.src="/images/but_gray_hover.png";
+
+w_down=new Image();
+w_down.src="/pic/w_show.gif";
+w_up=new Image();
+w_up.src="/pic/w_hide.gif";
+ws_down=new Image();
+ws_down.src="/images/or_er2_down.gif";
+ws_up=new Image();
+ws_up.src="/images/or_close2.gif";
+
+var selRow;
+var row_color;
+function onRowClick(row){
+  if(row != selRow){
+     if (selRow != null){
+        selRow.bgColor = row_color;
+     }
+  selRow = row;
+  row_color = row.bgColor;
+  selRow.bgColor="#e8e8e8";
+  }
+}
+function hideShow(elem,parent) {
+  var child =  document.getElementById(elem);
+  child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+  if (parent.className == "win_expandable") parent.src = child.className == "collapsed" ? w_down.src : w_up.src;
+}
+function hideShowSel(elem) {
+  var child =  document.getElementById(elem);
+  child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+  var imgparent =  document.getElementById('img_'+elem);
+  if (imgparent.className == "win_expandable") imgparent.src = child.className == "collapsed" ? ws_down.src : ws_up.src;
+  var txtparent =  document.getElementById('txt_'+elem);
+  if (txtparent.className == "win_expandable") txtparent.innerHTML = child.className == "collapsed" ? "Раскрыть" : "Скрыть";
+}
+function hideShowSel1(elem) {
+  var child =  document.getElementById(elem);
+  $('#'+elem).slideToggle(500, function(){didScroll = true;})
+  child.className = child.className == "collapsed1" ? "expanded1" : "collapsed1";
+  if (child.className == "collapsed1") {
+    $('#'+elem).slideUp(500, function(){didScroll = true;})}
+  else {
+    $('#'+elem).slideDown(500, function(){didScroll = true;})}
+  var txtparent =  document.getElementById('txt_'+elem);
+  if (txtparent.className == "win_expandable") txtparent.innerHTML = child.className == "collapsed1" ? "▼" : "▲";
+}
+function RowSelect(row,sel){
+  var rbgc = sel==1 ? "#e8e8e8" : "#f5f5f5";
+  $('#'+row+' td').attr('bgColor', rbgc);
+}
+function select_all(){
+  $('input:checkbox[name^="tid"]').attr('checked', true);
+  $('input:checkbox[name^="pid"]').attr('checked', true);
+  $('tr[id^="arw"] td').attr('bgColor', "#e8e8e8");
+  $('tr[id^="brw"] td').attr('bgColor', "#e8e8e8");
+}
+function deselect_all(){
+  $('input:checkbox[name^="tid"]').attr('checked', false);
+  $('input:checkbox[name^="pid"]').attr('checked', false);
+  $('tr[id^="arw"] td').attr('bgColor', "#f5f5f5");
+  $('tr[id^="brw"] td').attr('bgColor', "#f5f5f5");
+}
+function select_options(sname){
+  $('input:checkbox[name^="'+sname+'s_"]').attr('checked', true);
+  $('tr[name^="'+sname+'_"]').attr('bgColor', "#dddddd");
+  checked_count(sname);
+  isnew=1;
+  }
+function deselect_options(sname){
+  $('input:checkbox[name^="'+sname+'s_"]').attr('checked', false);
+  $('tr[name^="'+sname+'_"]').attr('bgColor', "#f5f5f5");
+  checked_count(sname);
+  isnew=1;
+}
+function wait_load_options(sname){
+  $('span[name="'+sname+'sheader"]').text('загружается...');
+}
+function checked_count(sname){
+  var nb=$('input:checkbox[name^="'+sname+'s_"]:checked').length;
+  if (nb>0){$('span[name="'+sname+'sheader"]').html('(выделено: ' + nb + ')')}
+  else{$('span[name="'+sname+'sheader"]').text('')}
+}
+var ir=0;
+function resizelist(sname, offset) {
+ if (ir <= offset+10) {
+  ir=ir+1;
+  $('div[id="'+sname+'_options"]').height(ir+50);
+  window.setTimeout('resizelist("'+sname+'", '+offset+')', 1);
+ }
+}
+var rubricloaded=0;
+var titleloaded=0;
+var orgloaded=0;
+var authorloaded=0;
+var yearloaded=0;
+var typeloaded=0;
+var catloaded=0;
+var roleloaded=0;
+var keywordloaded=0;
+var isnew=0;
+
+$(document).ready(function() { 
+	didScroll=true;
+
+
+
+$('#rubric_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="rubrics_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(8) + "|"});
+$('#rubrics_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#rubrics_options').load("author_items_rubrics.asp?id=17783&order=" + $('#rubric_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+rubricloaded=1;
+})
+$('*[id$="_rubrics"]').click(function() { 
+hideShowSel1('rubrics');
+if (rubricloaded==0){
+$('#rubrics_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_rubrics.asp?id=17783&order=" + $('#rubric_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#rubrics_options').html(data);
+  if ($('#rubrics_table').height()<=200){$('#rubrics_options').height($('#rubrics_table').height()+10)}
+  else {$('#rubrics_options').height(200)};
+  rubricloaded=1;
+  })
+}
+else {
+  if ($('#rubrics_table').height()<=200){$('#rubrics_options').height($('#rubrics_table').height()+10)}
+  else {$('#rubrics_options').height(200)};
+}
+})
+
+
+$('#title_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="titles_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(7) + "|"});
+$('#titles_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#titles_options').load("author_items_titles.asp?id=17783&order=" + $('#title_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+titleloaded=1;
+})
+$('*[id$="_titles"]').click(function() { 
+hideShowSel1('titles');
+if (titleloaded==0){
+$('#titles_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_titles.asp?id=17783&order=" + $('#title_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#titles_options').html(data);
+  if ($('#titles_table').height()<=200){$('#titles_options').height($('#titles_table').height()+10)}
+  else {$('#titles_options').height(200)};
+  titleloaded=1;
+  })
+}
+else {
+  if ($('#titles_table').height()<=200){$('#titles_options').height($('#titles_table').height()+10)}
+  else {$('#titles_options').height(200)};
+}
+})
+
+
+$('#org_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="orgs_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(5) + "|"});
+$('#orgs_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#orgs_options').load("author_items_orgs.asp?id=17783&order=" + $('#org_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+orgloaded=1;
+})
+$('*[id$="_orgs"]').click(function() { 
+hideShowSel1('orgs');
+if (orgloaded==0){
+$('#orgs_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_orgs.asp?id=17783&order=" + $('#org_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#orgs_options').html(data);
+  if ($('#orgs_table').height()<=200){$('#orgs_options').height($('#orgs_table').height()+10)}
+  else {$('#orgs_options').height(200)};
+  orgloaded=1;
+  })
+}
+else {
+  if ($('#orgs_table').height()<=200){$('#orgs_options').height($('#orgs_table').height()+10)}
+  else {$('#orgs_options').height(200)};
+}
+})
+
+
+$('#author_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="authors_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(8) + "|"});
+selids = encodeURIComponent(selids);
+$('#authors_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#authors_options').load("author_items_authors.asp?id=17783&order=" + $('#author_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+authorloaded=1;
+})
+$('*[id$="_authors"]').click(function() { 
+hideShowSel1('authors');
+if (authorloaded==0){
+$('#authors_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_authors.asp?id=17783&order=" + $('#author_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#authors_options').html(data);
+  if ($('#authors_table').height()<=200){$('#authors_options').height($('#authors_table').height()+10)}
+  else {$('#authors_options').height(200)};
+  authorloaded=1;
+  })
+}
+else {
+  if ($('#authors_table').height()<=200){$('#authors_options').height($('#authors_table').height()+10)}
+  else {$('#authors_options').height(200)};
+}
+})
+
+
+$('#year_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="years_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(6) + "|"});
+$('#years_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#years_options').load("author_items_years.asp?id=17783&order=" + $('#year_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+yearloaded=1;
+})
+$('*[id$="_years"]').click(function() { 
+hideShowSel1('years');
+if (yearloaded==0){
+$('#years_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_years.asp?id=17783&order=" + $('#year_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#years_options').html(data);
+  if ($('#years_table').height()<=200){$('#years_options').height($('#years_table').height()+10)}
+  else {$('#years_options').height(200)};
+  yearloaded=1;
+  })
+}
+else {
+  if ($('#years_table').height()<=200){$('#years_options').height($('#years_table').height()+10)}
+  else {$('#years_options').height(200)};
+}
+})
+
+
+$('#type_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="types_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(6) + "|"});
+$('#types_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#types_options').load("author_items_types.asp?id=17783&order=" + $('#type_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+typeloaded=1;
+})
+$('*[id$="_types"]').click(function() { 
+hideShowSel1('types');
+if (typeloaded==0){
+$('#types_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_types.asp?id=17783&order=" + $('#type_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#types_options').html(data);
+  if ($('#types_table').height()<=200){$('#types_options').height($('#types_table').height()+10)}
+  else {$('#types_options').height(200)};
+  typeloaded=1;
+  })
+}
+else {
+  if ($('#types_table').height()<=200){$('#types_options').height($('#types_table').height()+10)}
+  else {$('#types_options').height(200)};
+}
+})
+
+
+$('#cat_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="cats_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(6) + "|"});
+$('#cats_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#cats_options').load("author_items_cats.asp?id=17783&order=" + $('#cat_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+catloaded=1;
+})
+$('*[id$="_cats"]').click(function() { 
+hideShowSel1('cats');
+if (catloaded==0){
+$('#cats_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_cats.asp?id=17783&order=" + $('#cat_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#cats_options').html(data);
+  if ($('#cats_table').height()<=200){$('#cats_options').height($('#cats_table').height()+10)}
+  else {$('#cats_options').height(200)};
+  catloaded=1;
+  })
+}
+else {
+  if ($('#cats_table').height()<=200){$('#cats_options').height($('#cats_table').height()+10)}
+  else {$('#cats_options').height(200)};
+}
+})
+
+
+$('#role_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="roles_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(6) + "|"});
+$('#roles_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#roles_options').load("author_items_roles.asp?id=17783&order=" + $('#role_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+roleloaded=1;
+})
+$('*[id$="_roles"]').click(function() { 
+hideShowSel1('roles');
+if (roleloaded==0){
+$('#roles_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_roles.asp?id=17783&order=" + $('#role_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#roles_options').html(data);
+  if ($('#roles_table').height()<=200){$('#roles_options').height($('#roles_table').height()+10)}
+  else {$('#roles_options').height(200)};
+  roleloaded=1;
+  })
+}
+else {
+  if ($('#roles_table').height()<=200){$('#roles_options').height($('#roles_table').height()+10)}
+  else {$('#roles_options').height(200)};
+}
+})
+
+
+$('#keyword_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="keywords_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(9) + "|"});
+$('#keywords_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#keywords_options').load("author_items_keywords.asp?id=17783&order=" + $('#keyword_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+keywordloaded=1;
+})
+$('*[id$="_keywords"]').click(function() { 
+hideShowSel1('keywords');
+if (keywordloaded==0){
+$('#keywords_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_keywords.asp?id=17783&order=" + $('#keyword_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#keywords_options').html(data);
+  if ($('#keywords_table').height()<=200){$('#keywords_options').height($('#keywords_table').height()+10)}
+  else {$('#keywords_options').height(200)};
+  keywordloaded=1;
+  })
+}
+else {
+  if ($('#keywords_table').height()<=200){$('#keywords_options').height($('#keywords_table').height()+10)}
+  else {$('#keywords_options').height(200)};
+}
+})
+
+
+})
+
+function reset_form(){
+  var frm = document.forms["results"];
+  deselect_options("rubric"); 
+  deselect_options("title"); 
+  deselect_options("org"); 
+  deselect_options("author"); 
+  deselect_options("year"); 
+  deselect_options("type"); 
+  deselect_options("cat"); 
+  deselect_options("role"); 
+  deselect_options("keyword"); 
+}
+function pub_search(){
+  var frm = document.forms["results"];
+    frm.pagenum.value=1;
+    frm.action="author_items.asp";
+    frm.target="";
+    frm.submit()
+}
+
+
+function itembox_add(){
+  var frm = document.forms["results"];
+  var issel=0;
+  frm.items_all.value="";
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       if (frm.elements[i].checked) {
+	     issel=issel+1;
+	     frm.items_all.value = frm.items_all.value + frm.elements[i].name.substring(3, frm.elements[i].name.length) + "|";
+	   }
+    }
+	}
+	if (issel==0) {
+    alerts ("Не выделено ни одной публикации")}
+	else {
+    $.fancybox({
+      href : 'itembox_select.asp?items_all='+frm.items_all.value ,
+      title : '',
+			padding : 20,     
+			width : 480,
+			height : 400,
+			overlayOpacity : 0.3,	
+			overlayColor : '#000',
+			speedIn : 500,
+			hideOnOverlayClick : false,
+			enableEscapeButton : true,
+			type : 'iframe'
+    });
+  }
+}
+
+function itembox_add_all(){
+  var frm = document.forms["results"];
+	$.fancybox({
+		href : 'itembox_select.asp?listid='+frm.listid.value ,
+		title : '',
+		padding : 20,     
+		width : 480,
+		height : 400,
+		overlayOpacity : 0.3,	
+		overlayColor : '#000',
+		speedIn : 500,
+		hideOnOverlayClick : false,
+		enableEscapeButton : true,
+		type : 'iframe'
+	});
+}
+
+function items_rubric_add(){
+  var frm = document.forms["results"];
+  var issel=0;
+  frm.items_all.value="";
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       if (frm.elements[i].checked) {
+	     issel=issel+1;
+	     frm.items_all.value = frm.items_all.value + frm.elements[i].name.substring(3, frm.elements[i].name.length) + "|";
+	   }
+    }
+ }
+ if (issel==0) {
+    alerts ("Не выделено ни одной публикации")}
+ else {
+  $.fancybox({
+    href : 'items_rubric_add.asp?items_all='+frm.items_all.value ,
+    title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 150,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+  });
+ }
+}
+function newquery(){
+  document.forms["results"].action="querybox.asp";
+  document.forms["results"].target="";
+  document.forms["results"].submit()
+}
+function show_help(topic){
+  anewwin=window.open("", "addwin", "resizable=yes,scrollbars=yes,height=300,width=500,top=0,left=0");
+  document.forms["results"].action=topic;
+  document.forms["results"].target="addwin";
+  document.forms["results"].submit()
+}
+function load_article(id){
+
+  alerts("Для доступа к полному тексту необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function url_article(idid, urlnum){
+
+  alerts("Для просмотра документа необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function order_item(id, pr){
+
+  alerts("Для заказа полного текста публикации необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function goto_page(pnum){
+  var frm = document.forms["results"];
+  frm.pagenum.value=pnum;
+  frm.action="author_items.asp";
+  frm.target="";
+  frm.submit()
+}
+
+function author_items_print(){
+  var frm = document.forms["results"];
+  anewwin=window.open("", "author_items_print17783", "resizable=yes,scrollbars=yes,menubar=yes,height=600,width=700,top=50,left=50");
+  frm.action="author_items_print.asp";
+  frm.target="author_items_print17783";
+  frm.submit()
+}
+
+
+
+function show_author_refs(iid){
+
+  alerts("Для доступа к этой странице необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.forms["login"].login.focus();
+
+}
+
+
+function isVisible(tag) {
+    var t = $(tag);
+    var w = $(window);
+    var wt = w.scrollTop();
+    var tt = t.offset().top;
+    var tb = tt + t.height();
+    return ((tb <= wt + w.height()) && (tt >= wt));
+}
+function pdf_icon(b) {
+  if (!b.prop("shown") && isVisible(b)) {
+    b.prop("shown", true);
+    b.load("ispdf.asp?itemid=" + b.attr('name').substring(4) + "&rand=" + Math.random());
+  }
+}
+function get_pdfs(){
+  $('div[id^="pdf_"]:not(prop("shown"))').each(function(){
+    pdf_icon($(this))
+  });
+}
+setInterval(function() {
+  if ( didScroll2 ) {
+	didScroll2=false;
+	get_pdfs();
+    }
+ }, 200);
+
+</SCRIPT>
+</head>
+
+<body onLoad='document.all.loading.style.display="none"; document.all.thepage.style.display=""'>
+
+<div id="loading" style="position:absolute; width:100%; text-align:center; top:300px;">
+Пожалуйста, подождите, <br>пока Ваш запрос будет обработан
+<br><img src="/pic/query_wait.gif" border=0 width=31 height=31 vspace=5></div>
+
+<div id="thepage" style="display: none">
+<table width=100% cellpadding=0 cellspacing=0 border=0>
+<tr><td width=100% align=center valign=top>
+
+
+<table  cellpadding=0 cellspacing=0 border=0>
+<tr><td width=170 align=left valign=top id="leftcol">
+
+<table border=0 cellspacing=0 cellpadding=0 width=150>
+
+<tr><td><a href="/defaultx.asp"><img src="/images/welcome1.jpg" width=150 title="НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА eLIBRARY.RU" border=0 vspace=15></a></td></tr>
+
+
+<tr><td><a href="/defaultx.asp"><img id="elibrary_logo" src="/images/elibrary_logo2.svg" width=150 height=39 border=0 vspace=10 title="eLIBRARY.RU - НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА"></a></td></tr>
+<script language="JavaScript">
+if (supportsSVG) {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo2.svg";}
+else {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo.gif";}
+</script>
+<tr><td><img src="/pic/1pix.gif" vspace=7></td></tr>
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_basket').slideToggle(500, function(){didScroll = true;})" title="Состояние корзины в электронном магазине eLIBRARY.ru">КОРЗИНА</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_basket" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+<tr><td width=100% align=center valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Всего в корзине:&nbsp;</font><font color=#00008f><b><span id="basket_num">0</span></b>&nbsp;публ.</font></td></tr>
+<tr><td width=100% align=center valign=top>
+&nbsp;<font color=#000000>на сумму:&nbsp;</font><font color=#00008f><b><span id="basket_sum">0</span></b>&nbsp;руб.</font></td></tr>
+</td></tr>
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=center width=30 valign=bottom><a href="/basket.asp"><img src="/images/basket.png" width=15 height=15 border=0></a></td><td align=left width=110 valign=top><a href="/basket.asp">Содержание корзины</a></td></tr>
+</table>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_search(){
+if (document.forms["search"].ftext.value.length > 1) {
+  var frm = document.forms["search"];
+  frm.action="/query_results.asp";
+  frm.target="";
+  frm.submit();
+  }
+else {
+  alert("Введите не менее двух символов");
+  }
+}
+function search_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_search();
+	return false;
+  }
+} 
+</SCRIPT>
+<FORM method=post name="search" onSubmit="return false">
+<input type="hidden" name="where_fulltext" value="on">
+<input type="hidden" name="where_name" value="on">
+<input type="hidden" name="where_abstract" value="on">
+<input type="hidden" name="where_keywords" value="on">
+<input type="hidden" name="where_affiliation" value="">
+<input type="hidden" name="where_references" value="">
+<input type="hidden" name="type_article" value="on">
+<input type="hidden" name="type_disser" value="on">
+<input type="hidden" name="type_book" value="on">
+<input type="hidden" name="type_report" value="on">
+<input type="hidden" name="type_conf" value="on">
+<input type="hidden" name="type_patent" value="on">
+<input type="hidden" name="type_preprint" value="on">
+<input type="hidden" name="type_grant" value="on">
+<input type="hidden" name="type_dataset" value="on">
+<input type="hidden" name="search_freetext" value="">
+<input type="hidden" name="search_morph" value="on">
+<input type="hidden" name="search_fulltext" value="">
+<input type="hidden" name="search_open" value="">
+<input type="hidden" name="search_results" value="">
+<input type="hidden" name="titles_all" value="">
+<input type="hidden" name="authors_all" value="">
+<input type="hidden" name="rubrics_all" value="">
+<input type="hidden" name="queryboxid" value="">
+<input type="hidden" name="itemboxid" value="">
+<input type="hidden" name="begin_year" value="">
+<input type="hidden" name="end_year" value="">
+<input type="hidden" name="issues" value="all">
+<input type="hidden" name="orderby" value="rank">
+<input type="hidden" name="order" value="rev">
+<input type="hidden" name="changed" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_search').slideToggle(500, function(){didScroll = true;})" title="Поиск в Научной электронной библиотеке">ПОИСК</span></b></font>
+</td></tr>
+</table>
+<div ID="win_search" class="collapsed">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=140 align=center valign=top>
+<div style="height: 10px;"></div>
+<div class="formfr" style="width:126px;"><input type=text id="ftext" name="ftext" value="" style="width:118px;" class="inputt" onKeyPress="search_enter(event);"></div>
+<div style="height: 11px;"></div>
+
+<div class="butblue" style="width: 52px;" onClick="check_search()">Найти</div>
+
+</td></tr>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+</table>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/querybox.asp?scope=newquery">Расширенный поиск</a></td></tr>
+
+
+<tr><td colspan=2><div style="height:3px;"></div></td></tr>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/neural_search.asp">Нейропоиск</a></td></tr>
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+
+</FORM>
+
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_all(){
+  if (document.forms["login"].login.value==""){
+    alert("Не указано имя пользователя!");
+	return false;
+	}
+  else if (document.forms["login"].password.value==""){
+    alert("Не указан пароль!");
+	return false;
+	}
+  else{
+    var frm = document.forms["login"];
+    frm.action="/start_session.asp";
+    frm.target="";
+    frm.submit();
+   }
+}
+function login_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_all();
+	return false;
+  }
+} 
+function sso_orgs(){
+  var frm = document.forms["results"];
+  $.fancybox({
+    href : 'sso_orgs.asp' ,
+    title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 200,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+  });
+}
+function show_hide_password(target){
+	var input = document.getElementById('password');
+	if (input.getAttribute('type') == 'password') {
+		target.classList.add('view');
+		input.setAttribute('type', 'text');
+	} 
+	else {
+		target.classList.remove('view');
+		input.setAttribute('type', 'password');
+	}
+	return false;
+}
+</SCRIPT>
+
+<FORM method=post name="login" onSubmit="return false">
+<input type=hidden name="rpage" value=https://elibrary.ru/author_items.asp?authorid=17783&show_refs=1&org_order=0&cat_order=1&sortorder=0&slight=&itembox_name=&authorhash=Иванов Ю Ф&paysum=&auth=&urlnum=1&show_hash=0&pagenum=2&title_order=0&add_all=&hide_doubles=1&author_order=0&check_show_refs=on&items_all=&publs_all=&listid=&rubric_order=0&role_order=0&order=1&did=1&keyword_order=0&year_order=1&type_order=0&check_hide_doubles=on>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_login').slideToggle(500, function(){didScroll = true;})" title="Вход в библиотеку для зарегистрированных пользователей">ВХОД</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_login" class="expanded">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Имя пользователя<br>&nbsp;или адрес эл. почты:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<div class="formfr" style="width:126px;"><input type=text id="login" name="login" value="" style="width:118px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"></div>
+</td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Пароль:</font></td></tr>
+<tr><td align=center width=100%>
+<div class="formfr" style="width:126px;"><input type=password id="password" name="password" value="" style="width:102px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"><a href="#" class="password-control" onclick="return show_hide_password(this);"></a></div>
+</td></tr>
+
+<tr><td align=center width=100%>
+
+<div style="height: 9px;"></div>
+<div class="butred" style="width: 52px;" onClick="check_all()">Вход</div>
+<div style="height: 9px;"></div>
+
+</td></tr></table>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr valign=middle class="menub"><td align=center width=30><input type=checkbox name="knowme"></td><td align=left width=101>Запомнить меня</td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/access_terms.asp">Правила доступа</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/author_info.asp?isnew=1&rpage=https%3A%2F%2Felibrary%2Eru%2Fauthor%5Fitems%2Easp%3Fauthorid%3D17783%26show%5Frefs%3D1%26org%5Forder%3D0%26cat%5Forder%3D1%26sortorder%3D0%26slight%3D%26itembox%5Fname%3D%26authorhash%3D%D0%98%D0%B2%D0%B0%D0%BD%D0%BE%D0%B2+%D0%AE+%D0%A4%26paysum%3D%26auth%3D%26urlnum%3D1%26show%5Fhash%3D0%26pagenum%3D2%26title%5Forder%3D0%26add%5Fall%3D%26hide%5Fdoubles%3D1%26author%5Forder%3D0%26check%5Fshow%5Frefs%3Don%26items%5Fall%3D%26publs%5Fall%3D%26listid%3D%26rubric%5Forder%3D0%26role%5Forder%3D0%26order%3D1%26did%3D1%26keyword%5Forder%3D0%26year%5Forder%3D1%26type%5Forder%3D0%26check%5Fhide%5Fdoubles%3Don">Регистрация</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/pass_request.asp">Забыли пароль?</a></td></tr>
+
+
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:sso_orgs()">Вход через Вашу организацию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+</td></tr>
+</FORM>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_goto').slideToggle(500, function(){didScroll = true;})" title="Быстрый переход на популярные страницы сайта">НАВИГАТОР</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_goto" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=4 cellpadding=0 width=140>
+
+<tr valign=top><td width=25 align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left width=115><a href="/titles.asp">ЖУРНАЛЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/books.asp">КНИГИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/patents.asp">ПАТЕНТЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/querybox.asp">ПОИСК</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/authors.asp">АВТОРЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/orgs.asp">ОРГАНИЗАЦИИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/keywords.asp">КЛЮЧЕВЫЕ СЛОВА</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/rubrics.asp">РУБРИКАТОР</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/region_compare.asp">РЕГИОНЫ</a></td></tr>
+
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=25 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=115 valign=top><a href="/defaultx.asp">Начальная страница</a></td></tr></table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_legend').slideToggle(500, function(){didScroll = true;})" title="Назначение используе">ЛЕГЕНДА</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_legend" class="expanded">
+
+<div style="height: 10px;"></div>
+<table width=100% cellspacing=0 cellpadding=3 border=0 bgcolor=#eeeeee>
+<tr><td width=15% align=right valign=top><img src="/images/download_green.png" width=16 hspace=3 border=0></td><td width=85% align=left valign=middle><font color=#00008f>Доступ к полному тексту документа открыт</font></td></tr>
+<tr><td align=right valign=top><img src="/images/download_blue.png" width=16 hspace=3 border=0></td><td align=left valign=middle><font color=#00008f>Полный текст доступен на сайте издателя</font></td></tr>
+<tr><td align=right valign=top><img src="/images/download_yellow.png" width=16 hspace=3 border=0></td><td align=left valign=middle><font color=#00008f>Полный текст может быть получен через систему заказа</font></td></tr>
+<tr><td align=right valign=top><img src="/images/download_orange.png" width=16 hspace=3 border=0></td><td align=left valign=middle><font color=#00008f>Доступ к полному тексту закрыт</font></td></tr>
+<tr><td valign=top align=center><font color=#00008f>-</font></td><td align=left><font color=#00008f>Если иконки нет - полный текст документа отсутствует в НЭБ</font></td></tr>
+
+<tr><td valign=top align=right><img src="/images/ref.png" width=16 hspace=3 border=0></td>
+<td align=left><font color=#00008f>Публикация из списков цитируемой литературы</font></td></tr>
+
+</table>
+
+</div></div>
+</td></tr>
+
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function end_session(){
+
+  document.forms["session"].saveuser.value="1";
+
+  document.forms["session"].action="/end_session.asp";
+  document.forms["session"].target="";
+  document.forms["session"].submit()
+}
+</SCRIPT>
+<FORM action="/end_session.asp" method=POST name="session">
+<input type="hidden" name="saveuser" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_session').slideToggle(500, function(){didScroll = true;})" title="Информация о текущей сессии пользователя">СЕССИЯ</span></b></font>
+</td></tr>
+</table>
+
+
+<div ID="win_session" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>Имя пользователя:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>Незарегистрированный пользователь</font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Начало работы:</font></td></tr>
+
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>13.10.2026 17:51</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Время работы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>00:42</font></td></tr>
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="/project_user_office.asp">Личный кабинет</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:end_session()">Закрыть сессию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+</FORM>
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_contact').slideToggle(500, function(){didScroll = true;})" title="Контактная информация Научной электронной библиотеки">КОНТАКТЫ</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_contact" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Служба поддержки:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 1<br></font>
+<font color=#00008f><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font></td></tr>
+</td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям журналов:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 2<br></font>
+<font color=#00008f><a href="mailto:publish@elibrary.ru">publish@elibrary.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям книг:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 3<br></font>
+<font color=#00008f><a href="mailto:book@elibrary.ru">book@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Space для издательств:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:info@sciencespace.ru">info@sciencespace.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Index для организаций:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:org@scienceindex.ru">org@scienceindex.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Доступ к API:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:api@elibrary.ru">api@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Подписчикам:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 6<br></font>
+<font color=#00008f><a href="mailto:sales.team@elibrary.ru">sales.team@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Конференции, семинары:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 7<br></font>
+<font color=#00008f><a href="mailto:conf@elibrary.ru">conf@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Почтовый адрес:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="/contact_new.asp">117246, г. Москва,
+Научный проезд, д. 14А, стр. 3, таунхаус 1</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Веб-сайт:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://elibrary.ru">https://elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Telegram-канал:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://t.me/elibrary_ru_official" target=_blank>t.me/elibrary_ru_official</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Размещение рекламы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:reklama@elibrary.ru">reklama@elibrary.ru</a></font></td></tr>
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/contact_new.asp">Схема проезда</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="https://support.elibrary.ru">Задать вопрос</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/vacancy.asp">Вакансии</a></td></tr>
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<div style="width: 140px;" class="help-panel">
+<table width=140 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=15% align=right valign=top>
+<img src="/images/but_orange_i.gif" width=15 height=15 hspace=0 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>По всем вопросам, связанным с работой в системе Science Index, обращайтесь, пожалуйста, в службу поддержки:<br><br>
++7 (495) 544-2494<br><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font>
+</td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+
+
+</table>
+
+</td><td align=left valign=top>
+
+<FORM method=post name="results" onSubmit="return false">
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr><td width=600 align=left valign=top>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+<tr><td width=100% align=left valign=top>
+
+<div class="header-panel">
+<div style="margin: 0; border: 0; padding: 0 0 5px 0; text-align: center; font-size: 9pt;"><font color=#5674b9><b>СПИСОК ПУБЛИКАЦИЙ АВТОРА</b></font></div>
+</div>
+
+</td></tr></table>
+
+</td><td width=200 align=right valign=middle id="rightcol">
+
+
+<table width=200 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=12% align=right valign=top>
+<a href="https://t.me/elibrary_ru_official/118" target=_blank><img src="/images/telegram.svg" width=24 height=24 border=0></a></td>
+<td width=88% align=left valign=middle><font color=#00008f><a href="https://t.me/elibrary_ru_official/118" target=_blank>Обновления в анализе публикационной активности организаций</a></font>
+</td></tr>
+</table>
+</td></tr>
+
+
+<tr><td align=left valign=top>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+
+<input type="hidden" name="itembox_name" value="">
+<input type="hidden" name="auth" value="">
+<input type="hidden" name="authorid" value="17783">
+<input type="hidden" name="authorhash" value="Иванов Ю Ф">
+<input type="hidden" name="pagenum" value="2">
+<input type="hidden" name="add_all" value="">
+<input type="hidden" name="paysum" value="">
+<input type="hidden" name="slight" value="">
+<input type="hidden" name="show_refs" value="1">
+<input type="hidden" name="hide_doubles" value="1">
+<input type="hidden" name="items_all" value="">
+<input type="hidden" name="publs_all" value="">
+<input type="hidden" name="did" value="1">
+<input type="hidden" name="urlnum" value="1">
+<input type="hidden" name="listid" value="">
+
+<tr><td width=100% align=left valign=top>
+
+<div style="width:540px; margin:0 20px 20px 20px; border:0; padding:0; text-align: center; font-size: 9pt;">
+<font color=#F26C4F><b>ИВАНОВ ЮРИЙ ФЕДОРОВИЧ</b></font>  <span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br><a href="org_about.asp?orgsid=116">Институт сильноточной электроники СО РАН</a>, лаборатория плазменной эмиссионной электроники (Томск)
+
+</div>
+
+<div class="form-panel">
+
+<div style="margin:0; border:0; padding:0;">
+<font color=#F26C4F><b><span class="expandable" onClick="$('#show_param').slideToggle(500, function(){didScroll = true;})" title="Показать/скрыть параметры поиска">ПАРАМЕТРЫ</span></b></font>
+</div>
+
+<div id="show_param" class="expanded">
+
+<div style="height:5px;"></div>
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_rubrics" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_rubrics">ТЕМАТИКА</span></font><span id="rubricsheader" name="rubricsheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="rubrics" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="rubric_order" style="width:168px;" class="input" id="rubric_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по названию рубрики
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("rubric")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("rubric")'>Снять выделение</a></td></tr>
+</table>
+<div id="rubrics_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_titles" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_titles">ЖУРНАЛЫ</span></font><span id="titlesheader" name="titlesheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="titles" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="title_order" style="width:168px" class="input" id="title_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по названию журнала
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("title")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("title")'>Снять выделение</a></td></tr>
+</table>
+<div id="titles_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_orgs" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_orgs">ОРГАНИЗАЦИИ</span></font><span id="orgsheader" name="orgsheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="orgs" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="org_order" style="width:168px" class="input" id="org_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по названию организации
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("org")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("org")'>Снять выделение</a></td></tr>
+</table>
+<div id="orgs_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_authors" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_authors">АВТОРЫ</span></font><span id="authorsheader" name="authorsheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="authors" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="author_order" style="width:168px" class="input" id="author_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по фамилии
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("author")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("author")'>Снять выделение</a></td></tr>
+</table>
+<div id="authors_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_years" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_years">ГОДЫ</span></font><span id="yearsheader" name="yearsheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="years" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="year_order" style="width:168px" class="input" id="year_order">
+<option value="0" >по числу публикаций
+<option value="1" selected>по году
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("year")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("year")'>Снять выделение</a></td></tr>
+</table>
+<div id="years_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_types" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_types">ТИП ПУБЛИКАЦИИ</span></font><span id="typesheader" name="typesheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="types" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="type_order" style="width:168px" class="input" id="type_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по типу публикации
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("type")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("type")'>Снять выделение</a></td></tr>
+</table>
+<div id="types_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_cats" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_cats">КАТЕГОРИЯ ПУБЛИКАЦИИ</span></font><span id="catsheader" name="catsheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="cats" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="cat_order" style="width:168px" class="input" id="cat_order">
+<option value="0" >по числу цитирований
+<option value="1" selected>по категории публикации
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("cat")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("cat")'>Снять выделение</a></td></tr>
+</table>
+<div id="cats_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_roles" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_roles">УЧАСТИЕ В ПУБЛИКАЦИИ</span></font><span id="rolesheader" name="rolesheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="roles" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="role_order" style="width:168px" class="input" id="role_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по способу участия
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("role")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("role")'>Снять выделение</a></td></tr>
+</table>
+<div id="roles_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_keywords" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_keywords">КЛЮЧЕВЫЕ СЛОВА</span></font><span id="keywordsheader" name="keywordsheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="keywords" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="keyword_order" style="width:168px" class="input" id="keyword_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по ключевому слову
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("keyword")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("keyword")'>Снять выделение</a></td></tr>
+</table>
+<div id="keywords_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+<div style="height:5px;">&nbsp;</div>
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td width=514 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Показывать:</font></td></tr>
+<tr><td align=left valign=top>
+<div class="formfr"><select id="show_hash" name="show_hash" style="width:510px" class="input" onKeyPress="submit_enter(event)">
+<option value="0" selected>включенные в список работ автора (привязанные) публикации
+<option value="1" >непривязанные публикации, которые могут принадлежать данному автору
+
+</select></div></td></tr>
+</table>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr><td align=right width=24><input type=checkbox name="check_show_refs" id="check_show_refs" checked onClick='if (this.checked) {document.forms["results"].show_refs.value="1";} else {document.forms["results"].show_refs.value="0";}'></td><td align=left width=484>- учитывать публикации, извлеченные из списков цитируемой литературы&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Показываются не только публикации, имеющие полное библиографическое описание в РИНЦ, но и публикации автора, извлеченные из списков цитируемой литературы. Это позволяет учесть публикации, отсутствующие в РИНЦ, но при этом хорошо цитируемые в современной научной литературе</p>'></td></tr>
+<tr><td align=right width=24><input type=checkbox name="check_hide_doubles" id="check_hide_doubles" checked onClick='if (this.checked) {document.forms["results"].hide_doubles.value="1";} else {document.forms["results"].hide_doubles.value="0";}'></td><td align=left width=484>- объединять оригинальные и переводные версии статей и переиздания книг&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>В этом режиме разные версии одной и той же публикации (например, ее оригинальная и переводная версии, или повторные издания одной и той же монографии) объединяются в группу и при расчетах всех показателей автора учитываются как одна публикация. В том числе ссылки, сделанные из таких публикаций, засчитываются как одна ссылка</p>'></td></tr>
+</table>
+
+<div style="height:5px;"></div>
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td width=170 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Сортировка:</font></td><td width=15></td><td width=139 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Порядок:</font></td><td width=15></td><td width=80></td><td width=80></td></tr>
+<tr align=left valign=top>
+<td><div class="formfr"><select id="sortorder" name="sortorder" style="width:166px" class="input" onChange='var ord = document.forms["results"].order; switch(this.value) {case "0" : ord.value="1"; break; case "1" : ord.value="0"; break; case "6" : ord.value="1"; break; case "2" : ord.value="1"; break; case "3" : ord.value="1"; break; case "4" : ord.value="1"; break; case "5" : ord.value="0"; break; case "7" : ord.value="1"; break; }' onKeyPress="submit_enter(event)">
+<option value="0" selected>по дате выпуска
+<option value="1" >по названию публикации
+<option value="2" >по году и первому автору
+<option value="6" >по году и названию
+<option value="5" >по первому автору
+<option value="3" >по числу цитирований
+<option value="4" >по дате размещения
+<option value="7" >по тематической близости
+</select></div></td>
+<td></td>
+<td><div class="formfr"><select id="order" name="order" style="width:135px" class="input" onKeyPress="submit_enter(event)">
+<option value="0" >по возрастанию
+<option value="1" selected>по убыванию
+</select></div></td>
+<td></td>
+<td align=left valign=middle>
+<div class="butblue" style="width: 67px;" onClick="reset_form()">Очистить</div>
+</td>
+<td align=right valign=middle>
+<div class="butred" style="width: 67px;" onClick="pub_search()">Поиск</div>
+</td>
+</tr>
+</table>
+
+<div style="height:8px;"></div>
+</div>
+</div>
+
+
+<a name="list"></a>
+<div style="width: 480px; margin: 10px 0 10px 30px; border: 0; padding: 10px 20px 7px 20px; text-align: center;" >
+<table width=480 cellspacing=3 cellpadding=0 border=0>
+<tr><td width=40 align=right valign=top><img src="images/but_orange_i.gif" width=15 height=15 hspace=10 border=0></td><td width=431 align=left valign=top class="redref"><font color=#00008f>Всего найдена</font> <b><font color=#ff0000>2581</font></b> <font color=#00008f>публикация с общим количеством цитирований: </font><b><font color=#ff0000><span id="totalcited"></span></font></b><font color=#00008f>.<br>Показано на данной странице: с <b>101</b> по <b>200</b>.</font></td></tr></table>
+</div>
+
+<table width=580 cellspacing=0 cellpadding=3 id="restab" style="border-spacing: 0px 4px; table-layout: fixed;">
+<tr align=center valign=middle height=15>
+<td width=28><font color=#555555>&nbsp;<b>№</b></font></td>
+<td width=510><font color=#555555><b>Публикация</b></font></td>
+<td width=24><span title="Число цитирований публикации в РИНЦ"><font color=#555555><b>Цит.</b></font></span></td></tr>
+<tr><td colspan=3>
+<div style="width: 574px;" class="table-line"></div>
+</td></tr>
+
+<tr><td colspan=3 height=0></td></tr>
+
+
+<tr valign=middle id="arw80407957">
+<td align=center valign=top class="select-tr-left"><a name="x80407957"></a>
+<font color=#00008f><b>101.</b></font><br><input type=checkbox name="tid80407957" id="tid80407957"  onClick='if (this.checked) {RowSelect("arw80407957",1)} else {RowSelect("arw80407957",0)}'><div id="pdf_80407957" name="pdf_80407957"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80407957"><b><span style="line-height:1.0;">STRUCTURE, PHASE COMPOSITION, AND SURFACE PROPERTIES OF R2M9 HIGH-SPEED STEEL</span></b></a><br><font color=#00008f><i>Ivanov Yu.F., Gromov V.E., Yuryev A.B., Minenko S.S., Semin A.P., Chapaikin A.S.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=80407933">Journal of Surface Investigation: X-Ray, Synchrotron and Neutron Techniques</a>. 
+2024. Т. 18. <a href="/contents.asp?id=80407933&selid=80407957">№&nbsp;6</a>.  С. 1395-1400.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+8</td></tr>
+
+
+
+<tr valign=middle id="arw80497924">
+<td align=center valign=top class="select-tr-left"><a name="x80497924"></a>
+<font color=#00008f><b>102.</b></font><br><input type=checkbox name="tid80497924" id="tid80497924"  onClick='if (this.checked) {RowSelect("arw80497924",1)} else {RowSelect("arw80497924",0)}'><div id="pdf_80497924" name="pdf_80497924"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80497924"><b><span style="line-height:1.0;">MODELING OF THE ELECTRON BEAM CURRENT DURING THE PULSE FOR ALLOYING THE SURFACE OF STAINLESS STEEL WITH TITANIUM AND ALUMINUM</span></b></a><br><font color=#00008f><i>Shpanov D.A., Moskvin P.V., Petrikova E.A., Ivanov Yu.F., Vorobyov M.S.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=80497905">Journal of Surface Investigation: X-Ray, Synchrotron and Neutron Techniques</a>. 
+2024. Т. 18. <a href="/contents.asp?id=80497905&selid=80497924">№&nbsp;S1</a>.  С. S136-S145.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw80497918">
+<td align=center valign=top class="select-tr-left"><a name="x80497918"></a>
+<font color=#00008f><b>103.</b></font><br><input type=checkbox name="tid80497918" id="tid80497918"  onClick='if (this.checked) {RowSelect("arw80497918",1)} else {RowSelect("arw80497918",0)}'><div id="pdf_80497918" name="pdf_80497918"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80497918"><b><span style="line-height:1.0;">STRUCTURAL STUDIES OF THE “NITRIDE COATING/SILUMIN SUBSTRATE” SYSTEM AFTER PULSED ELECTRON BEAM TREATMENT</span></b></a><br><font color=#00008f><i>Krysina O.V., Ivanov Yu.F., Prokopenko N.A., Teresov A.D., Moskvin P.V., Petrikova E.A., Tolkachev O.S.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=80497905">Journal of Surface Investigation: X-Ray, Synchrotron and Neutron Techniques</a>. 
+2024. Т. 18. <a href="/contents.asp?id=80497905&selid=80497918">№&nbsp;S1</a>.  С. S91-S99.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw64894619">
+<td align=center valign=top class="select-tr-left"><a name="x64894619"></a>
+<font color=#00008f><b>104.</b></font><br><input type=checkbox name="tid64894619" id="tid64894619"  onClick='if (this.checked) {RowSelect("arw64894619",1)} else {RowSelect("arw64894619",0)}'><div id="pdf_64894619" name="pdf_64894619"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=64894619"><b><span style="line-height:1.0;">АНАЛИЗ СТРУКТУРЫ ПОВЕРХНОСТНОГО СЛОЯ РЕЛЬСОВ СПЕЦИАЛЬНОГО НАЗНАЧЕНИЯ, ФОРМИРУЮЩЕЙСЯ В ПРОЦЕССЕ ЭКСПЛУАТАЦИИ</span></b></a><br><font color=#00008f><i>Порфирьев М.А., Иванов Ю.Ф., Громов В.Е., Шлярова Ю.А., Крюков Р.Е.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=64894616">Фундаментальные проблемы современного материаловедения</a>. 
+2024. Т. 21. <a href="/contents.asp?id=64894616&selid=64894619">№&nbsp;1</a>.  С. 28-35.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw64894617">
+<td align=center valign=top class="select-tr-left"><a name="x64894617"></a>
+<font color=#00008f><b>105.</b></font><br><input type=checkbox name="tid64894617" id="tid64894617"  onClick='if (this.checked) {RowSelect("arw64894617",1)} else {RowSelect("arw64894617",0)}'><div id="pdf_64894617" name="pdf_64894617"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=64894617"><b><span style="line-height:1.0;">ЭЛЕКТРОННО-МИКРОСКОПИЧЕСКОЕ ИССЛЕДОВАНИЕ СТРУКТУРЫ ЗОНЫ КОНТАКТА ПОДЛОЖКА-ПОКРЫТИЕ, ПОДВЕРГНУТОЙ ОБЛУЧЕНИЮ ИМПУЛЬСНЫМ ЭЛЕКТРОННЫМ ПУЧКОМ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Ефимов М.О., Громов В.Е., Шлярова Ю.А., Коновалов С.В., Панченко И.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=64894616">Фундаментальные проблемы современного материаловедения</a>. 
+2024. Т. 21. <a href="/contents.asp?id=64894616&selid=64894617">№&nbsp;1</a>.  С. 9-16.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw67900054">
+<td align=center valign=top class="select-tr-left"><a name="x67900054"></a>
+<font color=#00008f><b>106.</b></font><br><input type=checkbox name="tid67900054" id="tid67900054"  onClick='if (this.checked) {RowSelect("arw67900054",1)} else {RowSelect("arw67900054",0)}'><div id="pdf_67900054" name="pdf_67900054"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67900054"><b><span style="line-height:1.0;">СТРУКТУРА СЛОЯ БЫСТРОРЕЖУЩЕЙ СТАЛИ С АЗОТОМ, НАПЛАВЛЕННОГО НА ДЕТАЛИ МЕТАЛЛУРГИЧЕСКОГО ОБОРУДОВАНИЯ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Громов В.Е., Перегудов О.А., Ващук Е.С., Гостевская А.Н.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=67900053">Фундаментальные проблемы современного материаловедения</a>. 
+2024. Т. 21. <a href="/contents.asp?id=67900053&selid=67900054">№&nbsp;2</a>.  С. 143-152.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw67900058">
+<td align=center valign=top class="select-tr-left"><a name="x67900058"></a>
+<font color=#00008f><b>107.</b></font><br><input type=checkbox name="tid67900058" id="tid67900058"  onClick='if (this.checked) {RowSelect("arw67900058",1)} else {RowSelect("arw67900058",0)}'><div id="pdf_67900058" name="pdf_67900058"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67900058"><b><span style="line-height:1.0;">ВЛИЯНИЕ РАЗЛИЧНЫХ ВИДОВ НАГРУЖЕНИЯ РЕЛЬСОВОЙ СТАЛИ НА ЭВОЛЮЦИЮ ТОНКОЙ СТРУКТУРЫ</span></b></a><br><font color=#00008f><i>Попова Н.А., Громов В.Е., Порфирьев М.А., Крюков Р.Е., Иванов Ю.Ф., Шляров В.В., Никоненко Е.Л.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=67900053">Фундаментальные проблемы современного материаловедения</a>. 
+2024. Т. 21. <a href="/contents.asp?id=67900053&selid=67900058">№&nbsp;2</a>.  С. 179-187.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw71962774">
+<td align=center valign=top class="select-tr-left"><a name="x71962774"></a>
+<font color=#00008f><b>108.</b></font><br><input type=checkbox name="tid71962774" id="tid71962774"  onClick='if (this.checked) {RowSelect("arw71962774",1)} else {RowSelect("arw71962774",0)}'><div id="pdf_71962774" name="pdf_71962774"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=71962774"><b><span style="line-height:1.0;">ЭВОЛЮЦИЯ СУБСТРУКТУРЫ ЦЕМЕНТИТА РЕЛЬСОВ ИЗ ЗАЭВТЕКТОИДНОЙ СТАЛИ ПРИ ЭКСПЛУАТАЦИИ</span></b></a><br><font color=#00008f><i>Громов В.Е., Иванов Ю.Ф., Порфирьев М.А., Шлярова Ю.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=71962773">Фундаментальные проблемы современного материаловедения</a>. 
+2024. Т. 21. <a href="/contents.asp?id=71962773&selid=71962774">№&nbsp;3</a>.  С. 273-282.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+3</td></tr>
+
+
+
+<tr valign=middle id="arw71962782">
+<td align=center valign=top class="select-tr-left"><a name="x71962782"></a>
+<font color=#00008f><b>109.</b></font><br><input type=checkbox name="tid71962782" id="tid71962782"  onClick='if (this.checked) {RowSelect("arw71962782",1)} else {RowSelect("arw71962782",0)}'><div id="pdf_71962782" name="pdf_71962782"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=71962782"><b><span style="line-height:1.0;">ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ СОЗДАНИЯ И ИСПОЛЬЗОВАНИЯ ВЫСОКОЭНТРОПИЙНЫХ СПЛАВОВ</span></b></a><br><font color=#00008f><i>Громов В.Е., Иванов Ю.Ф., Семин А.П., Боровский С.В., Петрикова Е.А., Чжан П., Серебрякова А.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=71962773">Фундаментальные проблемы современного материаловедения</a>. 
+2024. Т. 21. <a href="/contents.asp?id=71962773&selid=71962782">№&nbsp;3</a>.  С. 315-324.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+4</td></tr>
+
+
+
+<tr valign=middle id="arw65515892">
+<td align=center valign=top class="select-tr-left"><a name="x65515892"></a>
+<font color=#00008f><b>110.</b></font><br><input type=checkbox name="tid65515892" id="tid65515892"  onClick='if (this.checked) {RowSelect("arw65515892",1)} else {RowSelect("arw65515892",0)}'><div id="pdf_65515892" name="pdf_65515892"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65515892"><b><span style="line-height:1.0;">СТРУКТУРА И СВОЙСТВА ЛЕНТЫ ИЗ ВЫСОКОЭНТРОПИЙНОГО СПЛАВА СOСRFENIMN</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Громов В.Е., Семин А.П., Боровский С.В., Панин С.В., Могильников П.С., Корниенков Б.А., Колотовкин Н.Ю.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=65515887">Проблемы черной металлургии и материаловедения</a>. 
+2024. <a href="/contents.asp?id=65515887&selid=65515892">№&nbsp;1</a>.  С. 46-52.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw65515895">
+<td align=center valign=top class="select-tr-left"><a name="x65515895"></a>
+<font color=#00008f><b>111.</b></font><br><input type=checkbox name="tid65515895" id="tid65515895"  onClick='if (this.checked) {RowSelect("arw65515895",1)} else {RowSelect("arw65515895",0)}'><div id="pdf_65515895" name="pdf_65515895"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65515895"><b><span style="line-height:1.0;">СТРУКТУРНО-ФАЗОВОЕ СОСТОЯНИЕ И СВОЙСТВА ПЛАЗМЕННОЙ НАПЛАВКИ БЫСТРОРЕЖУЩЕЙ СТАЛИ Р2М9Ю ПОСЛЕ ОТПУСКА</span></b></a><br><font color=#00008f><i>Гусева Т.П., Громов В.Е., Иванов Ю.Ф., Юрьев А.Б., Чапайкин А.С.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=65515887">Проблемы черной металлургии и материаловедения</a>. 
+2024. <a href="/contents.asp?id=65515887&selid=65515895">№&nbsp;1</a>.  С. 72-80.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+8</td></tr>
+
+
+
+<tr valign=middle id="arw72372400">
+<td align=center valign=top class="select-tr-left"><a name="x72372400"></a>
+<font color=#00008f><b>112.</b></font><br><input type=checkbox name="tid72372400" id="tid72372400"  onClick='if (this.checked) {RowSelect("arw72372400",1)} else {RowSelect("arw72372400",0)}'><div id="pdf_72372400" name="pdf_72372400"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=72372400"><b><span style="line-height:1.0;">ЭЛЕКТРОННО-МИКРОСКОПИЧЕСКИЙ АНАЛИЗ СТРУКТУРНО-ФАЗОВЫХ СОСТОЯНИЙ ПЛАЗМЕННОЙ БЫСТРОРЕЖУЩЕЙ НАПЛАВКИ ПОСЛЕ ОТПУСКА И ЭЛЕКТРОННО-ПУЧКОВОЙ ОБРАБОТКИ</span></b></a><br><font color=#00008f><i>Громов В.Е., Иванов Ю.Ф., Миненко С.С., Юрьев А.Б., Коновалов С.В., Чапайкин А.С., Литовченко И.Ю., Семин А.П.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=72372383">Проблемы черной металлургии и материаловедения</a>. 
+2024. <a href="/contents.asp?id=72372383&selid=72372400">№&nbsp;3</a>.  С. 113-126.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+9</td></tr>
+
+
+
+<tr valign=middle id="arw77273785">
+<td align=center valign=top class="select-tr-left"><a name="x77273785"></a>
+<font color=#00008f><b>113.</b></font><br><input type=checkbox name="tid77273785" id="tid77273785"  onClick='if (this.checked) {RowSelect("arw77273785",1)} else {RowSelect("arw77273785",0)}'><div id="pdf_77273785" name="pdf_77273785"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=77273785"><b><span style="line-height:1.0;">СТРУКТУРА, ФУНКЦИОНАЛЬНЫЕ СВОЙСТВА И ДЕФОРМАЦИОННОЕ ПОВЕДЕНИЕ ЛЕНТ АМОРФНЫХ СПЛАВОВ СИСТЕМЫ FE-CO-SI-B-P</span></b></a><br><font color=#00008f><i>Семин А.П., Громов В.Е., Иванов Ю.Ф., Панин С.В., Соснин В.В., Могильников П.С., Литовченко И.Ю., Селиванов И.Д.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=77273775">Проблемы черной металлургии и материаловедения</a>. 
+2024. <a href="/contents.asp?id=77273775&selid=77273785">№&nbsp;4</a>.  С. 64-77.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw77273786">
+<td align=center valign=top class="select-tr-left"><a name="x77273786"></a>
+<font color=#00008f><b>114.</b></font><br><input type=checkbox name="tid77273786" id="tid77273786"  onClick='if (this.checked) {RowSelect("arw77273786",1)} else {RowSelect("arw77273786",0)}'><div id="pdf_77273786" name="pdf_77273786"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=77273786"><b><span style="line-height:1.0;">СТРУКТУРА И СВОЙСТВА НАПЛАВКИ ВЫСОКОЭНТРОПИЙНОЙ МОЛИБДЕНОВОЙ БЫСТРОРЕЖУЩЕЙ СТАЛИ, ПОДВЕРГНУТОЙ МНОГОКРАТНОЙ ТЕРМИЧЕСКОЙ ОБРАБОТКЕ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Громов В.Е., Миненко С.С., Чапайкин А.С., Гусева Т.П., Романов Д.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=77273775">Проблемы черной металлургии и материаловедения</a>. 
+2024. <a href="/contents.asp?id=77273775&selid=77273786">№&nbsp;4</a>.  С. 78-89.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw68537140">
+<td align=center valign=top class="select-tr-left"><a name="x68537140"></a>
+<font color=#00008f><b>115.</b></font><br><input type=checkbox name="tid68537140" id="tid68537140"  onClick='if (this.checked) {RowSelect("arw68537140",1)} else {RowSelect("arw68537140",0)}'><div id="pdf_68537140" name="pdf_68537140"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=68537140"><b><span style="line-height:1.0;">ЭВОЛЮЦИЯ СИСТЕМЫ "ПЛЕНКА (TI)/(СИЛУМИН) ПОДЛОЖКА",ОБЛУЧЕННОЙ ИМПУЛЬСНЫМ ЭЛЕКТРОННЫМ ПУЧКОМ</span></b></a><br><font color=#00008f><i>Загуляев Д.В., Иванов Ю.Ф., Толкачев О.С., Шляров В.В., Шлярова Ю.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=68537132">Вестник Южно-Уральского государственного университета. Серия: Математика. Механика. Физика</a>. 
+2024. Т. 16. <a href="/contents.asp?id=68537132&selid=68537140">№&nbsp;3</a>.  С. 50-61.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw75147591">
+<td align=center valign=top class="select-tr-left"><a name="x75147591"></a>
+<font color=#00008f><b>116.</b></font><br><input type=checkbox name="tid75147591" id="tid75147591"  onClick='if (this.checked) {RowSelect("arw75147591",1)} else {RowSelect("arw75147591",0)}'><div id="pdf_75147591" name="pdf_75147591"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=75147591"><b><span style="line-height:1.0;">РЕНТГЕНОВСКИЕ ДИФРАКЦИОННЫЕ ИССЛЕДОВАНИЯ ПРОЦЕССА РОСТА ТОНКИХ ПЛЕНОК ВЫСОКОЭНТРОПИЙНОГО СПЛАВА TINBZRTAHFCU IN SITU С ИСПОЛЬЗОВАНИЕМ СИНХРОТРОННОГО ИЗЛУЧЕНИЯ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Ахмадеев Ю.Х., Клопотов А.А., Прокопенко Н.А., Петрикова Е.А., Крысина О.В., Шугуров В.В., Шмаков А.Н., Лавров В.Ю.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=75147577">Физико-химические аспекты изучения кластеров, наноструктур и наноматериалов</a>. 
+2024. <a href="/contents.asp?id=75147577&selid=75147591">№&nbsp;16</a>.  С. 140-153.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw67312082">
+<td align=center valign=top class="select-tr-left"><a name="x67312082"></a>
+<font color=#00008f><b>117.</b></font><br><input type=checkbox name="tid67312082" id="tid67312082"  onClick='if (this.checked) {RowSelect("arw67312082",1)} else {RowSelect("arw67312082",0)}'><div id="pdf_67312082" name="pdf_67312082"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67312082"><b><span style="line-height:1.0;">ANALYSIS OF HARDENING MECHANISMS OF RAIL STEEL UNDER PLASTIC DEFORMATION BY UNIAXIAL COMPRESSION</span></b></a><br><font color=#00008f><i>Aksenova K.V., Gromov V.E., Vashchuk E.S., Ivanov Yu.F.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=67312056">Inorganic Materials: Applied Research</a>. 
+2024. Т. 15. <a href="/contents.asp?id=67312056&selid=67312082">№&nbsp;2</a>.  С. 426-431.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw68061008">
+<td align=center valign=top class="select-tr-left"><a name="x68061008"></a>
+<font color=#00008f><b>118.</b></font><br><input type=checkbox name="tid68061008" id="tid68061008"  onClick='if (this.checked) {RowSelect("arw68061008",1)} else {RowSelect("arw68061008",0)}'><div id="pdf_68061008" name="pdf_68061008"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=68061008"><b><span style="line-height:1.0;">STRUCTURE AND PROPERTIES OF BIOINERT MO–NB COATING FORMED ON TITANIUM GRADE 5 MEDICAL ALLOY BY ELECTROEXPLOSIVE METHOD</span></b></a><br><font color=#00008f><i>Romanov D.A., Sosnin K.V., Pronin S.Yu., Pochetukha V.V., Ivanov Yu.F., Gromov V.E.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=68058997">Inorganic Materials: Applied Research</a>. 
+2024. Т. 15. <a href="/contents.asp?id=68058997&selid=68061008">№&nbsp;3</a>.  С. 737-751.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw65621359">
+<td align=center valign=top class="select-tr-left"><a name="x65621359"></a>
+<font color=#00008f><b>119.</b></font><br><input type=checkbox name="tid65621359" id="tid65621359"  onClick='if (this.checked) {RowSelect("arw65621359",1)} else {RowSelect("arw65621359",0)}'><div id="pdf_65621359" name="pdf_65621359"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65621359"><b><span style="line-height:1.0;">СТРУКТУРНО-ФАЗОВЫЕ СОСТОЯНИЯ И СВОЙСТВА ПЛАЗМЕННОЙ НАПЛАВКИ БЫСТРОРЕЖУЩЕЙ СТАЛЬЮ В СРЕДЕ АЗОТА</span></b></a><br><font color=#00008f><i>Чапайкин А.С., Громов В.Е., Чжан П., Иванов Ю.Ф., Крюков Р.Е., Шляров В.В., Семин А.П.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=65621356">Вестник Сибирского государственного индустриального университета</a>. 
+2024. <a href="/contents.asp?id=65621356&selid=65621359">№&nbsp;1&nbsp;(47)</a>.  С. 35-47.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+5</td></tr>
+
+
+
+<tr valign=middle id="arw68005723">
+<td align=center valign=top class="select-tr-left"><a name="x68005723"></a>
+<font color=#00008f><b>120.</b></font><br><input type=checkbox name="tid68005723" id="tid68005723"  onClick='if (this.checked) {RowSelect("arw68005723",1)} else {RowSelect("arw68005723",0)}'><div id="pdf_68005723" name="pdf_68005723"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=68005723"><b><span style="line-height:1.0;">МЕТАЛЛИЧЕСКИЕ СТЕКЛА ИЗ ВЫСОКОЭНТРОПИЙНЫХ СПЛАВОВ: СВОЙСТВА, ОСОБЕННОСТИ ПОЛУЧЕНИЯ И ИСПОЛЬЗОВАНИЯ</span></b></a><br><font color=#00008f><i>Чжан П., Иванов Ю.Ф., Семин А.П., Боровский С.В., Громов В.Е., Шляров В.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=68005722">Вестник Сибирского государственного индустриального университета</a>. 
+2024. <a href="/contents.asp?id=68005722&selid=68005723">№&nbsp;2&nbsp;(48)</a>.  С. 10-22.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw68005728">
+<td align=center valign=top class="select-tr-left"><a name="x68005728"></a>
+<font color=#00008f><b>121.</b></font><br><input type=checkbox name="tid68005728" id="tid68005728"  onClick='if (this.checked) {RowSelect("arw68005728",1)} else {RowSelect("arw68005728",0)}'><div id="pdf_68005728" name="pdf_68005728"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=68005728"><b><span style="line-height:1.0;">PERSPECTIVE TRENDS OF CREATION AND APPLICATION: HIGH-ENTROPY GLASSES</span></b></a><br><font color=#00008f><i>Ivanov Yu.F., Semin A.P., Gromov V.E., Borovskii S.V., Yuriev A.B., Minenko S.S.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=68005722">Bulletin of the Siberian State Industrial University</a>. 
+2024. <a href="/contents.asp?id=68005722&selid=68005728">№&nbsp;2&nbsp;(48)</a>.  С. 61-68.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw72755329">
+<td align=center valign=top class="select-tr-left"><a name="x72755329"></a>
+<font color=#00008f><b>122.</b></font><br><input type=checkbox name="tid72755329" id="tid72755329"  onClick='if (this.checked) {RowSelect("arw72755329",1)} else {RowSelect("arw72755329",0)}'><div id="pdf_72755329" name="pdf_72755329"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=72755329"><b><span style="line-height:1.0;">СТРУКТУРА И СВОЙСТВА СИСТЕМЫ ПОКРЫТИЕ (AG - C) / ПОДЛОЖКА (СU), ОБЛУЧЕННОЙ ИМПУЛЬСНЫМ ЭЛЕКТРОННЫМ ПУЧКОМ. ВЕСТНИК СИБИРСКОГО ГОСУДАРСТВЕННОГО ИНДУСТРИАЛЬНОГО УНИВЕРСИТЕТА</span></b></a><br><font color=#00008f><i>Романов Д.А., Московский С.В., Почетуха В.В., Ващук Е.С., Иванов Ю.Ф.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=72755328">Вестник Сибирского государственного индустриального университета</a>. 
+2024. <a href="/contents.asp?id=72755328&selid=72755329">№&nbsp;3&nbsp;(49)</a>.  С. 10-21.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw79561495">
+<td align=center valign=top class="select-tr-left"><a name="x79561495"></a>
+<font color=#00008f><b>123.</b></font><br><input type=checkbox name="tid79561495" id="tid79561495"  onClick='if (this.checked) {RowSelect("arw79561495",1)} else {RowSelect("arw79561495",0)}'><div id="pdf_79561495" name="pdf_79561495"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=79561495"><b><span style="line-height:1.0;">МОДИФИКАЦИЯ ПОВЕРХНОСТНОГО СПЛАВА ХН65ВМТЮ МЕТОДОМ ИМПУЛЬСНОЙ ЭЛЕКТРОННО-ПУЧКОВОЙ ОБРАБОТКИ</span></b></a><br><font color=#00008f><i>Комаров Д.В., Коновалов С.В., Иванов Ю.Ф., Панченко И.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=79561484">Вестник Сибирского государственного индустриального университета</a>. 
+2024. <a href="/contents.asp?id=79561484&selid=79561495">№&nbsp;4&nbsp;(50)</a>.  С. 72-82.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw65535655">
+<td align=center valign=top class="select-tr-left"><a name="x65535655"></a>
+<font color=#00008f><b>124.</b></font><br><input type=checkbox name="tid65535655" id="tid65535655"  onClick='if (this.checked) {RowSelect("arw65535655",1)} else {RowSelect("arw65535655",0)}'><div id="pdf_65535655" name="pdf_65535655"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65535655"><b><span style="line-height:1.0;">STRENGTHENING MECHANISMS OF RAIL STEEL UNDER COMPRESSION</span></b></a><br><font color=#00008f><i>Ivanov Yu., Porfiriev M., Gromov V., Popova N., Shliarova Yu.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=64228203">Metals</a>. 
+2024. Т. 14. <a href="/contents.asp?id=64228203&selid=65535655">№&nbsp;1</a>.  С. 9.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw68537156">
+<td align=center valign=top class="select-tr-left"><a name="x68537156"></a>
+<font color=#00008f><b>125.</b></font><br><input type=checkbox name="tid68537156" id="tid68537156"  onClick='if (this.checked) {RowSelect("arw68537156",1)} else {RowSelect("arw68537156",0)}'><div id="pdf_68537156" name="pdf_68537156"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=68537156"><b><span style="line-height:1.0;">УПРАВЛЕНИЕ ТОКОМ ЭЛЕКТРОННОГО ПУЧКА В ТЕЧЕНИЕ ИМПУЛЬСА ДЛЯ ЛЕГИРОВАНИЯ ПОВЕРХНОСТИ НЕРЖАВЕЮЩЕЙ СТАЛИ ТИТАНОМ И АЛЮМИНИЕМ</span></b></a><br><font color=#00008f><i>Шпанов Д.А., Москвин П.В., Петрикова Е.А., Иванов Ю.Ф., Воробьёв М.С.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=68537144">Materials. Technologies. Design</a>. 
+2024. Т. 6. <a href="/contents.asp?id=68537144&selid=68537156">№&nbsp;2&nbsp;(17)</a>.  С. 129-141.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw79089200">
+<td align=center valign=top class="select-tr-left"><a name="x79089200"></a>
+<font color=#00008f><b>126.</b></font><br><input type=checkbox name="tid79089200" id="tid79089200"  onClick='if (this.checked) {RowSelect("arw79089200",1)} else {RowSelect("arw79089200",0)}'><div id="pdf_79089200" name="pdf_79089200"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=79089200"><b><span style="line-height:1.0;">ИМПУЛЬСНАЯ МНОГОСТУПЕНЧАТАЯ ЭЛЕКТРОННО-ПУЧКОВАЯ ОБРАБОТКА КАК МЕТОД МОДИФИЦИРОВАНИЯ ДЕТАЛЕЙ, ИЗГОТОВЛЕННЫХ ИЗ ЗАЭВТЕКТИЧЕСКОГО СИЛУМИНА</span></b></a><br><font color=#00008f><i>Рыгина М.Е., Иванов Ю.Ф., Прудников А.Н., Петрикова Е.А., Москвин П.В., Петюкевич М.С., Торба М.С.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=79089192">Materials. Technologies. Design</a>. 
+2024. Т. 6. <a href="/contents.asp?id=79089192&selid=79089200">№&nbsp;3&nbsp;(18)</a>.  С. 73-82.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw79745380">
+<td align=center valign=top class="select-tr-left"><a name="x79745380"></a>
+<font color=#00008f><b>127.</b></font><br><input type=checkbox name="tid79745380" id="tid79745380"  onClick='if (this.checked) {RowSelect("arw79745380",1)} else {RowSelect("arw79745380",0)}'><div id="pdf_79745380" name="pdf_79745380"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=79745380"><b><span style="line-height:1.0;">EXPLORATION OF PHYSICAL–CHEMICAL AND STRUCTURAL-PHASE MECHANISMS IN TI-AL INTERMETALLIC COATING FORMATION</span></b></a><br><font color=#00008f><i>Nazarov A., Nagimov R., Oleinik A., Maslov A., Nikolaev A., Ramazanov K., Denisov V., Ivanov Yu., Korznikova E.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=74558963">Quantum Beam Science</a>. 
+2024. Т. 8. <a href="/contents.asp?id=74558963&selid=79745380">№&nbsp;4</a>.  С. 31.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54959075">
+<td align=center valign=top class="select-tr-left"><a name="x54959075"></a>
+<font color=#00008f><b>128.</b></font><br><input type=checkbox name="tid54959075" id="tid54959075"  onClick='if (this.checked) {RowSelect("arw54959075",1)} else {RowSelect("arw54959075",0)}'><div id="pdf_54959075" name="pdf_54959075"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54959075"><b><span style="line-height:1.0;">ТОНКАЯ СТРУКТУРА ДЛИННОМЕРНЫХ РЕЛЬСОВ ИЗ ЗАЭВТЕКТОИДНОЙ СТАЛИ ПОСЛЕ ДЛИТЕЛЬНОЙ ЭКСПЛУАТАЦИИ</span></b></a><br><font color=#00008f><i>Порфирьев М.А., Громов В.Е., Иванов Ю.Ф., Попова Н.А., Шляров В.В.</i></font><br>
+<font color=#00008f>
+
+Монография /  Новокузнецк, 2023. 
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+23</td></tr>
+
+
+
+<tr valign=middle id="arw56007567">
+<td align=center valign=top class="select-tr-left"><a name="x56007567"></a>
+<font color=#00008f><b>129.</b></font><br><input type=checkbox name="tid56007567" id="tid56007567"  onClick='if (this.checked) {RowSelect("arw56007567",1)} else {RowSelect("arw56007567",0)}'><div id="pdf_56007567" name="pdf_56007567"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=56007567"><b><span style="line-height:1.0;">СПОСОБ ОБРАБОТКИ ПОВЕРХНОСТИ ДОЭВТЕКТИЧЕСКОГО СИЛУМИНА</span></b></a><br><font color=#00008f><i>Шляров В.В., Загуляев Д.В., Иванов Ю.Ф., Шлярова Ю.А.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2806354&nbsp;C1, 31.10.2023.
+ Заявка&nbsp;№&nbsp;2023124206&nbsp;от&nbsp;20.09.2023.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw59955234">
+<td align=center valign=top class="select-tr-left"><a name="x59955234"></a>
+<font color=#00008f><b>130.</b></font><br><input type=checkbox name="tid59955234" id="tid59955234"  onClick='if (this.checked) {RowSelect("arw59955234",1)} else {RowSelect("arw59955234",0)}'><div id="pdf_59955234" name="pdf_59955234"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59955234"><b><span style="line-height:1.0;">МОДИФИКАЦИЯ СТРУКТУРЫ И СВОЙСТВ ЦИРКОНИЕВОЙ И АЛЮМООКСИДНОЙ КЕРАМИКИ ИОННЫМИ ПУЧКАМИ</span></b></a><br><font color=#00008f><i>Болтуева В.А.</i></font><br>
+<font color=#00008f>
+
+диссертация на соискание ученой степени кандидата технических наук / ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ АВТОНОМНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ ВЫСШЕГО ОБРАЗОВАНИЯ "НАЦИОНАЛЬНЫЙ ИССЛЕДОВАТЕЛЬСКИЙ ТОМСКИЙ ПОЛИТЕХНИЧЕСКИЙ УНИВЕРСИТЕТ". 
+2023
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw59960206">
+<td align=center valign=top class="select-tr-left"><a name="x59960206"></a>
+<font color=#00008f><b>131.</b></font><br><input type=checkbox name="tid59960206" id="tid59960206"  onClick='if (this.checked) {RowSelect("arw59960206",1)} else {RowSelect("arw59960206",0)}'><div id="pdf_59960206" name="pdf_59960206"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59960206"><b><span style="line-height:1.0;">СИНТЕЗ И ИССЛЕДОВАНИЕ СВОЙСТВ ТОНКИХ УГЛЕРОДНЫХ ПЛЕНОК, ПОЛУЧЕННЫХ МЕТОДОМ ОСАЖДЕНИЯ В ПЛАЗМЕ СН4 И ПОСЛЕДУЮЩЕЙ ТЕРМООБРАБОТКОЙ</span></b></a><br><font color=#00008f><i>Прокопьев А.Р.</i></font><br>
+<font color=#00008f>
+
+диссертация на соискание ученой степени кандидата технических наук / ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ АВТОНОМНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ ВЫСШЕГО ОБРАЗОВАНИЯ "НАЦИОНАЛЬНЫЙ ИССЛЕДОВАТЕЛЬСКИЙ ТОМСКИЙ ПОЛИТЕХНИЧЕСКИЙ УНИВЕРСИТЕТ". 
+2023
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw59955122">
+<td align=center valign=top class="select-tr-left"><a name="x59955122"></a>
+<font color=#00008f><b>132.</b></font><br><input type=checkbox name="tid59955122" id="tid59955122"  onClick='if (this.checked) {RowSelect("arw59955122",1)} else {RowSelect("arw59955122",0)}'><div id="pdf_59955122" name="pdf_59955122"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59955122"><b><span style="line-height:1.0;">МНОГОМАСШТАБНЫЕ СТРУКТУРНЫЕ ИЗМЕНЕНИЯ МОНОКРИСТАЛЛОВ СТАЛИ ГАДФИЛЬДА ПРИ СУХОМ ТРЕНИИ СКОЛЬЖЕНИЯ</span></b></a><br><font color=#00008f><i>Новицкая О.А.</i></font><br>
+<font color=#00008f>
+
+диссертация на соискание ученой степени кандидата физико-математических наук / ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ НАУКИ ИНСТИТУТ ФИЗИКИ ПРОЧНОСТИ И МАТЕРИАЛОВЕДЕНИЯ СИБИРСКОГО ОТДЕЛЕНИЯ РОССИЙСКОЙ АКАДЕМИИ НАУК. 
+2023
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54283787">
+<td align=center valign=top class="select-tr-left"><a name="x54283787"></a>
+<font color=#00008f><b>133.</b></font><br><input type=checkbox name="tid54283787" id="tid54283787"  onClick='if (this.checked) {RowSelect("arw54283787",1)} else {RowSelect("arw54283787",0)}'><div id="pdf_54283787" name="pdf_54283787"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54283787"><b><span style="line-height:1.0;">ПРОЧНОСТНЫЕ, ТРИБОЛОГИЧЕСКИЕ СВОЙСТВА И СТРУКТУРНО-ФАЗОВЫЕ СОСТОЯНИЯ РЕЛЬСОВЫХ СТАЛЕЙ</span></b></a><br><font color=#00008f><i>Порфирьев М.А., Громов В.Е., Иванов Ю.Ф., Шлярова Ю.А., Крюков Р.Е., Черепанова Г.И.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Материалы во внешних полях (МВП–2023).&nbsp;труды XII Международного онлайн-симпозиума. Новокузнецк, 2023.  С. 103-104.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw54283729">
+<td align=center valign=top class="select-tr-left"><a name="x54283729"></a>
+<font color=#00008f><b>134.</b></font><br><input type=checkbox name="tid54283729" id="tid54283729"  onClick='if (this.checked) {RowSelect("arw54283729",1)} else {RowSelect("arw54283729",0)}'><div id="pdf_54283729" name="pdf_54283729"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54283729"><b><span style="line-height:1.0;">ЭЛЕКТРОННО-ИОННО-ПЛАЗМЕННЫЙ КОМПЛЕКСНЫЙ МНОГОЦИКЛОВЫЙ МЕТОД МОДИФИКАЦИИ ПОВЕРХНОСТНОГО СЛОЯ ВЫСОКОЛЕГИРОВАННОЙ СТАЛИ АУСТЕНИТНОГО КЛАССА</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Шугуров В.В., Петрикова Е.А., Тересов А.Д., Лопатин И.В.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Материалы во внешних полях (МВП–2023).&nbsp;труды XII Международного онлайн-симпозиума. Новокузнецк, 2023.  С. 11-12.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54216136">
+<td align=center valign=top class="select-tr-left"><a name="x54216136"></a>
+<font color=#00008f><b>135.</b></font><br><input type=checkbox name="tid54216136" id="tid54216136"  onClick='if (this.checked) {RowSelect("arw54216136",1)} else {RowSelect("arw54216136",0)}'><div id="pdf_54216136" name="pdf_54216136"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54216136"><b><span style="line-height:1.0;">MECHANISMS OF CONSTRUCTIONAL STEELS STRAIN HARDENING</span></b></a><br><font color=#00008f><i>Gromov V.E., Ivanov Yu.F., Popova N.A., Shliarova Yu.A., Porfiriev M.A., Starostenkov M.D., Semin A.P.</i></font><br>
+<font color=#00008f>
+
+Мonograph /  Novokuznetsk, 2023. 
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54283801">
+<td align=center valign=top class="select-tr-left"><a name="x54283801"></a>
+<font color=#00008f><b>136.</b></font><br><input type=checkbox name="tid54283801" id="tid54283801"  onClick='if (this.checked) {RowSelect("arw54283801",1)} else {RowSelect("arw54283801",0)}'><div id="pdf_54283801" name="pdf_54283801"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54283801"><b><span style="line-height:1.0;">СТРУКТУРА И СВОЙСТВА ПОКРЫТИЙ ИЗ ВЫСОКОЭНТРОПИЙНЫХ СПЛАВОВ FECOCRNIMN И FECOCRNIAL</span></b></a><br><font color=#00008f><i>Громов В.Е., Коновалов С.В., Иванов Ю.Ф., Ефимов М.О., Шлярова Ю.А., Панченко И.А., Черепанова Г.И.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Материалы во внешних полях (МВП–2023).&nbsp;труды XII Международного онлайн-симпозиума. Новокузнецк, 2023.  С. 132-133.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54695127">
+<td align=center valign=top class="select-tr-left"><a name="x54695127"></a>
+<font color=#00008f><b>137.</b></font><br><input type=checkbox name="tid54695127" id="tid54695127"  onClick='if (this.checked) {RowSelect("arw54695127",1)} else {RowSelect("arw54695127",0)}'><div id="pdf_54695127" name="pdf_54695127"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54695127"><b><span style="line-height:1.0;">PHYSICS OF STRAIN HARDENING OF STRUCTURAL STEELS</span></b></a><br><font color=#00008f><i>Ivanov Yu.F., Gromov V.E., Popova N.A., Shliarova Yu.A., Porfiriev M.A., Starostenkov M.D., Semin A.P.</i></font><br>
+<font color=#00008f>
+
+ USA, 2023. 
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw56704558">
+<td align=center valign=top class="select-tr-left"><a name="x56704558"></a>
+<font color=#00008f><b>138.</b></font><br><input type=checkbox name="tid56704558" id="tid56704558"  onClick='if (this.checked) {RowSelect("arw56704558",1)} else {RowSelect("arw56704558",0)}'><div id="pdf_56704558" name="pdf_56704558"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=56704558"><b><span style="line-height:1.0;">HIGH-ENTROPY FECOCRNIMN AND FECONICRAL ALLOYS COATINGS: STRUCTURE AND PROPERTIES</span></b></a><br><font color=#00008f><i>Chen X., Ivanov Yu.F., Gromov V.E., Efimov M.O., Konovalov S.V., Shlyarov V.V., Panchenko I.A.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Advanced High Entropy Materials.&nbsp;Abstracts of the V International Conference and School. Saint-Petersburg, 2023.  С. 143-144.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54662708">
+<td align=center valign=top class="select-tr-left"><a name="x54662708"></a>
+<font color=#00008f><b>139.</b></font><br><input type=checkbox name="tid54662708" id="tid54662708"  onClick='if (this.checked) {RowSelect("arw54662708",1)} else {RowSelect("arw54662708",0)}'><div id="pdf_54662708" name="pdf_54662708"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54662708"><b><span style="line-height:1.0;">ВНУТРЕННИЕ НАПРЯЖЕНИЯ В ПОЛИКРИСТАЛЛИЧЕСКИХ МЕТАЛЛИЧЕСКИХ МАТЕРИАЛАХ</span></b></a><br><font color=#00008f><i>Попова Н.А., Иванов Ю.Ф., Громов В.Е., Никоненко Е.Л., Соловьева Ю.В., Никоненко А.В., Шлярова Ю.А.</i></font><br>
+<font color=#00008f>
+
+Учебное пособие /  Новокузнецк, 2023. 
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+11</td></tr>
+
+
+
+<tr valign=middle id="arw50343088">
+<td align=center valign=top class="select-tr-left"><a name="x50343088"></a>
+<font color=#00008f><b>140.</b></font><br><input type=checkbox name="tid50343088" id="tid50343088"  onClick='if (this.checked) {RowSelect("arw50343088",1)} else {RowSelect("arw50343088",0)}'><div id="pdf_50343088" name="pdf_50343088"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50343088"><b><span style="line-height:1.0;">ФИЗИКА ДЕФОРМАЦИОННОГО УПРОЧНЕНИЯ КОНСТРУКЦИОННЫХ СТАЛЕЙ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Громов В.Е., Попова Н.А., Шлярова Ю.А., Порфирьев М.А.</i></font><br>
+<font color=#00008f>
+
+ Москва, 2023. 
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+3</td></tr>
+
+
+
+<tr valign=middle id="arw63798131">
+<td align=center valign=top class="select-tr-left"><a name="x63798131"></a>
+<font color=#00008f><b>141.</b></font><br><input type=checkbox name="tid63798131" id="tid63798131"  onClick='if (this.checked) {RowSelect("arw63798131",1)} else {RowSelect("arw63798131",0)}'><div id="pdf_63798131" name="pdf_63798131"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=63798131"><b><span style="line-height:1.0;">СТРУКТУРА И СВОЙСТВА ПОКРЫТИЯ AL-MG-B, СФОРМИРОВАННОГО ИОННО-ПЛАЗМЕННЫМ МЕТОДОМ НА ПОВЕРХНОСТИ ВЫСОКОЭНТРОПИЙНОГО СПЛАВА</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Шугуров В.В., Ажажа И.И., Петрикова Е.А., Толкачев О.С.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: ВАКУУМНАЯ ТЕХНИКА и ТЕХНОЛОГИИ - 2023.&nbsp;Труды 30-й Всероссийской научно-технической конференции с международным участием. Санкт-Петербург, 2023.  С. 199-202.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw59080523">
+<td align=center valign=top class="select-tr-left"><a name="x59080523"></a>
+<font color=#00008f><b>142.</b></font><br><input type=checkbox name="tid59080523" id="tid59080523"  onClick='if (this.checked) {RowSelect("arw59080523",1)} else {RowSelect("arw59080523",0)}'><div id="pdf_59080523" name="pdf_59080523"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59080523"><b><span style="line-height:1.0;">ФОРМИРОВАНИЕ НАНОСТРУКТУРЫ ВЫСОКОЭНТРОПИЙНЫХ СПЛАВОВ ПРИ ЭЛЕКТРОННО-ПУЧКОВОЙ ОБРАБОТКЕ</span></b></a><br><font color=#00008f><i>Громов В.Е., Иванов Ю.Ф., Ефимов М.О., Шлярова Ю.А., Панченко И.А., Коновалов С.В.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: VIII Всероссийская конференция по наноматериалам.&nbsp;Сборник материалов конференции. Москва, 2023.  С. 206-207.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw59080538">
+<td align=center valign=top class="select-tr-left"><a name="x59080538"></a>
+<font color=#00008f><b>143.</b></font><br><input type=checkbox name="tid59080538" id="tid59080538"  onClick='if (this.checked) {RowSelect("arw59080538",1)} else {RowSelect("arw59080538",0)}'><div id="pdf_59080538" name="pdf_59080538"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59080538"><b><span style="line-height:1.0;">ФОРМИРОВАНИЕ НАНОРАЗМЕРНОГО ЦЕМЕНТИТА В РЕЛЬСАХ ПРИ ДЛИТЕЛЬНОЙ ЭКСПЛУАТАЦИИ</span></b></a><br><font color=#00008f><i>Громов В.Е., Порфирьев М.А., Юрьев А.А., Иванов Ю.Ф., Шлярова Ю.А., Панин С.В.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: VIII Всероссийская конференция по наноматериалам.&nbsp;Сборник материалов конференции. Москва, 2023.  С. 208-209.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54976573">
+<td align=center valign=top class="select-tr-left"><a name="x54976573"></a>
+<font color=#00008f><b>144.</b></font><br><input type=checkbox name="tid54976573" id="tid54976573"  onClick='if (this.checked) {RowSelect("arw54976573",1)} else {RowSelect("arw54976573",0)}'><div id="pdf_54976573" name="pdf_54976573"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54976573"><b><span style="line-height:1.0;">АНАЛИЗ ИЗМЕНЕНИЯ МЕХАНИЧЕСКИХ И ТРИБОЛОГИЧЕСКИХ СВОЙСТВ ПОВЕРХНОСТНОГО СЛОЯ ВЫСОКОЭНТРОПИЙНОГО СПЛАВА AL-CR-FE-CO-NI, МОДИФИЦИРОВАННОГО ЭЛЕКТРОННО-ИОННО-ПЛАЗМЕННОЙ ОБРАБОТКОЙ</span></b></a><br><font color=#00008f><i>Ефимов М.О., Громов В.Е., Иванов Ю.Ф., Шлярова Ю.А., Панченко И.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Взаимодействие излучений с твердым телом.&nbsp;материалы 15-й Международной конференции. Минск, 2023.  С. 230-232.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw53923622">
+<td align=center valign=top class="select-tr-left"><a name="x53923622"></a>
+<font color=#00008f><b>145.</b></font><br><input type=checkbox name="tid53923622" id="tid53923622"  onClick='if (this.checked) {RowSelect("arw53923622",1)} else {RowSelect("arw53923622",0)}'><div id="pdf_53923622" name="pdf_53923622"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=53923622"><b><span style="line-height:1.0;">ДЕФОРМАЦИОННОЕ УПРОЧНЕНИЕ СТАЛЕЙ РАЗЛИЧНЫХ СТРУКТУРНЫХ КЛАССОВ</span></b></a><br><font color=#00008f><i>Аксёнова К.В., Громов В.Е., Иванов Ю.Ф., Попова Н.А., Юрьев А.А.</i></font><br>
+<font color=#00008f>
+
+Монография /  Новокузнецк, 2023. 
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+5</td></tr>
+
+
+
+<tr valign=middle id="arw54593725">
+<td align=center valign=top class="select-tr-left"><a name="x54593725"></a>
+<font color=#00008f><b>146.</b></font><br><input type=checkbox name="tid54593725" id="tid54593725"  onClick='if (this.checked) {RowSelect("arw54593725",1)} else {RowSelect("arw54593725",0)}'><div id="pdf_54593725" name="pdf_54593725"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54593725"><b><span style="line-height:1.0;">СТРУКТУРА И СВОЙСТВА ВЭС КАНТОРА CO-CR-FE-NI-MN, СФОРМИРОВАННОГО НА ПОДЛОЖКЕ ИЗ СПЛАВА 5083</span></b></a><br><font color=#00008f><i>Ефимов М.О., Громов В.Е., Иванов Ю.Ф., Шлярова Ю.А., Панченко И.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Международный семинар "Структурные основы модифицирования материалов" МНТ-XVII.&nbsp;Тезисы докладов. Обнинск, 2023.  С. 29-30.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54976591">
+<td align=center valign=top class="select-tr-left"><a name="x54976591"></a>
+<font color=#00008f><b>147.</b></font><br><input type=checkbox name="tid54976591" id="tid54976591"  onClick='if (this.checked) {RowSelect("arw54976591",1)} else {RowSelect("arw54976591",0)}'><div id="pdf_54976591" name="pdf_54976591"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54976591"><b><span style="line-height:1.0;">ТОНКАЯ СТРУКТУРА РЕЛЬСОВ ИЗ ЗАЭВТЕКТОИДНОЙ СТАЛИ ПРИ ЭКСПЛУАТАЦИИ</span></b></a><br><font color=#00008f><i>Порфирьев М.А., Иванов Ю.Ф., Громов В.Е., Шлярова Ю.А., Крюков Р.Е.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Взаимодействие излучений с твердым телом.&nbsp;материалы 15-й Международной конференции. Минск, 2023.  С. 298-300.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54593726">
+<td align=center valign=top class="select-tr-left"><a name="x54593726"></a>
+<font color=#00008f><b>148.</b></font><br><input type=checkbox name="tid54593726" id="tid54593726"  onClick='if (this.checked) {RowSelect("arw54593726",1)} else {RowSelect("arw54593726",0)}'><div id="pdf_54593726" name="pdf_54593726"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54593726"><b><span style="line-height:1.0;">СТРУКТУРА ПОВЕРХНОСТНОГО СЛОЯ РЕЛЬСОВ, ФОРМИРУЮЩЕЙСЯ В ПРОЦЕССЕ ДЛИТЕЛЬНОЙ ЭКСПЛУАТАЦИИ</span></b></a><br><font color=#00008f><i>Порфирьев М.А., Громов В.Е., Иванов Ю.Ф., Шлярова Ю.А., Крюков Р.Е.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Международный семинар "Структурные основы модифицирования материалов" МНТ-XVII.&nbsp;Тезисы докладов. Обнинск, 2023.  С. 31.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54283740">
+<td align=center valign=top class="select-tr-left"><a name="x54283740"></a>
+<font color=#00008f><b>149.</b></font><br><input type=checkbox name="tid54283740" id="tid54283740"  onClick='if (this.checked) {RowSelect("arw54283740",1)} else {RowSelect("arw54283740",0)}'><div id="pdf_54283740" name="pdf_54283740"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54283740"><b><span style="line-height:1.0;">СТРУКТУРА И СВОЙСТВА ЗАЭВТЕКТИЧЕСКОГО СИЛУМИНА, ПОДВЕРГНУТОГО КОМПЛЕКСНОЙ ОБРАБОТКЕ</span></b></a><br><font color=#00008f><i>Шлярова Ю.А., Шляров В.В., Загуляев Д.В., Серебрякова А.А., Иванов Ю.Ф., Громов В.Е.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Материалы во внешних полях (МВП–2023).&nbsp;труды XII Международного онлайн-симпозиума. Новокузнецк, 2023.  С. 35.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw54976615">
+<td align=center valign=top class="select-tr-left"><a name="x54976615"></a>
+<font color=#00008f><b>150.</b></font><br><input type=checkbox name="tid54976615" id="tid54976615"  onClick='if (this.checked) {RowSelect("arw54976615",1)} else {RowSelect("arw54976615",0)}'><div id="pdf_54976615" name="pdf_54976615"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54976615"><b><span style="line-height:1.0;">АМОРФНО-КРИСТАЛЛИЧЕСКИЕ ПОКРЫТИЯ НА ОСНОВЕ AL-MG-B, СФОРМИРОВАННЫЕ ИОННО-ПЛАЗМЕННЫМ МЕТОДОМ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Шугуров В.В., Ажажа И.И., Петрикова Е.А., Толкачев О.С.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Взаимодействие излучений с твердым телом.&nbsp;материалы 15-й Международной конференции. Минск, 2023.  С. 392-394.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54919177">
+<td align=center valign=top class="select-tr-left"><a name="x54919177"></a>
+<font color=#00008f><b>151.</b></font><br><input type=checkbox name="tid54919177" id="tid54919177"  onClick='if (this.checked) {RowSelect("arw54919177",1)} else {RowSelect("arw54919177",0)}'><div id="pdf_54919177" name="pdf_54919177"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54919177"><b><span style="line-height:1.0;">ФОРМИРОВАНИЕ ДЕФЕКТНОЙ СТРУКТУРЫ РЕЛЬСОВ ИЗ ЗАЭВТЕКТОИДНОЙ СТАЛИ ПРИ ЭКСПЛУАТАЦИИ</span></b></a><br><font color=#00008f><i>Громов В.Е., Иванов Ю.Ф., Порфирьев М.А., Шляров В.В., Перегудов О.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Физика и технология перспективных материалов - 2023.&nbsp;Сборник трудов Международной конференции. Уфа, 2023.  С. 407-408.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw58730565">
+<td align=center valign=top class="select-tr-left"><a name="x58730565"></a>
+<font color=#00008f><b>152.</b></font><br><input type=checkbox name="tid58730565" id="tid58730565"  onClick='if (this.checked) {RowSelect("arw58730565",1)} else {RowSelect("arw58730565",0)}'><div id="pdf_58730565" name="pdf_58730565"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=58730565"><b><span style="line-height:1.0;">СТРУКТУРНО-ФАЗОВЫЕ СОСТОЯНИЯ И МЕХАНИЧЕСКИЕ СВОЙСТВА ПОКРЫТИЯ AG-C-CU ПОСЛЕ ОБРАБОТКИ КОНЦЕНТРИРОВАННЫМИ ПОТОКАМИ ЭНЕРГИИ</span></b></a><br><font color=#00008f><i>Романов Д.А., Московский С.В., Почетуха В.В., Ващук Е.С., Иванов Ю.Ф., Ионина А.В.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Фундаментальное и прикладное материаловедение.&nbsp;Труды XX Международной научной школы-конференции. Барнаул, 2023.  С. 44-51.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw54664739">
+<td align=center valign=top class="select-tr-left"><a name="x54664739"></a>
+<font color=#00008f><b>153.</b></font><br><input type=checkbox name="tid54664739" id="tid54664739"  onClick='if (this.checked) {RowSelect("arw54664739",1)} else {RowSelect("arw54664739",0)}'><div id="pdf_54664739" name="pdf_54664739"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54664739"><b><span style="line-height:1.0;">ПОВЕРХНОСТНОЕ ЛЕГИРОВАНИЕ ЗАЭВТЕКТИЧЕСКОГО СИЛУМИНА ТИТАНОМ С ЦЕЛЬЮ УЛУЧШЕНИЯ ПРОЧНОСТНЫХ И ПЛАСТИЧЕСКИХ ХАРАКТЕРИСТИК</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Петрикова Е.А., Тересов А.Д., Рыгина М.Е., Прокопенко Н.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Физическая мезомеханика. Материалы с многоуровневой иерархически организованной структурой и интеллектуальные производственные технологии.&nbsp;Тезисы докладов Международной конференции. Томск, 2023.  С. 447-448.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54664740">
+<td align=center valign=top class="select-tr-left"><a name="x54664740"></a>
+<font color=#00008f><b>154.</b></font><br><input type=checkbox name="tid54664740" id="tid54664740"  onClick='if (this.checked) {RowSelect("arw54664740",1)} else {RowSelect("arw54664740",0)}'><div id="pdf_54664740" name="pdf_54664740"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54664740"><b><span style="line-height:1.0;">СТРУКТУРА И СВОЙСТВА ВЫСОКОЭНТРОПИЙНЫХ МАТЕРИАЛОВ, ПОЛУЧЕННЫХ ИОННО-ПЛАЗМЕННЫМ МЕТОДОМ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Прокопенко Н.А., Петрикова Е.А., Шугуров В.В., Толкачев О.С.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Физическая мезомеханика. Материалы с многоуровневой иерархически организованной структурой и интеллектуальные производственные технологии.&nbsp;Тезисы докладов Международной конференции. Томск, 2023.  С. 449-450.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw67931608">
+<td align=center valign=top class="select-tr-left"><a name="x67931608"></a>
+<font color=#00008f><b>155.</b></font><br><input type=checkbox name="tid67931608" id="tid67931608"  onClick='if (this.checked) {RowSelect("arw67931608",1)} else {RowSelect("arw67931608",0)}'><div id="pdf_67931608" name="pdf_67931608"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67931608"><b><span style="line-height:1.0;">МОРФОЛОГИЯ ПОКРЫТИЯ (AG-C)/(МЕДЬ), ОБЛУЧЕННОГО ИМПУЛЬСНЫМ ПЛАЗМЕННЫМ ПУЧКОМ</span></b></a><br><font color=#00008f><i>Романов Д.А., Московский С.В., Почетуха В.В., Ващук Е.С., Ионина А.В., Иванов Ю.Ф.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Инновации в информационных технологиях, машиностроении и автотранспорте.&nbsp;Сборник материалов VII Международной научно-практической конференции. Кемерово, 2023.  С. 449-453.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54664741">
+<td align=center valign=top class="select-tr-left"><a name="x54664741"></a>
+<font color=#00008f><b>156.</b></font><br><input type=checkbox name="tid54664741" id="tid54664741"  onClick='if (this.checked) {RowSelect("arw54664741",1)} else {RowSelect("arw54664741",0)}'><div id="pdf_54664741" name="pdf_54664741"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54664741"><b><span style="line-height:1.0;">БОРСОДЕРЖАЩИЕ ПОКРЫТИЯ, СФОРМИРОВАННЫЕ НА ВЫСОКОЭНТРОПИЙНОМ СПЛАВЕ КОМБИНИРОВАННЫМ ИОННОПЛАЗМЕННЫМ МЕТОДОМ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Шугуров В.В., Ажажа И.И., Петрикова Е.А., Толкачев О.С.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Физическая мезомеханика. Материалы с многоуровневой иерархически организованной структурой и интеллектуальные производственные технологии.&nbsp;Тезисы докладов Международной конференции. Томск, 2023.  С. 451-452.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54664748">
+<td align=center valign=top class="select-tr-left"><a name="x54664748"></a>
+<font color=#00008f><b>157.</b></font><br><input type=checkbox name="tid54664748" id="tid54664748"  onClick='if (this.checked) {RowSelect("arw54664748",1)} else {RowSelect("arw54664748",0)}'><div id="pdf_54664748" name="pdf_54664748"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54664748"><b><span style="line-height:1.0;">ТЕРМОХИМИЧЕСКИЙ СИНТЕЗ СИАЛОНА В РЕЗУЛЬТАТЕ ОБЛУЧЕНИЯ ПОРОШКОВОЙ СМЕСИ ALN+SI3N4 И SI3N4+AL2O3 ЭЛЕКТРОННЫМ ИМПУЛЬСНЫМ ПУЧКОМ И ЛАЗЕРНЫМ ИЗЛУЧЕНИЕМ</span></b></a><br><font color=#00008f><i>Клопотов А.А., Власов В.А., Безухов К.А., Сапрыкин А.А., Иванов Ю.Ф., Сыртанов М.С., Волокитин Г.Г., Саркисов Ю.С.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Физическая мезомеханика. Материалы с многоуровневой иерархически организованной структурой и интеллектуальные производственные технологии.&nbsp;Тезисы докладов Международной конференции. Томск, 2023.  С. 463-464.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54593699">
+<td align=center valign=top class="select-tr-left"><a name="x54593699"></a>
+<font color=#00008f><b>158.</b></font><br><input type=checkbox name="tid54593699" id="tid54593699"  onClick='if (this.checked) {RowSelect("arw54593699",1)} else {RowSelect("arw54593699",0)}'><div id="pdf_54593699" name="pdf_54593699"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54593699"><b><span style="line-height:1.0;">СТРУКТУРНО-ФАЗОВЫЕ СОСТОЯНИЯ И СВОЙСТВА ВЫСОКОЭНТРОПИЙНЫХ СПЛАВА ПОСЛЕ ЭЛЕКТРОННО-ИОННО-ПЛАЗМЕННОЙ ОБРАБОТКИ</span></b></a><br><font color=#00008f><i>Громов В.Е., Коновалов С.В., Иванов Ю.Ф., Ефимов М.О., Шлярова Ю.А., Панченко И.А., Бирюкова Е.Н.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Международный семинар "Структурные основы модифицирования материалов" МНТ-XVII.&nbsp;Тезисы докладов. Обнинск, 2023.  С. 5.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54283752">
+<td align=center valign=top class="select-tr-left"><a name="x54283752"></a>
+<font color=#00008f><b>159.</b></font><br><input type=checkbox name="tid54283752" id="tid54283752"  onClick='if (this.checked) {RowSelect("arw54283752",1)} else {RowSelect("arw54283752",0)}'><div id="pdf_54283752" name="pdf_54283752"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54283752"><b><span style="line-height:1.0;">FEATURES OF THE FRACTURE SURFACE OF THE AK5M2 ALLOY MODIFIED WITH TI AND IRRADIATED BY AN ELECTRON BEAM</span></b></a><br><font color=#00008f><i>Serebryakova A.A., Shliarova Yu.A., Zaguliaev D.V., Ivanov Yu.F.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Материалы во внешних полях (МВП–2023).&nbsp;труды XII Международного онлайн-симпозиума. Новокузнецк, 2023.  С. 58-59.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw54283759">
+<td align=center valign=top class="select-tr-left"><a name="x54283759"></a>
+<font color=#00008f><b>160.</b></font><br><input type=checkbox name="tid54283759" id="tid54283759"  onClick='if (this.checked) {RowSelect("arw54283759",1)} else {RowSelect("arw54283759",0)}'><div id="pdf_54283759" name="pdf_54283759"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54283759"><b><span style="line-height:1.0;">ИЗМЕНЕНИЕ ЭЛЕМЕНТНОГО И ФАЗОВОГО СОСТАВА, ДЕФЕКТНОЙ СУБСТРУКТУРЫ ОБРАЗЦОВ СИСТЕМЫ «ПЛЕНКА (ТИТАН) / (АК5М2) ПОДЛОЖКА», ПОДВЕРГНУТЫХ ОБЛУЧЕНИЮ ЭЛЕКТРОННЫМ ПУЧКОМ</span></b></a><br><font color=#00008f><i>Шляров В.В., Загуляев Д.В., Шлярова Ю.А., Серебрякова А.А., Иванов Ю.Ф., Громов В.Е.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Материалы во внешних полях (МВП–2023).&nbsp;труды XII Международного онлайн-симпозиума. Новокузнецк, 2023.  С. 65-67.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw54283776">
+<td align=center valign=top class="select-tr-left"><a name="x54283776"></a>
+<font color=#00008f><b>161.</b></font><br><input type=checkbox name="tid54283776" id="tid54283776"  onClick='if (this.checked) {RowSelect("arw54283776",1)} else {RowSelect("arw54283776",0)}'><div id="pdf_54283776" name="pdf_54283776"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54283776"><b><span style="line-height:1.0;">МЕХАНИЗМЫ УПРОЧНЕНИЯ РЕЛЬСОВОЙ СТАЛИ ПРИ СЖАТИИ</span></b></a><br><font color=#00008f><i>Аксёнова К.В., Ващук Е.С., Громов В.Е., Иванов Ю.Ф.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Материалы во внешних полях (МВП–2023).&nbsp;труды XII Международного онлайн-симпозиума. Новокузнецк, 2023.  С. 85-87.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54283728">
+<td align=center valign=top class="select-tr-left"><a name="x54283728"></a>
+<font color=#00008f><b>162.</b></font><br><input type=checkbox name="tid54283728" id="tid54283728"  onClick='if (this.checked) {RowSelect("arw54283728",1)} else {RowSelect("arw54283728",0)}'><div id="pdf_54283728" name="pdf_54283728"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54283728"><b><span style="line-height:1.0;">СТРУКТУРНО-ФАЗОВЫЕ СОСТОЯНИЯ ПОВЕРХНОСТИ ТИТАНА ПОСЛЕ ЭЛЕКТРОВЗРЫВНОГО НАУГЛЕРОЖИВАНИЯ СОВМЕСТНО С ОКСИДОМ ЦИРКОНИЯ И ЭЛЕКТРОННО-ПУЧКОВОЙ ОБРАБОТКИ</span></b></a><br><font color=#00008f><i>Ионина А.В., Ващук Е.С., Будовских Е.А., Громов В.Е., Иванов Ю.Ф.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Материалы во внешних полях (МВП–2023).&nbsp;труды XII Международного онлайн-симпозиума. Новокузнецк, 2023.  С. 9-11.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw50305608">
+<td align=center valign=top class="select-tr-left"><a name="x50305608"></a>
+<font color=#00008f><b>163.</b></font><br><input type=checkbox name="tid50305608" id="tid50305608"  onClick='if (this.checked) {RowSelect("arw50305608",1)} else {RowSelect("arw50305608",0)}'><div id="pdf_50305608" name="pdf_50305608"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50305608"><b><span style="line-height:1.0;">EFFECT OF ELECTRON-BEAM TREATMENT ON THE STRUCTURE AND PROPERTIES OF (B + CR) FILM DEPOSITED ON A HIGH-ENTROPY ALLOY ALCRFECONI</span></b></a><br><font color=#00008f><i>Ivanov Yu., Gromov V., Konovalov S., Efimov M., Shliarova Yu., Panchenko I.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=50234836">Materials Letters</a>. 
+2023. Т. 335.  С. 133704.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+8</td></tr>
+
+
+
+<tr valign=middle id="arw61035511">
+<td align=center valign=top class="select-tr-left"><a name="x61035511"></a>
+<font color=#00008f><b>164.</b></font><br><input type=checkbox name="tid61035511" id="tid61035511"  onClick='if (this.checked) {RowSelect("arw61035511",1)} else {RowSelect("arw61035511",0)}'><div id="pdf_61035511" name="pdf_61035511"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=61035511"><b><span style="line-height:1.0;">ELECTRON-BEAM SURFACE PROCESSING OF METAL MATERIALS MANUFACTURED BY ADDITIVE METHODS</span></b></a><br><font color=#00008f><i>Teresov A.D., Petrikova E.A., Ivanov Yu.F., Krysina O.V., Prokopenko N.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=49625776">Russian Physics Journal</a>. 
+2023. 
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw61046469">
+<td align=center valign=top class="select-tr-left"><a name="x61046469"></a>
+<font color=#00008f><b>165.</b></font><br><input type=checkbox name="tid61046469" id="tid61046469"  onClick='if (this.checked) {RowSelect("arw61046469",1)} else {RowSelect("arw61046469",0)}'><div id="pdf_61046469" name="pdf_61046469"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=61046469"><b><span style="line-height:1.0;">MULTIELEMENT NITRIDE COATINGS OF QUASI-EQUIATOMIC COMPOSITIONS SYNTHETIZED BY THE ION-PLASMA METHOD</span></b></a><br><font color=#00008f><i>Ivanov Yu.F., Akhmadeev Yu.H., Koval N.N., Shugurov V.V., Petrikova E.A., Krysina O.V., Prokopenko N.A., Tolkachev O.S.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=49625776">Russian Physics Journal</a>. 
+2023. 
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw62181448">
+<td align=center valign=top class="select-tr-left"><a name="x62181448"></a>
+<font color=#00008f><b>166.</b></font><br><input type=checkbox name="tid62181448" id="tid62181448"  onClick='if (this.checked) {RowSelect("arw62181448",1)} else {RowSelect("arw62181448",0)}'><div id="pdf_62181448" name="pdf_62181448"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=62181448"><b><span style="line-height:1.0;">FORMATION OF FINE STRUCTURE OF FLUTING SURFACES OF SPECIAL-PURPOSE RAILS AFTER THEIR LONG-TERM OPERATION</span></b></a><br><font color=#00008f><i>Gromov V.E., Potekaev A.I., Porfiriev M.A., Kryukov R.E., Ivanov Yu.F., Shlyarova Yu.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=62181447">Russian Physics Journal</a>. 
+2023. Т. 66. <a href="/contents.asp?id=62181447&selid=62181448">№&nbsp;3</a>.  С. 321-327.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw61774263">
+<td align=center valign=top class="select-tr-left"><a name="x61774263"></a>
+<font color=#00008f><b>167.</b></font><br><input type=checkbox name="tid61774263" id="tid61774263"  onClick='if (this.checked) {RowSelect("arw61774263",1)} else {RowSelect("arw61774263",0)}'><div id="pdf_61774263" name="pdf_61774263"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=61774263"><b><span style="line-height:1.0;">STRUCTURE AND PROPERTIES OF ELECTROEXPLOSION MOLYBDENUM COATING DEPOSITED ON TITANIUM ALLOY VT6</span></b></a><br><font color=#00008f><i>Romanov D.A., Sosnin K.V., Pronin S.Yu., Ivanov Yu.F., Gromov V.E.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54185915">Metal Science and Heat Treatment</a>. 
+2023. Т. 64. <a href="/contents.asp?id=54185915&selid=61774263">№&nbsp;11-12</a>.  С. 639-647.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw62562386">
+<td align=center valign=top class="select-tr-left"><a name="x62562386"></a>
+<font color=#00008f><b>168.</b></font><br><input type=checkbox name="tid62562386" id="tid62562386"  onClick='if (this.checked) {RowSelect("arw62562386",1)} else {RowSelect("arw62562386",0)}'><div id="pdf_62562386" name="pdf_62562386"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=62562386"><b><span style="line-height:1.0;">EFFECT OF ELECTRON BEAM TREATMENT ON THE STRUCTURE, PROPERTIES AND FRACTURE BEHAVIOR OF HIGH-ENTROPY CO – CR – FE – MN – NI ALLOY</span></b></a><br><font color=#00008f><i>Shlyarova Yu.A., Gromov V.E., Konovalov S.V., Ivanov Yu.F.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54185915">Metal Science and Heat Treatment</a>. 
+2023. Т. 64. <a href="/contents.asp?id=54185915&selid=62562386">№&nbsp;11-12</a>.  С. 662-667.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw62539221">
+<td align=center valign=top class="select-tr-left"><a name="x62539221"></a>
+<font color=#00008f><b>169.</b></font><br><input type=checkbox name="tid62539221" id="tid62539221"  onClick='if (this.checked) {RowSelect("arw62539221",1)} else {RowSelect("arw62539221",0)}'><div id="pdf_62539221" name="pdf_62539221"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=62539221"><b><span style="line-height:1.0;">ANALYSIS OF THE STRUCTURE AND PROPERTIES OF CD – AG – N COATING FORMED ON COPPER BY ELECTRON-ION-PLASMA SPUTTERING</span></b></a><br><font color=#00008f><i>Romanov D.A., Pochetukha V.V., Moskovskii S.V., Sosnin K.V., Ivanov Yu.F., Gromov V.E.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54185915">Metal Science and Heat Treatment</a>. 
+2023. Т. 64. <a href="/contents.asp?id=54185915&selid=62539221">№&nbsp;11-12</a>.  С. 697-704.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw61598928">
+<td align=center valign=top class="select-tr-left"><a name="x61598928"></a>
+<font color=#00008f><b>170.</b></font><br><input type=checkbox name="tid61598928" id="tid61598928"  onClick='if (this.checked) {RowSelect("arw61598928",1)} else {RowSelect("arw61598928",0)}'><div id="pdf_61598928" name="pdf_61598928"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=61598928"><b><span style="line-height:1.0;">EFFECT OF TWO-STAGE SURFACE MODIFICATION ON THE STRUCTURE OF AL – 11% SI AND AL – 20% SI SILUMINS</span></b></a><br><font color=#00008f><i>Shlyarova Yu.A., Zagulyaev D.V., Gromov V.E., Ivanov Yu.F., Shlyarov V.V., Prudnikov A.N.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54185915">Metal Science and Heat Treatment</a>. 
+2023. Т. 64. <a href="/contents.asp?id=54185915&selid=61598928">№&nbsp;11-12</a>.  С. 712-719.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw64327392">
+<td align=center valign=top class="select-tr-left"><a name="x64327392"></a>
+<font color=#00008f><b>171.</b></font><br><input type=checkbox name="tid64327392" id="tid64327392"  onClick='if (this.checked) {RowSelect("arw64327392",1)} else {RowSelect("arw64327392",0)}'><div id="pdf_64327392" name="pdf_64327392"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=64327392"><b><span style="line-height:1.0;">NITRIDE COATINGS BASED ON A HIGH-ENTROPY ALLOY FORMED BY THE ION-PLASMA METHOD</span></b></a><br><font color=#00008f><i>Ivanov Yu.F., Akhmadeev Yu.H., Koval N.N., Shugurov V.V., Petrikova E.A., Krysina O.V., Prokopenko N.A., Tolkachev O.S.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54393028">High Energy Chemistry</a>. 
+2023. Т. 57. <a href="/contents.asp?id=54393028&selid=64327392">№&nbsp;S1</a>.  С. S77-S80.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw62609330">
+<td align=center valign=top class="select-tr-left"><a name="x62609330"></a>
+<font color=#00008f><b>172.</b></font><br><input type=checkbox name="tid62609330" id="tid62609330"  onClick='if (this.checked) {RowSelect("arw62609330",1)} else {RowSelect("arw62609330",0)}'><div id="pdf_62609330" name="pdf_62609330"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=62609330"><b><span style="line-height:1.0;">THERMOCHEMICAL SYNTHESIS OF SIALON USING LOW-TEMPERATURE PLASMA RADIATION AND A BRIGHT PULSED BEAM OF A POWDER MIXTURE OF ALN AND SI3N4</span></b></a><br><font color=#00008f><i>Klopotov A.A., Vlasov V.A., Bezukhov K.A., Volokitin G.G., Sarkisov Y.S., Ivanov Y.F., Syrtanov M.S., Shekhovtsov V.V.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54393028">High Energy Chemistry</a>. 
+2023. Т. 57. <a href="/contents.asp?id=54393028&selid=62609330">№&nbsp;S1</a>.  С. S95-S99.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54711918">
+<td align=center valign=top class="select-tr-left"><a name="x54711918"></a>
+<font color=#00008f><b>173.</b></font><br><input type=checkbox name="tid54711918" id="tid54711918"  onClick='if (this.checked) {RowSelect("arw54711918",1)} else {RowSelect("arw54711918",0)}'><div id="pdf_54711918" name="pdf_54711918"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54711918"><b><span style="line-height:1.0;">ЭЛЕКТРОННО-ИОННО-ПЛАЗМЕННОЕ МОДИФИЦИРОВАНИЕ ПОВЕРХНОСТИ СИЛУМИНА ЗАЭВТЕКТИЧЕСКОГО СОСТАВА</span></b></a><br><font color=#00008f><i>Шлярова Ю.А., Шляров В.В., Загуляев Д.В., Иванов Ю.Ф., Громов В.Е.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54711736">Известия высших учебных заведений. Цветная металлургия</a>. 
+2023. Т. 29. <a href="/contents.asp?id=54711736&selid=54711918">№&nbsp;5</a>.  С. 69-78.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw64732716">
+<td align=center valign=top class="select-tr-left"><a name="x64732716"></a>
+<font color=#00008f><b>174.</b></font><br><input type=checkbox name="tid64732716" id="tid64732716"  onClick='if (this.checked) {RowSelect("arw64732716",1)} else {RowSelect("arw64732716",0)}'><div id="pdf_64732716" name="pdf_64732716"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=64732716"><b><span style="line-height:1.0;">STRUCTURE AND PROPERTIES OF A HIGH-ENTROPY ALCRFECONI ALLOY AFTER TREATMENT WITH AN ELECTRON–ION PLASMA</span></b></a><br><font color=#00008f><i>Gromov V.E., Ivanov Yu.F., Efimov M.O., Shliarova Yu.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=64583893">Doklady Physics</a>. 
+2023. Т. 68. <a href="/contents.asp?id=64583893&selid=64732716">№&nbsp;7</a>.  С. 205-208.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54250284">
+<td align=center valign=top class="select-tr-left"><a name="x54250284"></a>
+<font color=#00008f><b>175.</b></font><br><input type=checkbox name="tid54250284" id="tid54250284"  onClick='if (this.checked) {RowSelect("arw54250284",1)} else {RowSelect("arw54250284",0)}'><div id="pdf_54250284" name="pdf_54250284"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54250284"><b><span style="line-height:1.0;">УВЕЛИЧЕНИЕ УСТАЛОСТНОЙ ДОЛГОВЕЧНОСТИ СПЛАВА АК5М2 ПУТЕМ НАНЕСЕНИЯ ПЛЕНКИ TI МЕТОДОМ ВАКУУМНО-ДУГОВОГО ПЛАЗМЕННО-АССИСТИРОВАННОГО ОСАЖДЕНИЯ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Шляров В.В., Аксенова К.В., Загуляев Д.В., Громов В.Е.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54250275">Известия вузов. Физика</a>. 
+2023. Т. 66. <a href="/contents.asp?id=54250275&selid=54250284">№&nbsp;7&nbsp;(788)</a>.  С. 74-82.
+</span>
+<div style="height: 5px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<td width=10% align=left valign=top bgcolor=#f5f5f5><font color=#000000>Версии:</font></td>
+<td width=90% align=left valign=top bgcolor=#f5f5f5>
+
+<span class="menug">
+<a href="item.asp?id=64325932">
+<span style="line-height:1.0;">STRUCTURE AND PROPERTIES OF R18U SURFACING OF HIGHSPEED STEEL AFTER ITS HIGH TEMPERING</span><br><i>Ivanov Yu.F., Gromov V.E., Potekaev A.I., Guseva T.P., Chapaikin A.S., Vashchuk E.S., Romanov D.A.</i><br>Russian Physics Journal. 2023. Т. 66. №&nbsp;7.  С. 731-739.
+</a></span>
+<br><div style="height: 5px;">&nbsp;</div>
+
+</td></tr></table>
+
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw54478000">
+<td align=center valign=top class="select-tr-left"><a name="x54478000"></a>
+<font color=#00008f><b>176.</b></font><br><input type=checkbox name="tid54478000" id="tid54478000"  onClick='if (this.checked) {RowSelect("arw54478000",1)} else {RowSelect("arw54478000",0)}'><div id="pdf_54478000" name="pdf_54478000"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54478000"><b><span style="line-height:1.0;">СТРУКТУРА И ФАЗОВЫЙ СОСТАВ ПОВЕРХНОСТНОГО СЛОЯ ВЫКРУЖКИ РЕЛЬСОВ ПОСЛЕ ЭКСПЛУАТАЦИИ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Громов В.Е., Порфирьев М.А., Крюков Р.Е., Шляров В.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54477998">Известия вузов. Физика</a>. 
+2023. Т. 66. <a href="/contents.asp?id=54477998&selid=54478000">№&nbsp;8&nbsp;(789)</a>.  С. 14-20.
+</span>
+<div style="height: 5px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<td width=10% align=left valign=top bgcolor=#f5f5f5><font color=#000000>Версии:</font></td>
+<td width=90% align=left valign=top bgcolor=#f5f5f5>
+
+<span class="menug">
+<a href="item.asp?id=64156117">
+<span style="line-height:1.0;">STRUCTURE AND PHASE STATE OF CERAMIC HIGH-ENTROPY ALLOY COATINGS FORMED BY PLASMA-ASSISTED VACUUM ARC DEPOSITION</span><br><i>Ivanov Yu.F., Akhmadeev Yu.H., Koval N.N., Shugurov V.V., Petrikova E.A., Krysina O.V., Prokopenko N.A., Tolkachev O.S.</i><br>Russian Physics Journal. 2023. Т. 66. №&nbsp;8.  С. 829-834.
+</a></span>
+<br><div style="height: 5px;">&nbsp;</div>
+
+</td></tr></table>
+
+</td><td align=center valign=middle class="select-tr-right">
+3</td></tr>
+
+
+
+<tr valign=middle id="arw50420578">
+<td align=center valign=top class="select-tr-left"><a name="x50420578"></a>
+<font color=#00008f><b>177.</b></font><br><input type=checkbox name="tid50420578" id="tid50420578"  onClick='if (this.checked) {RowSelect("arw50420578",1)} else {RowSelect("arw50420578",0)}'><div id="pdf_50420578" name="pdf_50420578"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50420578"><b><span style="line-height:1.0;">ТРАНСФОРМАЦИЯ ТОНКОЙ СТРУКТУРЫ ПЛАСТИНЧАТОГО ПЕРЛИТА ПРИ ДЕФОРМАЦИИ РЕЛЬСОВОЙ СТАЛИ</span></b></a><br><font color=#00008f><i>Громов В.Е., Аксёнова К.В., Иванов Ю.Ф., Кузнецов Р.В., Кормышев В.Е.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=50420573">Известия высших учебных заведений. Черная металлургия</a>. 
+2023. Т. 66. <a href="/contents.asp?id=50420573&selid=50420578">№&nbsp;1</a>.  С. 50-56.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw52992808">
+<td align=center valign=top class="select-tr-left"><a name="x52992808"></a>
+<font color=#00008f><b>178.</b></font><br><input type=checkbox name="tid52992808" id="tid52992808"  onClick='if (this.checked) {RowSelect("arw52992808",1)} else {RowSelect("arw52992808",0)}'><div id="pdf_52992808" name="pdf_52992808"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=52992808"><b><span style="line-height:1.0;">МНОГОСЛОЙНЫЕ АМОРФНОКРИСТАЛЛИЧЕСКИЕ ВЫСОКОЭНТРОПИЙНЫЕ МЕТАЛЛИЧЕСКИЕ ПЛЕНКИ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Прокопенко Н.А., Петрикова Е.А., Шугуров В.В., Тересов А.Д.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=52992788">Известия высших учебных заведений. Черная металлургия</a>. 
+2023. Т. 66. <a href="/contents.asp?id=52992788&selid=52992808">№&nbsp;2</a>.  С. 191-196.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54623828">
+<td align=center valign=top class="select-tr-left"><a name="x54623828"></a>
+<font color=#00008f><b>179.</b></font><br><input type=checkbox name="tid54623828" id="tid54623828"  onClick='if (this.checked) {RowSelect("arw54623828",1)} else {RowSelect("arw54623828",0)}'><div id="pdf_54623828" name="pdf_54623828"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54623828"><b><span style="line-height:1.0;">СТРУКТУРА И СВОЙСТВА ПОВЕРХНОСТНОГО СЛОЯ ВЭС ПОСЛЕ ЭЛЕКТРОННО-ИОННО-ПЛАЗМЕННОЙ ОБРАБОТКИ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Шугуров В.В., Тересов А.Д., Петрикова Е.А., Ефимов М.О.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54623822">Известия высших учебных заведений. Черная металлургия</a>. 
+2023. Т. 66. <a href="/contents.asp?id=54623822&selid=54623828">№&nbsp;4</a>.  С. 427-433.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw59718464">
+<td align=center valign=top class="select-tr-left"><a name="x59718464"></a>
+<font color=#00008f><b>180.</b></font><br><input type=checkbox name="tid59718464" id="tid59718464"  onClick='if (this.checked) {RowSelect("arw59718464",1)} else {RowSelect("arw59718464",0)}'><div id="pdf_59718464" name="pdf_59718464"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59718464"><b><span style="line-height:1.0;">АНАЛИЗ ЗОНЫ КОНТАКТА СИСТЕМЫ ПОКРЫТИЕ -ПОДЛОЖКА, ПОДВЕРГНУТОЙ ОБЛУЧЕНИЮ ИМПУЛЬСНЫМ ЭЛЕКТРОННЫМ ПУЧКОМ</span></b></a><br><font color=#00008f><i>Ефимов М.О., Иванов Ю.Ф., Громов В.Е., Шлярова Ю.А., Панченко И.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=59718458">Известия высших учебных заведений. Черная металлургия</a>. 
+2023. Т. 66. <a href="/contents.asp?id=59718458&selid=59718464">№&nbsp;6</a>.  С. 666-672.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw50743672">
+<td align=center valign=top class="select-tr-left"><a name="x50743672"></a>
+<font color=#00008f><b>181.</b></font><br><input type=checkbox name="tid50743672" id="tid50743672"  onClick='if (this.checked) {RowSelect("arw50743672",1)} else {RowSelect("arw50743672",0)}'><div id="pdf_50743672" name="pdf_50743672"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50743672"><b><span style="line-height:1.0;">УВЕЛИЧЕНИЕ МЕХАНИЧЕСКИХ ХАРАКТЕРИСТИК СПЛАВА АК5М2, УПРОЧНЕННОГО МЕТОДОМ ВАККУМНО-ДУГОВОГО НАНЕСЕНИЯ МЕТАЛЛИЧЕСКИХ ПОКРЫТИЙ</span></b></a><br><font color=#00008f><i>Шляров В.В., Серебрякова А.А., Загуляев Д.В., Иванов Ю.Ф., Устинов А.М.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=50743670">Инженерная физика</a>. 
+2023. <a href="/contents.asp?id=50743670&selid=50743672">№&nbsp;4</a>.  С. 38-47.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+6</td></tr>
+
+
+
+<tr valign=middle id="arw54017079">
+<td align=center valign=top class="select-tr-left"><a name="x54017079"></a>
+<font color=#00008f><b>182.</b></font><br><input type=checkbox name="tid54017079" id="tid54017079"  onClick='if (this.checked) {RowSelect("arw54017079",1)} else {RowSelect("arw54017079",0)}'><div id="pdf_54017079" name="pdf_54017079"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54017079"><b><span style="line-height:1.0;">СТРУКТУРА И СВОЙСТВА СИСТЕМЫ "ПОКРЫТИЕ (MO-AU)/(МЕДЬ) ПОДЛОЖКА" ПОСЛЕ ОБЛУЧЕНИЯ ИМПУЛЬСНЫМ ЭЛЕКТРОННЫМ ПУЧКОМ И АЗОТИРОВАНИЯ В ПЛАЗМЕ ГАЗОВОГО РАЗРЯДА НИЗКОГО ДАВЛЕНИЯ</span></b></a><br><font color=#00008f><i>Почетуха В.В., Романов Д.А., Иванов Ю.Ф., Филяков А.Д.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54017074">Инженерная физика</a>. 
+2023. <a href="/contents.asp?id=54017074&selid=54017079">№&nbsp;6</a>.  С. 38-48.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54709784">
+<td align=center valign=top class="select-tr-left"><a name="x54709784"></a>
+<font color=#00008f><b>183.</b></font><br><input type=checkbox name="tid54709784" id="tid54709784"  onClick='if (this.checked) {RowSelect("arw54709784",1)} else {RowSelect("arw54709784",0)}'><div id="pdf_54709784" name="pdf_54709784"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54709784"><b><span style="line-height:1.0;">ВЛИЯНИЕ ДЛИТЕЛЬНОЙ ЭКСПЛУАТАЦИИ НА СТРУКТУРНО-ФАЗОВОЕ СОСТОЯНИЕ ЗАЭВТЕКТОИДНОЙ РЕЛЬСОВОЙ СТАЛИ</span></b></a><br><font color=#00008f><i>Попова Н.А., Громов В.Е., Иванов Ю.Ф., Порфирьев М.А., Никоненко Е.Л., Шлярова Ю.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54709780">Материаловедение</a>. 
+2023. <a href="/contents.asp?id=54709780&selid=54709784">№&nbsp;10</a>.  С. 17-28.
+</span>
+<div style="height: 5px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<td width=10% align=left valign=top bgcolor=#f5f5f5><font color=#000000>Версии:</font></td>
+<td width=90% align=left valign=top bgcolor=#f5f5f5>
+
+<span class="menug">
+<a href="item.asp?id=68559216">
+<span style="line-height:1.0;">EFFECT OF LONG-TERM OPERATION ON STRUCTURAL-PHASE STATE OF HYPEREUTECTOID RAIL STEEL</span><br><i>Popova N.A., Gromov V.E., Ivanov Yu.F., Porfiryev M.A., Nikonenko E.L., Shlyarova Yu.A.</i><br>Inorganic Materials: Applied Research. 2024. Т. 15. №&nbsp;4.  С. 968-977.
+</a></span>
+<br><div style="height: 5px;">&nbsp;</div>
+
+</td></tr></table>
+
+</td><td align=center valign=middle class="select-tr-right">
+4</td></tr>
+
+
+
+<tr valign=middle id="arw54741088">
+<td align=center valign=top class="select-tr-left"><a name="x54741088"></a>
+<font color=#00008f><b>184.</b></font><br><input type=checkbox name="tid54741088" id="tid54741088"  onClick='if (this.checked) {RowSelect("arw54741088",1)} else {RowSelect("arw54741088",0)}'><div id="pdf_54741088" name="pdf_54741088"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54741088"><b><span style="line-height:1.0;">СТРУКТУРНО-ФАЗОВЫЕ СОСТОЯНИЯ В ГОЛОВКЕ РЕЛЬСОВ СПЕЦИАЛЬНОГО НАЗНАЧЕНИЯ ПОСЛЕ ДЛИТЕЛЬНОЙ ЭКСПЛУАТАЦИИ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Порфирьев М.А., Громов В.Е., Крюков Р.Е., Шлярова Ю.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54741081">Металлы</a>. 
+2023. <a href="/contents.asp?id=54741081&selid=54741088">№&nbsp;6</a>.  С. 53-58.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+11</td></tr>
+
+
+
+<tr valign=middle id="arw54803326">
+<td align=center valign=top class="select-tr-left"><a name="x54803326"></a>
+<font color=#00008f><b>185.</b></font><br><input type=checkbox name="tid54803326" id="tid54803326"  onClick='if (this.checked) {RowSelect("arw54803326",1)} else {RowSelect("arw54803326",0)}'><div id="pdf_54803326" name="pdf_54803326"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54803326"><b><span style="line-height:1.0;">АНАЛИЗ МЕХАНИЗМОВ УПРОЧНЕНИЯ РЕЛЬСОВОЙ СТАЛИ ПРИ ПЛАСТИЧЕСКОЙ ДЕФОРМАЦИИ ОДНООСНЫМ СЖАТИЕМ</span></b></a><br><font color=#00008f><i>Аксёнова К.В., Громов В.Е., Ващук Е.С., Иванов Ю.Ф.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54803319">Перспективные материалы</a>. 
+2023. <a href="/contents.asp?id=54803319&selid=54803326">№&nbsp;8</a>.  С. 37-44.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw50409152">
+<td align=center valign=top class="select-tr-left"><a name="x50409152"></a>
+<font color=#00008f><b>186.</b></font><br><input type=checkbox name="tid50409152" id="tid50409152"  onClick='if (this.checked) {RowSelect("arw50409152",1)} else {RowSelect("arw50409152",0)}'><div id="pdf_50409152" name="pdf_50409152"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50409152"><b><span style="line-height:1.0;">СТРУКТУРА ЗОНЫ КОНТАКТА НАПЛАВКА-ПОДЛОЖКА, ПОДВЕРГНУТОЙ ЭЛЕКТРОННО-ПУЧКОВОЙ ОБРАБОТКЕ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Громов В.Е., Ефимов М.О., Шлярова Ю.А., Панченко И.А., Коновалов С.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=50409145">Письма в Журнал технической физики</a>. 
+2023. Т. 49. <a href="/contents.asp?id=50409145&selid=50409152">№&nbsp;6</a>.  С. 28-31.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+4</td></tr>
+
+
+
+<tr valign=middle id="arw54899937">
+<td align=center valign=top class="select-tr-left"><a name="x54899937"></a>
+<font color=#00008f><b>187.</b></font><br><input type=checkbox name="tid54899937" id="tid54899937"  onClick='if (this.checked) {RowSelect("arw54899937",1)} else {RowSelect("arw54899937",0)}'><div id="pdf_54899937" name="pdf_54899937"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54899937"><b><span style="line-height:1.0;">СТРУКТУРА И СВОЙСТВА БИОИНЕРТНОГО ПОКРЫТИЯ MO - NB, СФОРМИРОВАННОГО НА МЕДИЦИНСКОМ СПЛАВЕ TITANIUM GRADE 5 ЭЛЕКТРОВЗРЫВНЫМ МЕТОДОМ</span></b></a><br><font color=#00008f><i>Романов Д.А., Соснин К.В., Пронин С.Ю., Почетуха В.В., Иванов Ю.Ф., Громов В.Е.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54899933">Физика и химия обработки материалов</a>. 
+2023. <a href="/contents.asp?id=54899933&selid=54899937">№&nbsp;4</a>.  С. 47-64.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54735506">
+<td align=center valign=top class="select-tr-left"><a name="x54735506"></a>
+<font color=#00008f><b>188.</b></font><br><input type=checkbox name="tid54735506" id="tid54735506"  onClick='if (this.checked) {RowSelect("arw54735506",1)} else {RowSelect("arw54735506",0)}'><div id="pdf_54735506" name="pdf_54735506"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54735506"><b><span style="line-height:1.0;">ГРАДИЕНТЫ СТРУКТУРЫ, ФАЗОВОГО СОСТАВА И ДИСЛОКАЦИОННОЙ СУБСТРУКТУРЫ В ГОЛОВКЕ РЕЛЬСОВ ИЗ ЗАЭВТЕКТОИДНОЙ СТАЛИ ПОСЛЕ ЭКСПЛУАТАЦИИ</span></b></a><br><font color=#00008f><i>Громов В.Е., Порфирьев М.А., Иванов Ю.Ф., Крюков Р.Е., Шляров В.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54735502">Вопросы материаловедения</a>. 
+2023. <a href="/contents.asp?id=54735502&selid=54735506">№&nbsp;3&nbsp;(115)</a>.  С. 39-48.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw50496445">
+<td align=center valign=top class="select-tr-left"><a name="x50496445"></a>
+<font color=#00008f><b>189.</b></font><br><input type=checkbox name="tid50496445" id="tid50496445"  onClick='if (this.checked) {RowSelect("arw50496445",1)} else {RowSelect("arw50496445",0)}'><div id="pdf_50496445" name="pdf_50496445"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50496445"><b><span style="line-height:1.0;">ЭВОЛЮЦИЯ СТРУКТУРЫ ПЛАСТИНЧАТОГО ПЕРЛИТА РЕЛЬСОВОЙ СТАЛИ ПРИ РАСТЯЖЕНИИ</span></b></a><br><font color=#00008f><i>Аксенова К.В., Громов В.Е., Иванов Ю.Ф., Ващук Е.С., Порфирьев М.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=50496444">Известия Алтайского государственного университета</a>. 
+2023. <a href="/contents.asp?id=50496444&selid=50496445">№&nbsp;1&nbsp;(129)</a>.  С. 11-17.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw54629212">
+<td align=center valign=top class="select-tr-left"><a name="x54629212"></a>
+<font color=#00008f><b>190.</b></font><br><input type=checkbox name="tid54629212" id="tid54629212"  onClick='if (this.checked) {RowSelect("arw54629212",1)} else {RowSelect("arw54629212",0)}'><div id="pdf_54629212" name="pdf_54629212"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54629212"><b><span style="line-height:1.0;">HIGH-ENTROPY FECOCRNIMN AND FECONICRAL ALLOYS COATINGS: STRUCTURE AND PROPERTIES</span></b></a><br><font color=#00008f><i>Chen X., Ivanov Yu.F., Gromov V.E., Efimov M.O., Konovalov S.V., Shlyarov V.V., Panchenko I.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54629211">Известия Алтайского государственного университета</a>. 
+2023. <a href="/contents.asp?id=54629211&selid=54629212">№&nbsp;4&nbsp;(132)</a>.  С. 11-19.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw59855344">
+<td align=center valign=top class="select-tr-left"><a name="x59855344"></a>
+<font color=#00008f><b>191.</b></font><br><input type=checkbox name="tid59855344" id="tid59855344"  onClick='if (this.checked) {RowSelect("arw59855344",1)} else {RowSelect("arw59855344",0)}'><div id="pdf_59855344" name="pdf_59855344"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59855344"><b><span style="line-height:1.0;">СТРУКТУРА И СВОЙСТВА СИСТЕМЫ "ПОКРЫТИЕ (AG-C)/(МЕДЬ) ПОДЛОЖКА", ОБЛУЧЕННОЙ ИМПУЛЬСНЫМ ЭЛЕКТРОННЫМ ПУЧКОМ</span></b></a><br><font color=#00008f><i>Романов Д.А., Московский С.В., Почетуха В.В., Ващук Е.С., Иванов Ю.Ф.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=59855318">Ползуновский вестник</a>. 
+2023. <a href="/contents.asp?id=59855318&selid=59855344">№&nbsp;4</a>.  С. 166-177.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw59855346">
+<td align=center valign=top class="select-tr-left"><a name="x59855346"></a>
+<font color=#00008f><b>192.</b></font><br><input type=checkbox name="tid59855346" id="tid59855346"  onClick='if (this.checked) {RowSelect("arw59855346",1)} else {RowSelect("arw59855346",0)}'><div id="pdf_59855346" name="pdf_59855346"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59855346"><b><span style="line-height:1.0;">РАЗРУШЕНИЕ ПЛАСТИНЧАТОГО ПЕРЛИТА ПОВЕРХНОСТИ КАТАНИЯ РЕЛЬСОВ ПРИ ДЛИТЕЛЬНОЙ ЭКСПЛУАТАЦИИ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Громов В.Е., Порфирьев М.А., Крюков Р.Е., Шляров В.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=59855318">Ползуновский вестник</a>. 
+2023. <a href="/contents.asp?id=59855318&selid=59855346">№&nbsp;4</a>.  С. 191-198.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+4</td></tr>
+
+
+
+<tr valign=middle id="arw65086729">
+<td align=center valign=top class="select-tr-left"><a name="x65086729"></a>
+<font color=#00008f><b>193.</b></font><br><input type=checkbox name="tid65086729" id="tid65086729"  onClick='if (this.checked) {RowSelect("arw65086729",1)} else {RowSelect("arw65086729",0)}'><div id="pdf_65086729" name="pdf_65086729"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65086729"><b><span style="line-height:1.0;">STRENGTHENING MECHANISMS OF RAILS’ SURFACE IN ULTRA LONG-TERM OPERATION</span></b></a><br><font color=#00008f><i>Kuznetsov R.V., Gromov V.E., Ivanov Yu.F., Peregudov O.A., Shliarova Yu.A., Kormyshev V.E., Semin A.P.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=64470586">Physics of Metals and Metallography</a>. 
+2023. Т. 124. <a href="/contents.asp?id=64470586&selid=65086729">№&nbsp;13</a>.  С. 1509-1514.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw64146813">
+<td align=center valign=top class="select-tr-left"><a name="x64146813"></a>
+<font color=#00008f><b>194.</b></font><br><input type=checkbox name="tid64146813" id="tid64146813"  onClick='if (this.checked) {RowSelect("arw64146813",1)} else {RowSelect("arw64146813",0)}'><div id="pdf_64146813" name="pdf_64146813"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=64146813"><b><span style="line-height:1.0;">STRUCTURAL–PHASE STATES OF AN AL–FE–CO–CR–NI HEA COATING FORMED ON 5083 ALLOY</span></b></a><br><font color=#00008f><i>Ivanov Yu.F., Gromov V.E., Konovalov S.V., Efimov M.O., Shlyarova Yu.A., Panchenko I.A., Starostenkov M.D.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=55666269">Physics of the Solid State</a>. 
+2023. Т. 65. <a href="/contents.asp?id=55666269&selid=64146813">№&nbsp;1</a>.  С. 36-42.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw65408089">
+<td align=center valign=top class="select-tr-left"><a name="x65408089"></a>
+<font color=#00008f><b>195.</b></font><br><input type=checkbox name="tid65408089" id="tid65408089"  onClick='if (this.checked) {RowSelect("arw65408089",1)} else {RowSelect("arw65408089",0)}'><div id="pdf_65408089" name="pdf_65408089"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65408089"><b><span style="line-height:1.0;">STRUCTURAL–PHASE STATE OF A SURFACE OF ELECTRON-BEAM TREATMENT OF A STEEL SUBJECTED TO ELECTROEXPLOSIVE ALUMINIZING</span></b></a><br><font color=#00008f><i>Ionina A.V., Gromov V.E., Konovalov S.V., Ivanov Yu.F., Budovskikh E.A., Panchenko I.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=55666269">Physics of the Solid State</a>. 
+2023. Т. 65. <a href="/contents.asp?id=55666269&selid=65408089">№&nbsp;1</a>.  С. 43-47.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+3</td></tr>
+
+
+
+<tr valign=middle id="arw64463943">
+<td align=center valign=top class="select-tr-left"><a name="x64463943"></a>
+<font color=#00008f><b>196.</b></font><br><input type=checkbox name="tid64463943" id="tid64463943"  onClick='if (this.checked) {RowSelect("arw64463943",1)} else {RowSelect("arw64463943",0)}'><div id="pdf_64463943" name="pdf_64463943"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=64463943"><b><span style="line-height:1.0;">FORMATION OF INTERNAL STRESS FIELDS ON A RAIL SURFACE DURING OPERATION</span></b></a><br><font color=#00008f><i>Popova N.A., Gromov V.E., Ivanov Yu.F., Porfiriev M.A., Nikonenko E.L., Kryukov R.E., Gostevskaya A.N.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=64431925">Technical Physics Letters</a>. 
+2023. Т. 49. <a href="/contents.asp?id=64431925&selid=64463943">№&nbsp;10</a>.  С. 117-122.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54410947">
+<td align=center valign=top class="select-tr-left"><a name="x54410947"></a>
+<font color=#00008f><b>197.</b></font><br><input type=checkbox name="tid54410947" id="tid54410947"  onClick='if (this.checked) {RowSelect("arw54410947",1)} else {RowSelect("arw54410947",0)}'><div id="pdf_54410947" name="pdf_54410947"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54410947"><b><span style="line-height:1.0;">СТРУКТУРА И СВОЙСТВА ПОКРЫТИЙ СИСТЕМЫ AG-C, НАНЕСЕННЫХ ЭЛЕКТРОВЗРЫВНЫМ МЕТОДОМ НА МЕДНУЮ ПОДЛОЖКУ</span></b></a><br><font color=#00008f><i>Романов Д.А., Московский С.В., Почетуха В.В., Филяков А.Д., Иванов Ю.Ф.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54410940">Упрочняющие технологии и покрытия</a>. 
+2023. Т. 19. <a href="/contents.asp?id=54410940&selid=54410947">№&nbsp;9&nbsp;(225)</a>.  С. 421-426.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54594365">
+<td align=center valign=top class="select-tr-left"><a name="x54594365"></a>
+<font color=#00008f><b>198.</b></font><br><input type=checkbox name="tid54594365" id="tid54594365"  onClick='if (this.checked) {RowSelect("arw54594365",1)} else {RowSelect("arw54594365",0)}'><div id="pdf_54594365" name="pdf_54594365"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54594365"><b><span style="line-height:1.0;">STRENGTHENING MECHANISMS OF RAIL STEEL UNDER COMPRESSION</span></b></a><br><font color=#00008f><i>Ivanov Yu.F., Porfir'evM. A., Gromov V.E., Popova N.A., Serenkov Yu.S., Shlyarov V.V.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54594361">Ferrous Metallurgy. Bulletin of Scientific, Technical and Economic Information</a>. 
+2023. Т. 79. <a href="/contents.asp?id=54594361&selid=54594365">№&nbsp;8</a>.  С. 657-668.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw54830450">
+<td align=center valign=top class="select-tr-left"><a name="x54830450"></a>
+<font color=#00008f><b>199.</b></font><br><input type=checkbox name="tid54830450" id="tid54830450"  onClick='if (this.checked) {RowSelect("arw54830450",1)} else {RowSelect("arw54830450",0)}'><div id="pdf_54830450" name="pdf_54830450"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54830450"><b><span style="line-height:1.0;">ФОРМИРОВАНИЕ ГРАДИЕНТНЫХ СТРУКТУРНО-ФАЗОВЫХ СОСТОЯНИЙ В ГОЛОВКЕ РЕЛЬСОВ СПЕЦИАЛЬНОГО НАЗНАЧЕНИЯ ПОСЛЕ ЭКСПЛУАТАЦИИ</span></b></a><br><font color=#00008f><i>Иванов Ю.Ф., Порфирьев М.А., Громов В.Е., Крюков Р.Е., Шлярова Ю.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54830446">Деформация и разрушение материалов</a>. 
+2023. <a href="/contents.asp?id=54830446&selid=54830450">№&nbsp;11</a>.  С. 33-39.
+</span>
+<div style="height: 5px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<td width=10% align=left valign=top bgcolor=#f5f5f5><font color=#000000>Версии:</font></td>
+<td width=90% align=left valign=top bgcolor=#f5f5f5>
+
+<span class="menug">
+<a href="item.asp?id=79034929">
+<span style="line-height:1.0;">FORMATION OF GRADIENT STRUCTURAL-PHASE STATES IN THE HEAD OF SPECIAL-PURPOSE RAILS DURING OPERATION</span><br><i>Ivanov Yu.F., Porfir'ev M.A., Gromov V.E., Kryukov R.E., Shlyarova Yu.A.</i><br>Russian Metallurgy (Metally). 2024. Т. 2024. №&nbsp;2.  С. 298-304.
+</a></span>
+<br><div style="height: 5px;">&nbsp;</div>
+
+</td></tr></table>
+
+</td><td align=center valign=middle class="select-tr-right">
+9</td></tr>
+
+
+
+<tr valign=middle id="arw50304991">
+<td align=center valign=top class="select-tr-left"><a name="x50304991"></a>
+<font color=#00008f><b>200.</b></font><br><input type=checkbox name="tid50304991" id="tid50304991"  onClick='if (this.checked) {RowSelect("arw50304991",1)} else {RowSelect("arw50304991",0)}'><div id="pdf_50304991" name="pdf_50304991"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50304991"><b><span style="line-height:1.0;">ДЕФОРМАЦИОННОЕ УПРОЧНЕНИЕ РЕЛЬСОВОЙ СТАЛИ</span></b></a><br><font color=#00008f><i>Порфирьев М.А., Иванов Ю.Ф., Попова Н.А., Громов В.Е., Шлярова Ю.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=50304988">Деформация и разрушение материалов</a>. 
+2023. <a href="/contents.asp?id=50304988&selid=50304991">№&nbsp;2</a>.  С. 20-26.
+</span>
+<div style="height: 5px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<td width=10% align=left valign=top bgcolor=#f5f5f5><font color=#000000>Версии:</font></td>
+<td width=90% align=left valign=top bgcolor=#f5f5f5>
+
+<span class="menug">
+<a href="item.asp?id=64034245">
+<span style="line-height:1.0;">STRAIN HARDENING OF RAIL STEEL</span><br><i>Porfir’ev M.A., Ivanov Yu.F., Popova N.A., Gromov V.E., Shlyarova Yu.A.</i><br>Russian Metallurgy (Metally). 2023. Т. 2023. №&nbsp;4.  С. 485-491.
+</a></span>
+<br><div style="height: 5px;">&nbsp;</div>
+
+</td></tr></table>
+
+</td><td align=center valign=middle class="select-tr-right">
+5</td></tr>
+
+
+
+</table>
+
+
+<SCRIPT LANGUAGE="JavaScript">
+document.getElementById('totalcited').innerHTML=19381;
+</SCRIPT>
+
+
+<div style="width:578px; height:24px; border:#7f9db9 1px solid;padding:0;margin:20px 0 0 0; text-align:left; border-radius: 12px;" id="pages">
+<table width=578 height=24 cellspacing=1 cellpadding=3 border=0>
+<tr align=center valign=middle class="menurb">
+<td width=15% nowrap><a href="javascript:goto_page(1)">В&nbsp;начало</a></td>
+<td width=10% class="mouse-hovergr" nowrap><a title="Предыдущая страница" href="javascript:goto_page(1)">&lt;&lt;</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(1)">1</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#e8e8e8 nowrap><font color=#F26C4F>2</font></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(3)">3</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(4)">4</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(5)">5</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(6)">6</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(7)">7</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(8)">8</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(9)">9</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(10)">10</a></td>
+
+<td width=10% class="mouse-hovergr" nowrap><a title="Следующая страница" href="javascript:goto_page(3)">&gt;&gt;</a></td>
+<td width=15% nowrap><a href="javascript:goto_page(26)">В&nbsp;конец</a></td>
+</tr>
+</table>
+</div>
+
+<br>
+</td></tr></table>
+
+</td>
+<td align=right valign=top>
+
+<div id="panel_default" style="position: relative; width: 200px; height:0; margin: 0; border: 1px; padding: 0"></div>
+<div id="panel" style="position: relative; width: 200px; margin: 0; border: 0; padding: 0">
+
+<div style="width: 190px;" class="right-panel">
+
+<table width=190 cellspacing=0 cellpadding=3 border=0>
+
+<tr><td colspan=2 align=center valign=top><font color=#F26C4F><b>ИНСТРУМЕНТЫ</b></font><br><img src="/pic/1pix.gif" vspace=1><br></td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:goto_page(3)"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:goto_page(3)">Следующая страница</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:goto_page(1)"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:goto_page(1)">Предыдущая страница</a>
+</td></tr>
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:select_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:select_all()">Выделить все публикации на этой странице</a>
+</td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:deselect_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:deselect_all()">Снять выделение</a>
+</td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:itembox_add()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:itembox_add()">Добавить выделенные публикации в подборку</a></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:itembox_add_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:itembox_add_all()">Добавить все публикации автора в подборку</a></td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="cit_author_items.asp?id=17783"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="cit_author_items.asp?id=17783">Список публикаций, ссылающихся на работы автора</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:show_author_refs(17783)"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:show_author_refs(17783)">Список ссылок на работы автора</a>
+</td></tr>
+
+
+
+<tr><td width=15% align=right valign=top>
+<a href="author_profile.asp?id=17783"><img src="/pic/stat.gif" width=12 height=13 hspace=4 border=0></a></td>
+<td width=85% align=left valign=middle><a href="author_profile.asp?authorid=17783">Анализ публикационной активности автора</a>
+</td></tr>
+
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="/projects/science_index/author_tutorial.asp"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="/projects/science_index/author_tutorial.asp">Инструкция для авторов по работе в системе SCIENCE INDEX</a>
+</td></tr>
+
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="authors.asp"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="authors.asp">Авторский указатель</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="querybox.asp"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="querybox.asp">Поиск публикаций</a>
+</td></tr>
+
+
+
+
+</table>
+</div>
+
+</div>
+
+</td></tr></table>
+</td></tr></table>
+</FORM>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+$(function() {
+$(".help").tooltip({
+	position: "top right",
+	offset: [-15, -100],
+	effect: "fade", 
+	fadeInSpeed: 400, 
+	fadeOutSpeed: 400, 
+	delay: 400,  
+	predelay: 400,
+	opacity: 1.0
+});
+});
+</script>
+
+
+<br><br>
+<table width=970 height=40 border=0 cellpadding=0 cellspacing=0 id="footer">
+<tr align=center valign=middle class="menug">
+<td width=15% valign="bottom">
+
+</td>
+<td width=70%><font color=#00008f><span style="position: relative; top: 3px; right: 15px; color: #F26C4F;">*</span><a href="/copyright.asp">&copy; 2000-2026 ООО НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА. Все права защищены</a></font><span style="position: relative; top: 3px; left: 15px; color: #F26C4F;">*</span></td>
+<td width=15% valign="bottom">
+
+</td>
+</tr></table>
+
+<!-- Yandex.Metrika -->
+<div style="display:none;"><script type="text/javascript">
+(function(w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter171463 = new Ya.Metrika(171463);
+        } catch(e) {}
+    });
+})(window, 'yandex_metrika_callbacks');
+</script></div>
+<script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script>
+<noscript><div style="position:absolute"><img src="//mc.yandex.ru/watch/171463" alt="" /></div></noscript>
+<!-- /Yandex.Metrika -->
+
+
+
+
+<br><br><br>
+</td></tr></table>
+
+</html>
+

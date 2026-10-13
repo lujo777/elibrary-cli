@@ -1,0 +1,227 @@
+{
+ "status": "ok",
+ "message-type": "work-list",
+ "message-version": "1.0.0",
+ "message": {
+  "facets": {},
+  "total-results": 10,
+  "items": [
+   {
+    "DOI": "10.18699/ssmj20240404",
+    "type": "journal-article",
+    "title": [
+     "Contradictions in traditional ideas about atherosclerosis and the efficacy of lipid-lowering therapy. Promising directions"
+    ],
+    "author": [
+     {
+      "ORCID": "https://orcid.org/0000-0002-4931-5383",
+      "authenticated-orcid": true,
+      "given": "A. P.",
+      "family": "Vasiliev",
+      "sequence": "first",
+      "affiliation": [
+       {
+        "name": "Tyumen Cardiology Research Center, Tomsk National Research Medical Center Russian Academy of Science"
+       }
+      ],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "ORCID": "https://orcid.org/0000-0001-8675-9103",
+      "authenticated-orcid": true,
+      "given": "N. N.",
+      "family": "Streltsova",
+      "sequence": "additional",
+      "affiliation": [
+       {
+        "name": "Tyumen Cardiology Research Center, Tomsk National Research Medical Center Russian Academy of Science"
+       }
+      ],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Сибирский научный медицинский журнал"
+    ],
+    "link": [
+     {
+      "URL": "https://sibmed.elpub.ru/jour/article/viewFile/1610/649",
+      "content-type": "application/pdf",
+      "content-version": "vor",
+      "intended-application": "text-mining"
+     }
+    ],
+    "score": 83.99803,
+    "resource": {
+     "primary": {
+      "URL": "https://sibmed.elpub.ru/jour/article/view/1610"
+     }
+    },
+    "issued": {
+     "date-parts": [
+      [
+       2024,
+       8,
+       28
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.52420/umj.23.2.131",
+    "type": "journal-article",
+    "title": [
+     "Cholesterol, Atherosclerosis, Lipid-Lowering Therapy. Is It Completely Clear?"
+    ],
+    "author": [
+     {
+      "ORCID": "https://orcid.org/0000-0002-4931-5383",
+      "authenticated-orcid": true,
+      "given": "A. P.",
+      "family": "Vasiliev",
+      "sequence": "first",
+      "affiliation": [
+       {
+        "name": "Tyumen Cardiology Research Center, Tomsk National Research Medical Center, Russian Academy of Science"
+       }
+      ],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "ORCID": "https://orcid.org/0000-0001-8675-9103",
+      "authenticated-orcid": true,
+      "given": "N. N.",
+      "family": "Streltsova",
+      "sequence": "additional",
+      "affiliation": [
+       {
+        "name": "Tyumen Cardiology Research Center, Tomsk National Research Medical Center, Russian Academy of Science"
+       }
+      ],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Ural Medical Journal"
+    ],
+    "link": [
+     {
+      "URL": "https://www.umjusmu.ru/jour/article/viewFile/1504/1071",
+      "content-type": "application/pdf",
+      "content-version": "vor",
+      "intended-application": "text-mining"
+     }
+    ],
+    "score": 39.56225,
+    "resource": {
+     "primary": {
+      "URL": "https://www.umjusmu.ru/jour/article/view/1504"
+     }
+    },
+    "issued": {
+     "date-parts": [
+      [
+       2024,
+       5,
+       10
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.58676/sjmas.v1i7.41",
+    "type": "journal-article",
+    "title": [
+     "Lipid Therapy for Dyslipidemic Disorders Activates 21st Century Nano Antioxidant Hydrogen as a Potential Anti-COVID-19 Agent: Review"
+    ],
+    "author": [
+     {
+      "ORCID": "https://orcid.org/0000-0001-7019-4443",
+      "authenticated-orcid": false,
+      "given": "Irina",
+      "family": "Vasilieva",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "ORCID": "https://orcid.org/0000-0003-4588-2716",
+      "authenticated-orcid": false,
+      "given": "Maria",
+      "family": "Vasilieva",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "ORCID": "https://orcid.org/0000-0002-8962-2927",
+      "authenticated-orcid": false,
+      "given": "Ilie",
+      "family": "Vasiliev",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Special journal of the Medical Academy and other Life Sciences"
+    ],
+    "score": 21.546173,
+    "resource": {
+     "primary": {
+      "URL": "https://sjmas.com/index.php/sjmas/article/view/41"
+     }
+    },
+    "issued": {
+     "date-parts": [
+      [
+       2023,
+       8,
+       27
+      ]
+     ]
+    }
+   }
+  ],
+  "items-per-page": 3,
+  "query": {
+   "start-index": 0,
+   "search-terms": null
+  }
+ }
+}

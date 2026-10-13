@@ -1,0 +1,2296 @@
+
+<html>
+<head>
+<style type="text/css">
+BODY, P, TR, TD, INPUT, SELECT, OPTION, TEXTAREA, UL {font-family: Tahoma, Verdana, Arial Cyr, Arial, Helvetica, sans-serif; font-size: 8pt;}
+A {text-decoration: none; color: #00008f}
+H1 {font-family: Tahoma, Verdana, Arial Cyr, Arial, Helvetica, sans-serif; font-size: 9pt;}
+H2 {font-family: Tahoma, Verdana, Arial Cyr, Arial, Helvetica, sans-serif; font-size: 9pt;}
+FORM, H1, H2 {margin: 0}
+A:hover {color: #ff0000; text-decoration: underline}
+.menus A {color: #ffffff}
+.menus A:hover {color: #ffffff; text-decoration: underline}
+.menub A {color: #000000}
+.expandable {cursor:pointer;}
+img.expandable {filter:alpha(opacity=70); opacity: 0.7;}
+.win_expandable {cursor:pointer}
+.expanded {display:}
+.collapsed {display:none}
+.menug A {color: #555555}
+.redref A {color: #ED1C24}
+P.break {page-break-before: always}
+.input {border: #7f9db9 1px solid; background: #f5f5f5; height: 20px}
+.inputw {border: #7f9db9 1px solid; background: #ffffff; height: 20px}
+.inputr {border: #7f9db9 1px solid; background: #f5f5f5}
+.inputrw {border: #7f9db9 1px solid; background: #ffffff}
+.ast A:hover {text-decoration: none; color: #F26C4F}
+.ast A {font-family: Times New Roman, Garamond, Times, Georgia, serif; font-size: 30pt; color: #F26C4F}
+.astb A:hover {text-decoration: none; color: #00008f}
+.astb A {font-family: Times New Roman, Times, serif; font-size: 30pt; color: #00008f}
+.aster {color: #F26C4F; font-family: Times New Roman, Times, serif; font-size: 16pt; cursor:pointer;}
+.tooltip {
+	background-color:#000;
+	border:1px solid #fff;
+	padding:10px 15px;
+	width:250px;
+	display:none;
+	color:#fff;
+	text-align:left;
+	font-size:8pt;
+	/* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:0 0 10px #000;
+}
+.tooltip A:hover {color: #ffffff; text-decoration: underline}
+.tooltip A {color: #ffffff; text-decoration: underline}
+.redtext {color: #F26C4F;}
+.bluetext {color: #00008f;}
+</style>
+<meta property="og:image" content="https://elibrary.ru/images/elibrary_fb.png" />
+
+<title>Результаты поискового запроса</title>
+
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<SCRIPT LANGUAGE="JavaScript">
+//window.onerror=null;
+w_down=new Image();
+w_down.src="/pic/w_show.gif";
+w_up=new Image();
+w_up.src="/pic/w_hide.gif";
+
+function hideShow(elem,parent) {
+  var child =  document.getElementById(elem);
+  child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+  if (parent.className == "win_expandable") parent.src = child.className == "collapsed" ? w_down.src : w_up.src;
+}
+function RowSelect(row,sel){
+  row.bgColor = sel==1 ? "#dddddd" : "#f5f5f5";
+}
+function show_help(topic){
+  var frm = document.forms["results"];
+  anewwin=window.open("", "addwin", "resizable=yes,scrollbars=yes,height=300,width=500,top=0,left=0");
+  frm.action=topic;
+  frm.target="addwin";
+  frm.submit()
+}
+function select_all(){
+  var frm = document.forms["results"];
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       frm.elements[i].checked=1;
+       document.all.restab.rows["a" + frm.elements[i].name.substring(3, frm.elements[i].name.length)].bgColor = "#dddddd";}
+  }
+}
+function deselect_all(){
+  var frm = document.forms["results"];
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       frm.elements[i].checked=0;
+       document.all.restab.rows["a" + frm.elements[i].name.substring(3, frm.elements[i].name.length)].bgColor = "#f5f5f5";}
+  }
+}
+function itembox_add(){
+  var frm = document.forms["results"];
+  var issel=0;
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       if (frm.elements[i].checked) {issel=1; break}
+    }
+  }
+  if (issel==0) {
+    alert ("Не выделено ни одной статьи")}
+  else {
+    anewwin=window.open("", "dialog", "resizable=no,scrollbars=no,height=200,width=400,top=200,left=200");
+    anewwin.resizeTo(400,200);
+    frm.add_all.value=0;
+    frm.action="itembox_item_add.asp";
+    frm.target="dialog";
+    frm.submit()
+  }
+}
+function itembox_add_all(){
+  var frm = document.forms["results"];
+  anewwin=window.open("", "dialog", "resizable=no,scrollbars=no,height=200,width=400,top=200,left=200");
+  anewwin.resizeTo(400,200);
+  frm.add_all.value=1;
+  frm.action="itembox_item_add.asp";
+  frm.target="dialog";
+  frm.submit()
+}
+function itembox_new(aid,anam){
+  var frm = document.forms["results"];
+  var el = document.createElement("OPTION");
+  el.text=anam;
+  el.value=aid;
+  frm.itemboxid.options[frm.itemboxid.options.length]=el;
+  frm.itemboxid[frm.itemboxid.length-1].selected=true;
+}
+function load_article(id){
+
+  alert("Для доступа к полному тексту необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function url_article(idid, urlnum){
+
+  alerts("Для просмотра документа необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function order_item(id, pr){
+
+  alert("Для заказа полного текста публикации необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+
+var didScroll = false;
+var didScroll2 = false;
+
+function isVisible(tag) {
+    var t = $(tag);
+    var w = $(window);
+    var wt = w.scrollTop();
+    var tt = t.offset().top;
+    var tb = tt + t.height();
+    return ((tb <= wt + w.height()) && (tt >= wt));
+}
+function pdf_icon(b) {
+  if (!b.prop("shown") && isVisible(b)) {
+    b.prop("shown", true);
+    b.load("ispdf.asp?itemid=" + b.attr('name').substring(4) + "&rand=" + Math.random());
+  }
+}
+function get_pdfs(){
+  $('div[id^="pdf_"]:not(prop("shown"))').each(function(){
+    pdf_icon($(this))
+  });
+}
+setInterval(function() {
+  if ( didScroll2 ) {
+	didScroll2=false;
+	get_pdfs();
+    }
+ }, 200);
+
+$(document).ready(function() { 
+
+$(window).scroll(function() {
+     didScroll = true;
+ });
+
+setInterval(function() {
+  if ( didScroll ) {
+	didScroll=false;
+	didScroll2=true;
+    }
+ }, 500);
+
+	didScroll=true;
+})
+	
+</SCRIPT>
+</head>
+
+<body bgcolor=#f5f5f5 onLoad='document.all.loading.style.display="none"; document.all.thepage.style.display=""'>
+
+<div id="loading" style="position:absolute; width:100%; text-align:center; top:300px;">
+Пожалуйста, подождите, <br>пока Ваш запрос будет обработан
+<br><img src="/pic/query_wait.gif" border=0 width=31 height=31 vspace=5></div>
+
+<div id="thepage" style="display: none">
+
+<table width=100% cellpadding=0 cellspacing=0 border=0>
+<tr><td width=100% align=center valign=top>
+
+<table width=970 cellpadding=0 cellspacing=0 border=0 background="/pic/bg5.gif">
+<tr><td width=165 align=left valign=top>
+
+<table border=0 cellspacing=0 cellpadding=0 width=150>
+
+<tr><td><img src="/pic/1pix.gif" vspace=14></td></tr>
+
+<tr><td><a href="/defaultx.asp"><img src="/images/elibrary_logo.gif" width=150 height=33 border=0 title="eLIBRARY.RU - НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА"></a></td></tr>
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_search(){
+if (document.forms["search"].ftext.value.length > 1) {
+  var frm = document.forms["search"];
+  frm.action="/query_results.asp";
+  frm.target="";
+  frm.submit();
+  return false}
+else {
+   alert("Введите не менее двух символов");
+   return false}
+}
+</SCRIPT>
+<FORM name="search" action="/query_results.asp" method=POST onSubmit="return check_search()">
+<input type="hidden" name="where_fulltext" value="on">
+<input type="hidden" name="where_name" value="on">
+<input type="hidden" name="where_abstract" value="on">
+<input type="hidden" name="where_keywords" value="on">
+<input type="hidden" name="where_affiliation" value="">
+<input type="hidden" name="where_references" value="">
+<input type="hidden" name="type_article" value="on">
+<input type="hidden" name="type_disser" value="on">
+<input type="hidden" name="type_book" value="on">
+<input type="hidden" name="type_report" value="on">
+<input type="hidden" name="type_conf" value="on">
+<input type="hidden" name="type_patent" value="on">
+<input type="hidden" name="type_preprint" value="on">
+<input type="hidden" name="type_grant" value="on">
+<input type="hidden" name="type_dataset" value="on">
+<input type="hidden" name="search_freetext" value="">
+<input type="hidden" name="search_morph" value="on">
+<input type="hidden" name="search_fulltext" value="">
+<input type="hidden" name="search_open" value="">
+<input type="hidden" name="search_results" value="">
+<input type="hidden" name="titles_all" value="">
+<input type="hidden" name="authors_all" value="">
+<input type="hidden" name="rubrics_all" value="">
+<input type="hidden" name="queryboxid" value="">
+<input type="hidden" name="itemboxid" value="">
+<input type="hidden" name="begin_year" value="">
+<input type="hidden" name="end_year" value="">
+<input type="hidden" name="issues" value="all">
+<input type="hidden" name="orderby" value="rank">
+<input type="hidden" name="order" value="rev">
+<input type="hidden" name="changed" value="1">
+
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#555555>
+<tr><td width=100% bgcolor=#555555>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#555555 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Поиск в библиотеке</font><td width=15><img src="/pic/w_show.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_search',this)"></td>
+</td></tr></table></td></tr></table>
+<div ID="win_search" class="collapsed">
+
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#eeeeee width=100%>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+<tr><td width=100% align=center valign=top>
+<input type=text name="ftext" value="" size=10 maxlength=255 style="width:120px; border-left: #5c6aa6 1px solid; border-right: #5c6aa6 1px solid; border-top: #5c6aa6 1px solid; border-bottom: #5c6aa6 1px solid"><br>
+<img src="/pic/1pix.gif" vspace=4><br>
+<input type=submit value="Поиск" style="color:#ffffff; width:50px; background:#F26C4F; border-left: #F26C4F 0px solid; border-right: #F26C4F 0px solid; border-top: #F26C4F 0px solid; border-bottom: #F26C4F 0px solid">
+</td></tr>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+</table>
+
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#dddddd class="menub" width=100%>
+<tr valign=middle align=center><td><a href="/querybox.asp?scope=newquery">Расширенный поиск</a></td></tr></table>
+
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#dddddd class="menub" width=100%>
+<tr valign=middle align=center><td><a href="/neural_search.asp">Нейропоиск</a></td></tr></table>
+
+</div>
+
+</FORM>
+
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_all(){
+  jn=0;
+  if (document.forms["login"].login.value==""){jn=1}
+  if (document.forms["login"].password.value==""){jn=1}
+ if (jn==0){return true}
+ if (jn==1){alert("Не указан пароль или имя читателя!");
+            return false}
+}
+</SCRIPT>
+
+<FORM name="login" action="/start_session.asp" method=POST onSubmit="return check_all()">
+<input type=hidden name="rpage" value=https://elibrary.ru/query_results.asp?pagenum=2>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#555555 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Вход в библиотеку</font>
+</td><td width=15><img src="/pic/w_hide.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_login',this)" id="img_login"></td></tr></table></td></tr></table>
+<div ID="win_login" class="expanded">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#5c6aa6 width=100%>
+<tr valign=top><td width=100% bgcolor=#5c6aa6 align=center>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#eeeeee width=100%>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Имя пользователя<br>&nbsp;или адрес эл. почты:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<input type=text name="login" value="" size=10 maxlength=255 style="width:120px; border-left: #5c6aa6 1px solid; border-right: #5c6aa6 1px solid; border-top: #5c6aa6 1px solid; border-bottom: #5c6aa6 1px solid; text-align: center">
+</td></tr>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Пароль:</font></td></tr>
+<tr><td align=center width=100%>
+<input type=password name="password" value="" size=10 maxlength=255 style="width:120px; border-left: #5c6aa6 1px solid; border-right: #5c6aa6 1px solid; border-top: #5c6aa6 1px solid; border-bottom: #5c6aa6 1px solid; text-align: center">
+</td></tr>
+
+<tr><td align=center width=100%>
+<img src="/pic/1pix.gif" vspace=2><br>
+<input type=submit value="Вход" style="color:#ffffff; width:50px; background:#F26C4F; border-left: #F26C4F 0px solid; border-right: #F26C4F 0px solid; border-top: #F26C4F 0px solid; border-bottom: #F26C4F 0px solid">
+</td></tr></table>
+
+<table border=0 cellspacing=0 cellpadding=2 bgcolor=#eeeeee width=100%>
+<tr><td width=14 align=right valign=middle><input type=checkbox name="knowme"></td><td align=left valign=middle nowrap><font color=#00008f>Запомнить меня</font></td></tr>
+<tr><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td><td align=left valign=middle nowrap><a href="/access_terms.asp">Правила доступа</a></td></tr>
+<tr><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td><td align=left valign=middle nowrap><a href="/author_info.asp?isnew=1&rpage=https%3A%2F%2Felibrary%2Eru%2Fquery%5Fresults%2Easp%3Fpagenum%3D2">Регистрация</a></td></tr>
+<tr><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td><td align=left valign=middle nowrap><a href="/pass_request.asp">Забыли пароль?</a></td></tr>
+<tr><td colspan=2><img src="/pic/1pix.gif"></td></tr>
+</table>
+</td></tr></table>
+</div>
+</td></tr>
+</FORM>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Навигатор</font>
+</td><td width=15><img src="/pic/w_hide.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_goto',this)"></td></tr></table></td></tr></table>
+<div ID="win_goto" class="expanded">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#5c6aa6 width=100%>
+<tr valign=top><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=2 bgcolor=#eeeeee width=100%>
+
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/titles.asp">ЖУРНАЛЫ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/books.asp">КНИГИ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/patents.asp">ПАТЕНТЫ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/querybox.asp">ПОИСК</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/authors.asp">АВТОРЫ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/orgs.asp">ОРГАНИЗАЦИИ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/keywords.asp">КЛЮЧЕВЫЕ СЛОВА</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/rubrics.asp">РУБРИКАТОР</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/region_compare.asp">РЕГИОНЫ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+
+
+<tr><td colspan=2 ><img src="/pic/1pix.gif"></td></tr>
+<tr bgcolor=#dddddd align=center valign=middle><td colspan=2 class="menub"><a href="/defaultx.asp">Начальная страница</a></td></tr>
+</table>
+</td></tr></table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function end_session(){
+
+  document.forms["session"].saveuser.value="1";
+
+  document.forms["session"].action="/end_session.asp";
+  document.forms["session"].target="";
+  document.forms["session"].submit()
+}
+</SCRIPT>
+<FORM action="/end_session.asp" method=POST name="session">
+<input type="hidden" name="saveuser" value="1">
+
+
+
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Текущая сессия</font>
+</td><td width=15><img src="/pic/w_show.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_session',this)"></td></tr></table></td></tr></table>
+<div ID="win_session" class="collapsed">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#5c6aa6 width=100%>
+<tr valign=top><td width=100% bgcolor=#5c6aa6 align=center>
+<table border=0 cellspacing=0 cellpadding=1 bgcolor=#eeeeee width=100%>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Имя пользователя:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>Незарегистрированный пользователь</font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Начало работы:</font></td></tr>
+
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>13.10.2026 17:51</font></td></tr>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Время работы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>00:40</font></td></tr>
+
+<tr><td align=center width=100% bgcolor=#dddddd class="menub">
+<a href="/project_user_office.asp">Личный кабинет</a></td></tr>
+
+<tr><td align=center width=100% bgcolor=#dddddd class="menub">
+<a href="javascript:end_session()">Закрыть сессию</a></td></tr>
+</table>
+</td></tr></table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+</FORM>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Легенда</font>
+</td><td width=15><img src="/pic/w_hide.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_legend',this)"></td></tr></table></td></tr></table>
+<div ID="win_legend" class="expanded">
+
+<table width=100% cellspacing=0 cellpadding=3 border=0 bgcolor=#eeeeee>
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=2><br></td></tr>
+<tr><td width=15% align=right valign=top><img src="/images/download_green.png" width=16 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Доступ к полному тексту документа открыт</font></td></tr>
+<tr><td width=15% align=right valign=top><img src="/images/download_blue.png" width=16 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Полный текст доступен на сайте издателя</font></td></tr>
+<tr><td width=15% align=right valign=top><img src="/images/download_yellow.png" width=16 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Полный текст может быть получен через систему заказа</font></td></tr>
+<tr><td width=15% align=right valign=top><img src="/images/download_orange.png" width=16 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Доступ к полному тексту закрыт</font></td></tr>
+<tr><td valign=top align=center><font color=#00008f>-</font></td><td align=left><font color=#00008f>Если иконки нет - полный текст документа отсутствует в НЭБ</font></td></tr>
+
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=2><br></td></tr>
+</table>
+
+</div>
+</td></tr>
+
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Контакты</font>
+</td><td width=15><img src="/pic/w_show.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_contact',this)"></td></tr></table></td></tr></table>
+<div ID="win_contact" class="collapsed">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#eeeeee width=100%>
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=2><br></td></tr>
+<tr valign=top><td width=100% bgcolor=#5c6aa6 align=center>
+<table border=0 cellspacing=0 cellpadding=1 bgcolor=#eeeeee width=100%>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Служба поддержки:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>(7-495) 544-2494 доб. 1<br></font>
+<font color=#00008f><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font></td></tr>
+</td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Издателям журналов:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>(7-495) 544-2494 доб. 2<br></font>
+<font color=#00008f><a href="mailto:publish@elibrary.ru">publish@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Издателям книг:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>(7-495) 544-2494 доб. 3<br></font>
+<font color=#00008f><a href="mailto:book@elibrary.ru">book@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Издателям (Science Space):</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:info@sciencespace.ru">info@sciencespace.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Организациям (Science Index):</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:org@scienceindex.ru">org@scienceindex.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Доступ к API:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:api@elibrary.ru">api@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Подписчикам:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 6<br></font>
+<font color=#00008f><a href="mailto:sales.team@elibrary.ru">sales.team@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Конференции и семинары:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 7<br></font>
+<font color=#00008f><a href="mailto:conf@elibrary.ru">conf@elibrary.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Почтовый адрес:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>117246, г. Москва, Научный проезд, д. 14А, стр. 3, таунхаус 1</font><br><a href="/contact_new.asp"><b>схема проезда</b></a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Веб-сайт:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://elibrary.ru">https://elibrary.ru</a></font></td></tr>
+<tr><td width=100% align=center valign=top>
+</td></tr>
+
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Размещение рекламы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:reklama@elibrary.ru">reklama@elibrary.ru</a></font></td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=1></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Вакансии:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:info@elibrary.ru">info@elibrary.ru</a></font></td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=1></td></tr>
+
+</table>
+</td></tr>
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=2><br></td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Копирайт</font>
+</td><td width=15><img src="/pic/w_show.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_copyright',this)"></td></tr></table></td></tr></table>
+<div ID="win_copyright" class="collapsed">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#5c6aa6 width=100%>
+<tr valign=top><td width=100% bgcolor=#5c6aa6 align=center>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#eeeeee width=100%>
+<tr><td width=100% align=center valign=top bgcolor=#eeeeee>
+<img src="/pic/1pix.gif" vspace=2><br><font color=#00008f><a href="/copyright.asp">&copy; 2000-2026<br>ООО НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА</a></font><br><img src="/pic/1pix.gif" vspace=2></td></tr>
+<tr><td align=center width=100% bgcolor=#dddddd class="menub"><a href="/copyright.asp">
+Все права защищены.</a></td></tr>
+
+</table>
+</td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+
+<!-- Yandex.Metrika -->
+<div style="display:none;"><script type="text/javascript">
+(function(w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter171463 = new Ya.Metrika(171463);
+        } catch(e) {}
+    });
+})(window, 'yandex_metrika_callbacks');
+</script></div>
+<script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script>
+<noscript><div style="position:absolute"><img src="//mc.yandex.ru/watch/171463" alt="" /></div></noscript>
+<!-- /Yandex.Metrika -->
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9339902-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })();
+</script>
+
+
+</td></tr>
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+
+
+
+</table>
+
+</td><td width=580 align=center valign=top>
+
+
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+
+<tr><td width=100% align=center valign=top>
+<img src="/pic/1pix.gif" vspace=6><br>
+
+
+<table border=0 cellspacing=0 cellpadding=0 width=580>
+<FORM method=post name="results" action="query_results.asp">
+<input type="hidden" name="add_all" value="">
+<input type="hidden" name="paysum" value="">
+<input type="hidden" name="payitemid" value="">
+<input type="hidden" name="id" value="">
+<input type="hidden" name="authorid" value="">
+<input type="hidden" name="did" value="1">
+<input type="hidden" name="urlnum" value="1">
+
+<tr><td width=10 height=14></td>
+<td width=75 height=65 rowspan=5 align=center valign=middle>
+<table width=100% height=100% border=0 cellspacing=1 cellpadding=0 bgcolor=#ffffff>
+<tr><td width=100% height=100% bgcolor=#eeeeee align=center valign=middle><img src="images/menu_journ.jpg" width=73 height=63 border=0 style="filter:alpha(opacity=70)" onMouseover="this.filters.alpha.opacity=90" onMouseout="this.filters.alpha.opacity=70"></td></tr></table></td>
+<td width=495></td></tr>
+<tr><td bgcolor=#555555><img src="/pic/1pix.gif"></td>
+<td height=19 align=right valign=middle bgcolor=#555555><font color=#ffffff><b>РЕЗУЛЬТАТЫ ПОИСКОВОГО ЗАПРОСА</b><img src="/pic/1pix.gif" hspace=10></font></td></tr>
+<tr><td height=1 bgcolor=#ffffff></td><td bgcolor=#ffffff></td></tr>
+<tr><td height=14 bgcolor=#dddddd></td><td bgcolor=#f5f5f5 background="/pic/line1_gr.gif"></td></tr>
+<tr><td height=9></td><td></td></tr>
+</table>
+</td></tr>
+
+<tr><td width=100% align=center valign=top>
+
+<img src="/pic/1pix.gif" vspace=3><br>
+<b><font color=#00008f>&nbsp;&nbsp;&nbsp;ВСЕГО НАЙДЕНО ПУБЛИКАЦИЙ: </font><font color=#ff0000>1051</font><font color=#00008f> из </font><font color=#ff0000>82293065</font></font></b><br>
+
+<img src="/pic/1pix.gif" vspace=3><br>
+
+
+
+
+
+<table width=580 cellspacing=1 cellpadding=3 bgcolor=#ffffff id="restab">
+<tr align=center valign=middle>
+<td width=30 bgcolor=#555555><font color=#ffffff>№</font></td>
+<td width=520 bgcolor=#555555><font color=#ffffff>Публикация</font></td>
+<td width=30 bgcolor=#555555><font color=#ffffff>Цит.</font></td></tr>
+
+<tr valign=middle bgcolor=#f5f5f5 id="a92058009">
+<td align=center valign=top><font color=#00008f><b>101</b></font><br><input type=checkbox name="tid92058009" id="tid92058009"  onClick='if (this.checked) {RowSelect(a92058009,1)} else {RowSelect(a92058009,0)}'><div id="pdf_92058009" name="pdf_92058009"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=92058009"><b><span style="line-height:1.0;">ВЛИЯНИЕ ГИБРИДНОЙ СИСТЕМЫ МУНТ/ГРАФЕН НА ТЕНЗОЧУВСТВИТЕЛЬНОСТЬ ПОЛИМЕРНЫХ НАНОКОМПОЗИТОВ</span></b></a><br><font color=#00008f><i>Щегольков Ал. В., Щегольков А. В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=92057996">Российский химический журнал</a>. 
+2026. Т. 70. <a href="/contents.asp?id=92057996&selid=92058009">№&nbsp;3</a>.  С. 75-79.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a63359592">
+<td align=center valign=top><font color=#00008f><b>102</b></font><br><input type=checkbox name="tid63359592" id="tid63359592"  onClick='if (this.checked) {RowSelect(a63359592,1)} else {RowSelect(a63359592,0)}'><div id="pdf_63359592" name="pdf_63359592"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=63359592"><b><span style="line-height:1.0;">ЭЛЕКТРОСОПРОТИВЛЕНИЕ ЛАЗЕРНО-ИНДУЦИРОВАННОГО ГРАФЕНА, СИНТЕЗИРОВАННОГО НЕПРЕРЫВНЫМ CO<SUB>2</SUB>-ЛАЗЕРОМ</span></b></a><br><font color=#00008f><i>Михеев К.Г., Зонов Р.Г., Чучкалов Н.В., Михеев Г.М.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=63359572">Физика твердого тела</a>. 
+2024. Т. 66. <a href="/contents.asp?id=63359572&selid=63359592">№&nbsp;2</a>.  С. 280-288.
+</span>
+
+</td><td align=center valign=middle>8</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a54076582">
+<td align=center valign=top><font color=#00008f><b>103</b></font><br><input type=checkbox name="tid54076582" id="tid54076582"  onClick='if (this.checked) {RowSelect(a54076582,1)} else {RowSelect(a54076582,0)}'><div id="pdf_54076582" name="pdf_54076582"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54076582"><b><span style="line-height:1.0;">ПОЛУЧЕНИЕ ЧАСТИЦ ДИОКСИДА ТИТАНА (РУТИЛА) НА ПОВЕРХНОСТИ ВОССТАНОВЛЕННОГО ОКСИДА ГРАФЕНА В СВЕРХКРИТИЧЕСКОМ ИЗОПРОПАНОЛЕ</span></b></a><br><font color=#00008f><i>Грошкова Ю.А., Краевский С.В., Буслаева Е.Ю.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54076576">Радиоэлектроника. Наносистемы. Информационные технологии</a>. 
+2023. Т. 15. <a href="/contents.asp?id=54076576&selid=54076582">№&nbsp;2</a>.  С. 153-160.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a55870856">
+<td align=center valign=top><font color=#00008f><b>104</b></font><br><input type=checkbox name="tid55870856" id="tid55870856"  onClick='if (this.checked) {RowSelect(a55870856,1)} else {RowSelect(a55870856,0)}'><div id="pdf_55870856" name="pdf_55870856"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=55870856"><b><span style="line-height:1.0;">ИССЛЕДОВАНИЕ СВОЙСТВ ПОКРЫТИЙ, СФОРМИРОВАННЫХ МИКРОДУГОВЫМ ОКСИДИРОВАНИЕМ НА ТИТАНОВОМ СПЛАВЕ В ЭЛЕКТРОЛИТАХ С РАЗЛИЧНЫМ СОДЕРЖАНИЕМ ОКСИДА ГРАФЕНА</span></b></a><br><font color=#00008f><i>Крихели Н.И., Крамар О.В., Перетягин Н.Ю., Ундрицова Н.Г., Перетягин П.Ю., Григорьев С.Н.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=55870785">Вестник МГТУ "Станкин"</a>. 
+2023. <a href="/contents.asp?id=55870785&selid=55870856">№&nbsp;4&nbsp;(67)</a>.  С. 29-35.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a89260523">
+<td align=center valign=top><font color=#00008f><b>105</b></font><br><input type=checkbox name="tid89260523" id="tid89260523"  onClick='if (this.checked) {RowSelect(a89260523,1)} else {RowSelect(a89260523,0)}'><div id="pdf_89260523" name="pdf_89260523"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=89260523"><b><span style="line-height:1.0;">ДИНАМИКА ЗАПОЛНЕНИЯ ДИРАКОВСКОГО КОНУСА В УСЛОВИЯХ ПОЛЕВОГО ЭФФЕКТА НА ЭЛЕКТРОХИМИЧЕСКОМ ИНТЕРФЕЙСЕ ГРАФЕНА</span></b></a><br><font color=#00008f><i>Бутко А.В., Бутко В.Ю., Кумзеров Ю.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=89260520">Письма в Журнал технической физики</a>. 
+2026. Т. 52. <a href="/contents.asp?id=89260520&selid=89260523">№&nbsp;11</a>.  С. 11-14.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a75166372">
+<td align=center valign=top><font color=#00008f><b>106</b></font><br><input type=checkbox name="tid75166372" id="tid75166372"  onClick='if (this.checked) {RowSelect(a75166372,1)} else {RowSelect(a75166372,0)}'><div id="pdf_75166372" name="pdf_75166372"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=75166372"><b><span style="line-height:1.0;">ИЗЛУЧЕНИЕ, СОПРОВОЖДАЮЩЕЕ ЭФФЕКТ ШВИНГЕРА В ГРАФЕНЕ</span></b></a><br><font color=#00008f><i>Смолянский С.А., Дмитриев В.В., Чурочкин Д.В., Церюпа В.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=75166305">Физика элементарных частиц и атомного ядра</a>. 
+2024. Т. 55. <a href="/contents.asp?id=75166305&selid=75166372">№&nbsp;4</a>.  С. 1177-1184.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a80300801">
+<td align=center valign=top><font color=#00008f><b>107</b></font><br><input type=checkbox name="tid80300801" id="tid80300801"  onClick='if (this.checked) {RowSelect(a80300801,1)} else {RowSelect(a80300801,0)}'><div id="pdf_80300801" name="pdf_80300801"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80300801"><b><span style="line-height:1.0;">ПОЛУЧЕНИЕ ГРАФЕНА: ОСАЖДЕНИЕ И ОТЖИГ</span></b></a><br><font color=#00008f><i>Шустин Е.Г.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=80300790">Микроэлектроника</a>. 
+2024. Т. 53. <a href="/contents.asp?id=80300790&selid=80300801">№&nbsp;5</a>.  С. 448-456.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a60374770">
+<td align=center valign=top><font color=#00008f><b>108</b></font><br><input type=checkbox name="tid60374770" id="tid60374770"  onClick='if (this.checked) {RowSelect(a60374770,1)} else {RowSelect(a60374770,0)}'><div id="pdf_60374770" name="pdf_60374770"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=60374770"><b><span style="line-height:1.0;">О РЕОЛОГИИ И СТРУКТУРЕ НАНОЖИДКОСТИ С ПЛАСТИНАМИ ГРАФЕНА</span></b></a><br><font color=#00008f><i>Белкин А.А., Василенко А.В., Рафальская Т.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=60374751">Труды Новосибирского государственного архитектурно-строительного университета (Сибстрин)</a>. 
+2023. Т. 26. <a href="/contents.asp?id=60374751&selid=60374770">№&nbsp;3&nbsp;(89)</a>.  С. 108-117.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a54383563">
+<td align=center valign=top><font color=#00008f><b>109</b></font><br><input type=checkbox name="tid54383563" id="tid54383563"  onClick='if (this.checked) {RowSelect(a54383563,1)} else {RowSelect(a54383563,0)}'><div id="pdf_54383563" name="pdf_54383563"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54383563"><b><span style="line-height:1.0;">СИНТЕЗ ОКСИДА ГРАФЕНА ПО МОДИФИЦИРОВАННОМУ МЕТОДУ ХАММЕРСА</span></b></a><br><font color=#00008f><i>Таратайко А.В., Мамонтов Г.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54383556">Вестник Томского государственного университета. Химия</a>. 
+2023. <a href="/contents.asp?id=54383556&selid=54383563">№&nbsp;30</a>.  С. 67-79.
+</span>
+
+</td><td align=center valign=middle>11</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a83040860">
+<td align=center valign=top><font color=#00008f><b>110</b></font><br><input type=checkbox name="tid83040860" id="tid83040860"  onClick='if (this.checked) {RowSelect(a83040860,1)} else {RowSelect(a83040860,0)}'><div id="pdf_83040860" name="pdf_83040860"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83040860"><b><span style="line-height:1.0;">ДИСПЕРСИИ ГРАФЕНА И ХИМИЧЕСКАЯ СТОЙКОСТЬ</span></b></a><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=83040854">Лакокрасочные материалы и их применение</a>. 
+2025. <a href="/contents.asp?id=83040854&selid=83040860">№&nbsp;10&nbsp;(578)</a>.  С. 22-24.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a72801785">
+<td align=center valign=top><font color=#00008f><b>111</b></font><br><input type=checkbox name="tid72801785" id="tid72801785"  onClick='if (this.checked) {RowSelect(a72801785,1)} else {RowSelect(a72801785,0)}'><div id="pdf_72801785" name="pdf_72801785"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=72801785"><b><span style="line-height:1.0;">ВЛИЯНИЕ МАЛОСЛОЙНОГО ГРАФЕНА НА ФИЗИОЛОГИЧЕСКУЮ АКТИВНОСТЬ СПОР РИЗОСФЕРНОЙ КУЛЬТУРЫ B. SUBTILIS SP</span></b></a><br><font color=#00008f><i>Возняковский А.А., Канарский А.В., Возняковский А.П., Гематдинова В.М., Канарская З.А., Семенов Э.И., Кидалов С.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=72801778">Журнал технической физики</a>. 
+2024. Т. 94. <a href="/contents.asp?id=72801778&selid=72801785">№&nbsp;9</a>.  С. 1483-1488.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a91763339">
+<td align=center valign=top><font color=#00008f><b>112</b></font><br><input type=checkbox name="tid91763339" id="tid91763339"  onClick='if (this.checked) {RowSelect(a91763339,1)} else {RowSelect(a91763339,0)}'><div id="pdf_91763339" name="pdf_91763339"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91763339"><b><span style="line-height:1.0;">ТЕХНОЛОГИЯ ПРИМЕНЕНИЯ ГРАФЕНА В СОВРЕМЕННОМ КАПИТАЛЬНОМ СТРОИТЕЛЬСТВЕ</span></b></a><br><font color=#00008f><i>Бурачевский Д.А., Шиховцов А.А., Растопка Р.В., Килунин Р.С.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91601030">Экономика и предпринимательство</a>. 
+2026. <a href="/contents.asp?id=91601030&selid=91763339">№&nbsp;5&nbsp;(190)</a>.  С. 1280-1283.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a54512716">
+<td align=center valign=top><font color=#00008f><b>113</b></font><br><input type=checkbox name="tid54512716" id="tid54512716"  onClick='if (this.checked) {RowSelect(a54512716,1)} else {RowSelect(a54512716,0)}'><div id="pdf_54512716" name="pdf_54512716"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54512716"><b><span style="line-height:1.0;">МОДУЛЯЦИОННАЯ НЕУСТОЙЧИВОСТЬ ПЛАЗМОНОВ В СТРУКТУРЕ ИЗ ДВУХ СЛОЕВ ГРАФЕНА</span></b></a><br><font color=#00008f><i>Моисеев С.Г., Коробко Д.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54512475">Фотон-экспресс</a>. 
+2023. <a href="/contents.asp?id=54512475&selid=54512716">№&nbsp;6&nbsp;(190)</a>.  С. 380-381.
+</span>
+
+</td><td align=center valign=middle>2</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a80337938">
+<td align=center valign=top><font color=#00008f><b>114</b></font><br><input type=checkbox name="tid80337938" id="tid80337938"  onClick='if (this.checked) {RowSelect(a80337938,1)} else {RowSelect(a80337938,0)}'><div id="pdf_80337938" name="pdf_80337938"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80337938"><b><span style="line-height:1.0;">МОДЕЛИРОВАНИЕ ХАРАКТЕРИСТИК ГЕТЕРОСТРУКТУР НА ОСНОВЕ GAN/SIC/ГРАФЕН С ВЕРТИКАЛЬНЫМ ТРАНСПОРТОМ</span></b></a><br><font color=#00008f><i>Коломейцева Н.В., Ермак В.О., Волынец М.А., Абрамов И.И.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=80337813">Современные проблемы радиоэлектроники и телекоммуникаций</a>. 
+2024. <a href="/contents.asp?id=80337813&selid=80337938">№&nbsp;7</a>.  С. 156.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a80532095">
+<td align=center valign=top><font color=#00008f><b>115</b></font><br><input type=checkbox name="tid80532095" id="tid80532095"  onClick='if (this.checked) {RowSelect(a80532095,1)} else {RowSelect(a80532095,0)}'><div id="pdf_80532095" name="pdf_80532095"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80532095"><b><span style="line-height:1.0;">АВТОЭМИССИОННЫЕ СВОЙСТВА ГРАФЕНА И ГРАФЕНОВЫХ НАНОСТЕНОК</span></b></a><br><font color=#00008f><i>Белянин А.Ф., Борисов В.В., Сушенцов Н.И., Ринкевич А.Б., Пащенко П.В., Талис А.Л., Павлюкова Е.Р.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=80532080">Вестник РВО</a>. 
+2024. <a href="/contents.asp?id=80532080&selid=80532095">№&nbsp;4&nbsp;(6)</a>.  С. 104-111.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a87526111">
+<td align=center valign=top><font color=#00008f><b>116</b></font><br><input type=checkbox name="tid87526111" id="tid87526111"  onClick='if (this.checked) {RowSelect(a87526111,1)} else {RowSelect(a87526111,0)}'><div id="pdf_87526111" name="pdf_87526111"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=87526111"><b><span style="line-height:1.0;">АДСОРБЦИЯ ДИКЛОФЕНАКА НА КОМПОЗИТЕ ОКСИД АЛЛЮМИНИЯ/ОКСИД ГРАФЕНА</span></b></a><br><font color=#00008f><i>Курмышева А.Ю., Веденяпина М.Д., Кузнецова Е.В., Солис Пинарготе Н.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=87526104">Известия Академии наук. Серия химическая</a>. 
+2025. Т. 74. <a href="/contents.asp?id=87526104&selid=87526111">№&nbsp;11</a>.  С. 3342-3349.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a65621444">
+<td align=center valign=top><font color=#00008f><b>117</b></font><br><input type=checkbox name="tid65621444" id="tid65621444"  onClick='if (this.checked) {RowSelect(a65621444,1)} else {RowSelect(a65621444,0)}'><div id="pdf_65621444" name="pdf_65621444"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65621444"><b><span style="line-height:1.0;">ПОВЕРХНОСТНЫЕ ЯВЛЕНИЯ В ГРАФИТЕ И ПОЛУЧЕНИЕ ИЗ НЕГО ГРАФЕНА</span></b></a><br><font color=#00008f><i>Юров В.М., Жангозин К.Н., Жанабергенов Т.К., Каргин Д.Б.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=65621443">Новости науки Казахстана</a>. 
+2024. <a href="/contents.asp?id=65621443&selid=65621444">№&nbsp;1&nbsp;(160)</a>.  С. 19-42.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a74492301">
+<td align=center valign=top><font color=#00008f><b>118</b></font><br><input type=checkbox name="tid74492301" id="tid74492301"  onClick='if (this.checked) {RowSelect(a74492301,1)} else {RowSelect(a74492301,0)}'><div id="pdf_74492301" name="pdf_74492301"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=74492301"><b><span style="line-height:1.0;">ПОВЕРХНОСТНАЯ ЭНЕРГИЯ ГРАФЕНА</span></b></a><br><font color=#00008f><i>Юров В.М., Жангозин К.Н., Жанабергенов Т.К., Каргин Д.Б.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=74492269">Вестник университета Шакарима. Серия технические науки</a>. 
+2024. <a href="/contents.asp?id=74492269&selid=74492301">№&nbsp;3&nbsp;(15)</a>.  С. 243-252.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a53839596">
+<td align=center valign=top><font color=#00008f><b>119</b></font><br><input type=checkbox name="tid53839596" id="tid53839596"  onClick='if (this.checked) {RowSelect(a53839596,1)} else {RowSelect(a53839596,0)}'><div id="pdf_53839596" name="pdf_53839596"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=53839596"><b><span style="line-height:1.0;">ЭФФЕКТИВНАЯ ГЕНЕРАЦИЯ СПИНА В ГРАФЕНЕ НА МАГНИТНОЙ ПОДЛОЖКЕ ПРИ ПОГЛОЩЕНИИ СВЕТА В ДАЛЬНЕМ ИК ДИАПАЗОНЕ</span></b></a><br><font color=#00008f><i>Денисов К.С., Голеницкий К.Ю.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=53839584">Физика и техника полупроводников</a>. 
+2023. Т. 57. <a href="/contents.asp?id=53839584&selid=53839596">№&nbsp;3</a>.  С. 187-194.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a67213394">
+<td align=center valign=top><font color=#00008f><b>120</b></font><br><input type=checkbox name="tid67213394" id="tid67213394"  onClick='if (this.checked) {RowSelect(a67213394,1)} else {RowSelect(a67213394,0)}'><div id="pdf_67213394" name="pdf_67213394"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67213394"><b><span style="line-height:1.0;">НОСИМЫЕ НЕИНВАЗИВНЫЕ СЕНСОРЫ ГЛЮКОЗЫ НА ОСНОВЕ ГРАФЕНА И ДРУГИХ УГЛЕРОДНЫХ МАТЕРИАЛОВ</span></b></a><br><font color=#00008f><i>Антонова И.В., Иванов А.И.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=67213391">Успехи физических наук</a>. 
+2024. Т. 194. <a href="/contents.asp?id=67213391&selid=67213394">№&nbsp;5</a>.  С. 520-545.
+</span>
+
+</td><td align=center valign=middle>2</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a50460660">
+<td align=center valign=top><font color=#00008f><b>121</b></font><br><input type=checkbox name="tid50460660" id="tid50460660"  onClick='if (this.checked) {RowSelect(a50460660,1)} else {RowSelect(a50460660,0)}'><div id="pdf_50460660" name="pdf_50460660"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50460660"><b><span style="line-height:1.0;">ЧЕТВЕРТАЯ РОССИЙСКАЯ КОНФЕРЕНЦИЯ "ГРАФЕН: МОЛЕКУЛА И 2D КРИСТАЛЛ"</span></b></a><br><font color=#00008f><i>Окотруб А.В., Ворфоломеева А.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=50460649">Радиоэлектроника. Наносистемы. Информационные технологии</a>. 
+2023. Т. 15. <a href="/contents.asp?id=50460649&selid=50460660">№&nbsp;1</a>.  С. 106.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a80314257">
+<td align=center valign=top><font color=#00008f><b>122</b></font><br><input type=checkbox name="tid80314257" id="tid80314257"  onClick='if (this.checked) {RowSelect(a80314257,1)} else {RowSelect(a80314257,0)}'><div id="pdf_80314257" name="pdf_80314257"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80314257"><b><span style="line-height:1.0;">МОДИФИКАЦИЯ АМИНИРОВАННОГО ГРАФЕНА НАНОЧАСТИЦАМИ ZNO СУБНАНОМЕТРОВОГО РАЗМЕРА: AB INITIO ИССЛЕДОВАНИЕ ЭЛЕКТРОННЫХ СВОЙСТВ И ЭЛЕКТРОПРОВОДНОСТИ</span></b></a><br><font color=#00008f><i>Глухова О.Е., Барков П.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=80314255">Нано- и микросистемная техника</a>. 
+2025. Т. 27. <a href="/contents.asp?id=80314255&selid=80314257">№&nbsp;1</a>.  С. 8-14.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a54620888">
+<td align=center valign=top><font color=#00008f><b>123</b></font><br><input type=checkbox name="tid54620888" id="tid54620888"  onClick='if (this.checked) {RowSelect(a54620888,1)} else {RowSelect(a54620888,0)}'><div id="pdf_54620888" name="pdf_54620888"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54620888"><b><span style="line-height:1.0;">ВЛИЯНИЕ НАНОЧАСТИЦ ПЕГИЛИРОВАННОГО ОКСИДА ГРАФЕНА НА МЕТАБОЛИЗМ КЛЕТОК ЛИНИИ JURKAT</span></b></a><br><font color=#00008f><i>Тимганова В.П., Власова В.В., Бочкова М.С., Шардина К.Ю., Ужвиюк С.В., Храмцов П.В., Раев М.Б., Заморина С.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54620710">Доклады Российской академии наук. Науки о жизни</a>. 
+2023. Т. 512. <a href="/contents.asp?id=54620710&selid=54620888">№&nbsp;1</a>.  С. 470-473.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a72852422">
+<td align=center valign=top><font color=#00008f><b>124</b></font><br><input type=checkbox name="tid72852422" id="tid72852422"  onClick='if (this.checked) {RowSelect(a72852422,1)} else {RowSelect(a72852422,0)}'><div id="pdf_72852422" name="pdf_72852422"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=72852422"><b><span style="line-height:1.0;">МНОГОКРАТНОЕ ИЗМЕНЕНИЕ ЭЛЕКТРОЕМКОСТИ ЛАЗЕРНО-ИНДУЦИРОВАННОГО ГРАФЕНА ПРИ ВАРЬИРОВАНИИ РЕЖИМОВ СИНТЕЗА</span></b></a><br><font color=#00008f><i>Михеев К.Г., Зонов Р.Г., Булатов Д.Л., Сюгаев А.В., Михеев Г.М.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=72852421">Письма в Журнал технической физики</a>. 
+2024. Т. 50. <a href="/contents.asp?id=72852421&selid=72852422">№&nbsp;20</a>.  С. 3-6.
+</span>
+
+</td><td align=center valign=middle>2</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a65666021">
+<td align=center valign=top><font color=#00008f><b>125</b></font><br><input type=checkbox name="tid65666021" id="tid65666021"  onClick='if (this.checked) {RowSelect(a65666021,1)} else {RowSelect(a65666021,0)}'><div id="pdf_65666021" name="pdf_65666021"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65666021"><b><span style="line-height:1.0;">ФИЗИКО-ХИМИЧЕСКИЕ СВОЙСТВА ПОКРЫТИЙ, ПОЛУЧЕННЫХ ИЗ ДИСПЕРСИЙ ОКСИДА ГРАФЕНА И ЕГО ВОССТАНОВЛЕННОЙ ФОРМЫ</span></b></a><br><font color=#00008f><i>Белов Д.В., Беляев С.Н.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=65666012">Известия Академии наук. Серия химическая</a>. 
+2024. Т. 73. <a href="/contents.asp?id=65666012&selid=65666021">№&nbsp;4</a>.  С. 814-827.
+</span>
+
+</td><td align=center valign=middle>2</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a80351277">
+<td align=center valign=top><font color=#00008f><b>126</b></font><br><input type=checkbox name="tid80351277" id="tid80351277"  onClick='if (this.checked) {RowSelect(a80351277,1)} else {RowSelect(a80351277,0)}'><div id="pdf_80351277" name="pdf_80351277"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80351277"><b><span style="line-height:1.0;">ПОЛУЧЕНИЕ ЗАЩИТНЫХ ПОКРЫТИЙ НА ОСНОВЕ ЧАСТИЦ МАЛОСЛОЙНОГО ГРАФЕНА МЕТОДОМ ХИМИЧЕСКОЙ СШИВКИ</span></b></a><br><font color=#00008f><i>Возняковский А.А., Возняковский А.П., Титова С.И., Посылкина О.И., Кидалов С.В., Неверовская А.Ю., Овчинников Е.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=80351262">Журнал технической физики</a>. 
+2025. Т. 95. <a href="/contents.asp?id=80351262&selid=80351277">№&nbsp;2</a>.  С. 304-309.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a91794846">
+<td align=center valign=top><font color=#00008f><b>127</b></font><br><input type=checkbox name="tid91794846" id="tid91794846"  onClick='if (this.checked) {RowSelect(a91794846,1)} else {RowSelect(a91794846,0)}'><div id="pdf_91794846" name="pdf_91794846"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91794846"><b><span style="line-height:1.0;">ИССЛЕДОВАНИЕ ТРАНСПОРТНЫХ СВОЙСТВ ГРАФЕНА, ИСПОЛЬЗУЕМОГО ДЛЯ ДЕТЕКТИРОВАНИЯ МАРКЕРОВ БОЛЕЗНИ АЛЬЦГЕЙМЕРА</span></b></a><br><font color=#00008f><i>Приображенский С.Ю., Полоскин Д.С., Оганесян Г.А., Гущина Е.В., Роенков А.Д., Лебедев С.П., Лебедев А.А., Зубов А.В., Смирнов А.Н., Елисеев И.А., Шабунина Е.И., Воробьев А.А., Плеханов А.Ю., Пузык М.В., Шмидт Н.М., Усиков А.С., Воробьев С.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91794839">Письма в Журнал технической физики</a>. 
+2026. Т. 52. <a href="/contents.asp?id=91794839&selid=91794846">№&nbsp;16</a>.  С. 30-34.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a87627682">
+<td align=center valign=top><font color=#00008f><b>128</b></font><br><input type=checkbox name="tid87627682" id="tid87627682"  onClick='if (this.checked) {RowSelect(a87627682,1)} else {RowSelect(a87627682,0)}'><div id="pdf_87627682" name="pdf_87627682"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=87627682"><b><span style="line-height:1.0;">ВЛИЯНИЕ ВАКАНСИОННЫХ ДЕФЕКТОВ НА ЭЛЕКТРОННЫЕ И ЭЛЕКТРОФИЗИЧЕСКИЕ СВОЙСТВА КВАЗИ-2D ГРАФЕН/НАНОТРУБНЫХ ПЛЕНОК: DFTB ИССЛЕДОВАНИЕ</span></b></a><br><font color=#00008f><i>Слепченков М.М.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=83074636">Физика твердого тела</a>. 
+2025. Т. 67. <a href="/contents.asp?id=83074636&selid=87627682">№&nbsp;7</a>.  С. 1190-1196.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a60019951">
+<td align=center valign=top><font color=#00008f><b>129</b></font><br><input type=checkbox name="tid60019951" id="tid60019951"  onClick='if (this.checked) {RowSelect(a60019951,1)} else {RowSelect(a60019951,0)}'><div id="pdf_60019951" name="pdf_60019951"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=60019951"><b><span style="line-height:1.0;">ОСОБЕННОСТИ ИНИЦИИРОВАНИЯ СИЛЬНОТОЧНЫМ ЭЛЕКТРОННЫМ ПУЧКОМ ЭНЕРГОКОМПОЗИТОВ НА ОСНОВЕ ПОРИСТОГО КРЕМНИЯ С ДОБАВКАМИ БОРИДА И ГРАФЕНА</span></b></a><br><font color=#00008f><i>Савенков Г.Г., Морозов В.А., Илюшин М.А., Побережная У.М., Фрейман В.М., Зегря А.Г., Брагин В.А., Фадеев Д.В., Зегря Г.Г.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=60019938">Журнал технической физики</a>. 
+2024. Т. 94. <a href="/contents.asp?id=60019938&selid=60019951">№&nbsp;1</a>.  С. 119-124.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a89148486">
+<td align=center valign=top><font color=#00008f><b>130</b></font><br><input type=checkbox name="tid89148486" id="tid89148486"  onClick='if (this.checked) {RowSelect(a89148486,1)} else {RowSelect(a89148486,0)}'><div id="pdf_89148486" name="pdf_89148486"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=89148486"><b><span style="line-height:1.0;">ОПРЕДЕЛЕНИЕ КОЛИЧЕСТВА ГРАФЕНА В ПОЛИМОРФНОЙ МНОГОКОМПОНЕНТНОЙ УГЛЕРОДНОЙ СМЕСИ ПО ОПТИЧЕСКОЙ ХАРАКТЕРИСТИКЕ В КОЛОРИМЕТРИЧЕСКОЙ СИСТЕМЕ CIELAB</span></b></a><br><font color=#00008f><i>Доломатов М.Ю., Левашов Д.А., Субханкулов В.Р., Доломатова М.М., Вершинин С.С., Абдульминьев К.Г.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=89148478">Журнал прикладной спектроскопии</a>. 
+2026. Т. 93. <a href="/contents.asp?id=89148478&selid=89148486">№&nbsp;2</a>.  С. 211-215.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a89070716">
+<td align=center valign=top><font color=#00008f><b>131</b></font><br><input type=checkbox name="tid89070716" id="tid89070716"  onClick='if (this.checked) {RowSelect(a89070716,1)} else {RowSelect(a89070716,0)}'><div id="pdf_89070716" name="pdf_89070716"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=89070716"><b><span style="line-height:1.0;">СРАВНЕНИЕ СОРБЦИОННЫХ СВОЙСТВ АЭРОГЕЛЕЙ ВОССТАНОВЛЕННОГО ОКСИДА ГРАФЕНА С СОЕВЫМ ВОСКОМ И ПОЛИТЕТРАФТОРЭТИЛЕНОМ</span></b></a><br><font color=#00008f><i>Баскаков С.А., Баскакова Ю.В., Кабачков Е.Н., Жидков М.В., Альперович А.В., Красникова С.С., Дрёмова Н.Н., Усманов Р.И., Антонов В.Е., Шульга Ю.М.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=89070702">Журнал физической химии</a>. 
+2025. Т. 99. <a href="/contents.asp?id=89070702&selid=89070716">№&nbsp;12</a>.  С. 1901-1909.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a68019930">
+<td align=center valign=top><font color=#00008f><b>132</b></font><br><input type=checkbox name="tid68019930" id="tid68019930"  onClick='if (this.checked) {RowSelect(a68019930,1)} else {RowSelect(a68019930,0)}'><div id="pdf_68019930" name="pdf_68019930"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=68019930"><b><span style="line-height:1.0;">СИНТЕЗ ТУРБОСТРАТНОГО ГРАФЕНА МЕТОДОМ ПЛАЗМОХИМИЧЕСКОГО ПИРОЛИЗА</span></b></a><br><font color=#00008f><i>Доломатов М.Ю., Рыжиков О.Л., Субханкулов В.Р., Вершинин С.С., Саитов И.Х., Доломатова М.М.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=68019919">Бутлеровские сообщения</a>. 
+2024. Т. 78. <a href="/contents.asp?id=68019919&selid=68019930">№&nbsp;6</a>.  С. 99-105.
+</span>
+
+</td><td align=center valign=middle>4</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a82293256">
+<td align=center valign=top><font color=#00008f><b>133</b></font><br><input type=checkbox name="tid82293256" id="tid82293256"  onClick='if (this.checked) {RowSelect(a82293256,1)} else {RowSelect(a82293256,0)}'><div id="pdf_82293256" name="pdf_82293256"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82293256"><b><span style="line-height:1.0;">АНОМАЛЬНАЯ СВЕРХПРОВОДИМОСТЬ И НЕОБЫЧНЫЕ СВОЙСТВА НОРМАЛЬНОГО СОСТОЯНИЯ ДВУХСЛОЙНОГО И ПОДКРУЧЕННОГО ГРАФЕНА (МИНИОБЗОР)</span></b></a><br><font color=#00008f><i>Каган М.Ю., Коровушкин М.М., Мицкан В.А., Кугель К.И., Рахманов А.Л., Рожков А.В., Сбойчаков А.О.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82293249">Письма в Журнал экспериментальной и теоретической физики</a>. 
+2025. Т. 121. <a href="/contents.asp?id=82293249&selid=82293256">№&nbsp;9-10</a>.  С. 749-759.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a80340537">
+<td align=center valign=top><font color=#00008f><b>134</b></font><br><input type=checkbox name="tid80340537" id="tid80340537"  onClick='if (this.checked) {RowSelect(a80340537,1)} else {RowSelect(a80340537,0)}'><div id="pdf_80340537" name="pdf_80340537"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80340537"><b><span style="line-height:1.0;">СИНТЕЗ И СВОЙСТВА ЗАЩИТНЫХ КОМПОЗИЦИОННЫХ ЗОЛЬ-ГЕЛЬ ПОКРЫТИЙ, СОДЕРЖАЩИХ ГРАФЕН</span></b></a><br><font color=#00008f><i>Васькевич В.В., Коваленко Д.Л., Туан А.Н., Гайшун В.Е., Тиен В.Н.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=80340535">Проблемы физики, математики и техники</a>. 
+2024. <a href="/contents.asp?id=80340535&selid=80340537">№&nbsp;4&nbsp;(61)</a>.  С. 13-18.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a67942323">
+<td align=center valign=top><font color=#00008f><b>135</b></font><br><input type=checkbox name="tid67942323" id="tid67942323"  onClick='if (this.checked) {RowSelect(a67942323,1)} else {RowSelect(a67942323,0)}'><div id="pdf_67942323" name="pdf_67942323"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67942323"><b><span style="line-height:1.0;">ВЛИЯНИЕ ФУНКЦИОНАЛЬНЫХ ГРУПП НА ЭЛЕКТРОННО-ЭНЕРГЕТИЧЕСКИЕ ХАРАКТЕРИСТИКИ ТОНКИХ ПЛЕНОК ДЫРЧАТОГО ГРАФЕНА: РЕЗУЛЬТАТЫ DFTB-МОДЕЛИРОВАНИЯ</span></b></a><br><font color=#00008f><i>Барков П.В., Слепченков М.М., Глухова О.Е.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=67942320">Известия Саратовского университета. Новая серия. Серия: Физика</a>. 
+2024. Т. 24. <a href="/contents.asp?id=67942320&selid=67942323">№&nbsp;2</a>.  С. 114-125.
+</span>
+
+</td><td align=center valign=middle>2</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a65310633">
+<td align=center valign=top><font color=#00008f><b>136</b></font><br><input type=checkbox name="tid65310633" id="tid65310633"  onClick='if (this.checked) {RowSelect(a65310633,1)} else {RowSelect(a65310633,0)}'><div id="pdf_65310633" name="pdf_65310633"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65310633"><b><span style="line-height:1.0;">ЭЛЕКТРОФИЗИЧЕСКИЕ СВОЙСТВА ТОНКИХ ПЛЕНОК ПЕРФОРИРОВАННОГО ГРАФЕНА, ФУНКЦИОНАЛИЗИРОВАННОГО КАРБОНИЛЬНЫМИ ГРУППАМИ</span></b></a><br><font color=#00008f><i>Барков П.В., Слепченков М.М., Глухова О.Е.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=65310621">Журнал технической физики</a>. 
+2024. Т. 94. <a href="/contents.asp?id=65310621&selid=65310633">№&nbsp;3</a>.  С. 426-432.
+</span>
+
+</td><td align=center valign=middle>3</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a54134483">
+<td align=center valign=top><font color=#00008f><b>137</b></font><br><input type=checkbox name="tid54134483" id="tid54134483"  onClick='if (this.checked) {RowSelect(a54134483,1)} else {RowSelect(a54134483,0)}'><div id="pdf_54134483" name="pdf_54134483"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54134483"><b><span style="line-height:1.0;">ЭЛЕКТРОПРОВОДЯЩИЕ НАНОКОМПОЗИЦИОННЫЕ БИТУМНЫЕ ВЯЖУЩИЕ, СОДЕРЖАЩИЕ УГЛЕРОДНЫЕ НАНОТРУБКИ И МНОГОСЛОЙНЫЙ ГРАФЕН</span></b></a><br><font color=#00008f><i>Таров Д.В., Евлахин Д.А., Зеленин А.Д., Столяров Р.А., Ягубов В.С., Меметов Н.Р., Меметова А.Е., Чапаксов Н.А., Герасимова А.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54134474">Frontier Materials & Technologies</a>. 
+2023. <a href="/contents.asp?id=54134474&selid=54134483">№&nbsp;2</a>.  С. 131-139.
+</span>
+
+</td><td align=center valign=middle>3</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a80304931">
+<td align=center valign=top><font color=#00008f><b>138</b></font><br><input type=checkbox name="tid80304931" id="tid80304931"  onClick='if (this.checked) {RowSelect(a80304931,1)} else {RowSelect(a80304931,0)}'><div id="pdf_80304931" name="pdf_80304931"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80304931"><b><span style="line-height:1.0;">ДВА МЕТОДА ПОЛУЧЕНИЯ НАНОЧАСТИЦ ОКСИДА ВОЛЬФРАМА НА ПОВЕРХНОСТИ ВОССТАНОВЛЕННОГО ОКСИДА ГРАФЕНА В СВЕРХКРИТИЧЕСКОМ ИЗОПРОПАНОЛЕ</span></b></a><br><font color=#00008f><i>Грошкова Ю.А., Буслаева Е.Ю., Краевский С.В., Губин С.П.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=80304921">Радиоэлектроника. Наносистемы. Информационные технологии</a>. 
+2025. Т. 17. <a href="/contents.asp?id=80304921&selid=80304931">№&nbsp;1</a>.  С. 113-118.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a75996027">
+<td align=center valign=top><font color=#00008f><b>139</b></font><br><input type=checkbox name="tid75996027" id="tid75996027"  onClick='if (this.checked) {RowSelect(a75996027,1)} else {RowSelect(a75996027,0)}'><div id="pdf_75996027" name="pdf_75996027"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=75996027"><b><span style="line-height:1.0;">ВЛИЯНИЕ СВЕРХНИЗКОГО СОДЕРЖАНИЯ ГРАФЕНА В КОМПОЗИТАХ НА ОСНОВЕ СВЕРХВЫСОКОМОЛЕКУЛЯРНОГО ПОЛИЭТИЛЕНА НА ИХ ТЕРМООКИСЛИТЕЛЬНЫЕ И ТРИБООКИСЛИТЕЛЬНЫЕ СВОЙСТВА</span></b></a><br><font color=#00008f><i>Плетнева И.В., Заболотнов А.С., Гостев С.С., Крашенинников В.Г.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=75996022">Химическая безопасность</a>. 
+2024. Т. 8. <a href="/contents.asp?id=75996022&selid=75996027">№&nbsp;2</a>.  С. 69-77.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a82356333">
+<td align=center valign=top><font color=#00008f><b>140</b></font><br><input type=checkbox name="tid82356333" id="tid82356333"  onClick='if (this.checked) {RowSelect(a82356333,1)} else {RowSelect(a82356333,0)}'><div id="pdf_82356333" name="pdf_82356333"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82356333"><b><span style="line-height:1.0;">СИНТЕЗ ОКСИДА ГРАФЕНА С ИСПОЛЬЗОВАНИЕМ РЕАГЕНТОВ МАССОВОГО СЕГМЕНТА ОТЕЧЕСТВЕННОГО ПРОИЗВОДСТВА ДЛЯ ЭЛЕКТРОДОВ СУПЕРКОНДЕНСАТОРОВ</span></b></a><br><font color=#00008f><i>Кузнецова В.В., Спиридонов С.В., Морозов М.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82356329">Вестник Технологического университета</a>. 
+2025. Т. 28. <a href="/contents.asp?id=82356329&selid=82356333">№&nbsp;5</a>.  С. 20-25.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a82538016">
+<td align=center valign=top><font color=#00008f><b>141</b></font><br><input type=checkbox name="tid82538016" id="tid82538016"  onClick='if (this.checked) {RowSelect(a82538016,1)} else {RowSelect(a82538016,0)}'><div id="pdf_82538016" name="pdf_82538016"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82538016"><b><span style="line-height:1.0;">МОДЕЛИРОВАНИЕ ОТКЛИКА ГРАФЕНА НА ДЕЙСТВИЕ ИМПУЛЬСОВ ДАЛЬНЕГО ИК-ДИАПАЗОНА</span></b></a><br><font color=#00008f><i>Панферов А.Д., Новиков Н.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82538011">Известия Саратовского университета. Новая серия. Серия: Физика</a>. 
+2025. Т. 25. <a href="/contents.asp?id=82538011&selid=82538016">№&nbsp;2</a>.  С. 178-188.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a83168534">
+<td align=center valign=top><font color=#00008f><b>142</b></font><br><input type=checkbox name="tid83168534" id="tid83168534"  onClick='if (this.checked) {RowSelect(a83168534,1)} else {RowSelect(a83168534,0)}'><div id="pdf_83168534" name="pdf_83168534"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83168534"><b><span style="line-height:1.0;">ПОЛУЧЕНИЕ ДИСПЕРСИЙ ГРАФЕНА В РАСТВОРАХ НЕИОНОГЕННЫХ ПОВЕРХНОСТНО-АКТИВНЫХ ВЕЩЕСТВ ДЛЯ МОДИФИЦИРОВАНИЯ ПОЛИМЕРНЫХ ГЕЛЕЙ</span></b></a><br><font color=#00008f><i>Гатауллин А.Р., Абрамов В.А., Богданова С.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=83168530">Журнал прикладной химии</a>. 
+2025. Т. 98. <a href="/contents.asp?id=83168530&selid=83168534">№&nbsp;9-10</a>.  С. 510-522.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a65640276">
+<td align=center valign=top><font color=#00008f><b>143</b></font><br><input type=checkbox name="tid65640276" id="tid65640276"  onClick='if (this.checked) {RowSelect(a65640276,1)} else {RowSelect(a65640276,0)}'><div id="pdf_65640276" name="pdf_65640276"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65640276"><b><span style="line-height:1.0;">ФОТОЧУВСТВИТЕЛЬНЫЕ МЕМРИСТОРНЫЕ СТРУКТУРЫ НА ОСНОВЕ ВОССТАНОВЛЕННОГО ОКСИДА ГРАФЕНА И УГЛЕРОДНЫХ НАНОЧАСТИЦ</span></b></a><br><font color=#00008f><i>Баранов А.Н., Митюшев Н.Д., Фирсов А.А., Кабачков Е.Н., Панин Г.Н.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=65640257">Журнал структурной химии</a>. 
+2024. Т. 65. <a href="/contents.asp?id=65640257&selid=65640276">№&nbsp;4</a>.  С. 125704.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a69280116">
+<td align=center valign=top><font color=#00008f><b>144</b></font><br><input type=checkbox name="tid69280116" id="tid69280116"  onClick='if (this.checked) {RowSelect(a69280116,1)} else {RowSelect(a69280116,0)}'><div id="pdf_69280116" name="pdf_69280116"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=69280116"><b><span style="line-height:1.0;">ВЛИЯНИЕ ПЕГИЛИРОВАННЫХ НАНОЧАСТИЦ ОКСИДА ГРАФЕНА НА ФАГОЦИТАРНУЮ И ОКИСЛИТЕЛЬНУЮ АКТИВНОСТЬ НЕЙТРОФИЛОВ ЧЕЛОВЕКА</span></b></a><br><font color=#00008f><i>Бочкова М.С., Ракутина М.Н., Усанина Д.И., Тимганова В.П., Заморина С.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=69280003">Медицинская иммунология</a>. 
+2024. Т. 26. <a href="/contents.asp?id=69280003&selid=69280116">№&nbsp;5</a>.  С. 1071-1078.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a50465031">
+<td align=center valign=top><font color=#00008f><b>145</b></font><br><input type=checkbox name="tid50465031" id="tid50465031"  onClick='if (this.checked) {RowSelect(a50465031,1)} else {RowSelect(a50465031,0)}'><div id="pdf_50465031" name="pdf_50465031"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50465031"><b><span style="line-height:1.0;">ЛАЗЕРНОЕ ЗАЖИГАНИЕ ПИРОТЕХНИЧЕСКИХ СОСТАВОВ - ПОРИСТЫЙ КРЕМНИЙ - ФТОРПОЛИМЕР СКФ-32 - МНОГОСЛОЙНЫЙ ГРАФЕН</span></b></a><br><font color=#00008f><i>Савенков Г.Г., Фадеев Д.В., Побережная У.М., Илюшин М.А., Мазур А.С., Возняковский А.П., Оськин И.А., Брагин В.А., Шугалей И.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=50465022">Известия Санкт-Петербургского государственного технологического института (технического университета)</a>. 
+2023. <a href="/contents.asp?id=50465022&selid=50465031">№&nbsp;64&nbsp;(90)</a>.  С. 34-39.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a89112817">
+<td align=center valign=top><font color=#00008f><b>146</b></font><br><input type=checkbox name="tid89112817" id="tid89112817"  onClick='if (this.checked) {RowSelect(a89112817,1)} else {RowSelect(a89112817,0)}'><div id="pdf_89112817" name="pdf_89112817"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=89112817"><b><span style="line-height:1.0;">МОДИФИКАЦИЯ ПРОВОДЯЩИХ И СТРУКТУРНЫХ СВОЙСТВ CVD-ГРАФЕНА С ИСПОЛЬЗОВАНИЕМ МАГНЕТРОННОГО РАЗРЯДА</span></b></a><br><font color=#00008f><i>Гареев Т.И., Зайцев О.В., Нерушев О.А., Сорокин Д.В., Суляева В.С., Смовж Д.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=89112814">Известия вузов. Физика</a>. 
+2026. Т. 69. <a href="/contents.asp?id=89112814&selid=89112817">№&nbsp;2&nbsp;(819)</a>.  С. 24-32.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a91624407">
+<td align=center valign=top><font color=#00008f><b>147</b></font><br><input type=checkbox name="tid91624407" id="tid91624407"  onClick='if (this.checked) {RowSelect(a91624407,1)} else {RowSelect(a91624407,0)}'><div id="pdf_91624407" name="pdf_91624407"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91624407"><b><span style="line-height:1.0;">КОРРЕЛЯЦИОННЫЕ СООТНОШЕНИЯ, ТЕПЛОВОЕ ИЗЛУЧЕНИЕ И ПОГЛОЩЕНИЕ ДЛЯ ГРАФЕНА</span></b></a><br><font color=#00008f><i>Давидович М.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91624404">Журнал технической физики</a>. 
+2026. Т. 96. <a href="/contents.asp?id=91624404&selid=91624407">№&nbsp;7</a>.  С. 1316-1327.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a54166631">
+<td align=center valign=top><font color=#00008f><b>148</b></font><br><input type=checkbox name="tid54166631" id="tid54166631"  onClick='if (this.checked) {RowSelect(a54166631,1)} else {RowSelect(a54166631,0)}'><div id="pdf_54166631" name="pdf_54166631"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54166631"><b><span style="line-height:1.0;">ФУНКЦИОНАЛИЗАЦИЯ ФТОРИДА ГРАФЕНА 2-ФЕНИЛБЕНЗИМИДАЗОЛОМ</span></b></a><br><font color=#00008f><i>Матвеев З.А., Холхоев Б.Ч., Макотченко В.Г., Иванова М.Н., Федоров В.Е., Бурдуковский В.Ф.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54166630">Журнал общей химии</a>. 
+2023. Т. 93. <a href="/contents.asp?id=54166630&selid=54166631">№&nbsp;7</a>.  С. 987-994.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a91866556">
+<td align=center valign=top><font color=#00008f><b>149</b></font><br><input type=checkbox name="tid91866556" id="tid91866556"  onClick='if (this.checked) {RowSelect(a91866556,1)} else {RowSelect(a91866556,0)}'><div id="pdf_91866556" name="pdf_91866556"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91866556"><b><span style="line-height:1.0;">ВЛИЯНИЕ МАЛОСЛОЙНОГО ГРАФЕНА НА ПОВЕРХНОСТНЫЕ ХАРАКТЕРИСТИКИ КОМПОЗИЦИОННЫХ ПОЛИЭФИРНЫХ ПОКРЫТИЙ</span></b></a><br><font color=#00008f><i>Овчинников Е.В., Веремейчик А.И., Линник Д.А., Парфиевич А.Н., Нерода М.В., Проволенок А.В., Кузнецов Е.В., Лях С.О.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91658077">Вестник Барановичского государственного университета. Серия: Технические науки</a>. 
+2026. <a href="/contents.asp?id=91658077&selid=91866556">№&nbsp;1&nbsp;(19)</a>.  С. 48-57.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a50403766">
+<td align=center valign=top><font color=#00008f><b>150</b></font><br><input type=checkbox name="tid50403766" id="tid50403766"  onClick='if (this.checked) {RowSelect(a50403766,1)} else {RowSelect(a50403766,0)}'><div id="pdf_50403766" name="pdf_50403766"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50403766"><b><span style="line-height:1.0;">ВЗАИМОДЕЙСТВИЕ НАНОЧАСТИЦ ОКСИДА ГРАФЕНА С МОНОНУКЛЕАРНЫМИ КЛЕТКАМИ ЧЕЛОВЕКА В СИСТЕМЕ CELL-IQ</span></b></a><br><font color=#00008f><i>Ужвиюк С.В., Храмцов П.В., Раев М.Б., Тимганова В.П., Бочкова М.С., Хазиахматова О.Г., Малащенко В.В., Литвинова Л.С., Заморина С.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=50403757">Клеточные технологии в биологии и медицине</a>. 
+2023. <a href="/contents.asp?id=50403757&selid=50403766">№&nbsp;1</a>.  С. 62-68.
+</span>
+
+</td><td align=center valign=middle>2</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a67350720">
+<td align=center valign=top><font color=#00008f><b>151</b></font><br><input type=checkbox name="tid67350720" id="tid67350720"  onClick='if (this.checked) {RowSelect(a67350720,1)} else {RowSelect(a67350720,0)}'><div id="pdf_67350720" name="pdf_67350720"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67350720"><b><span style="line-height:1.0;">УГЛЕРОДНЫЕ НАНОКОМПОЗИТЫ В МЕДИЦИНЕ: ГРАФЕН И ПОЛИГРАФЕН КАК ВОЗМОЖНОЕ СРЕДСТВО ДОСТАВКИ ЛЕКАРСТВ ПРИ ОНКОЛОГИИ КИШЕЧНИКА</span></b></a><br><font color=#00008f><i>Ботин А.С., Машал Д.А., Попова Т.С., Ризк М.Г.Х., Кордова А.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=67350704">Актуальные вопросы биологической физики и химии</a>. 
+2023. Т. 8. <a href="/contents.asp?id=67350704&selid=67350720">№&nbsp;4</a>.  С. 477-485.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a60390593">
+<td align=center valign=top><font color=#00008f><b>152</b></font><br><input type=checkbox name="tid60390593" id="tid60390593"  onClick='if (this.checked) {RowSelect(a60390593,1)} else {RowSelect(a60390593,0)}'><div id="pdf_60390593" name="pdf_60390593"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=60390593"><b><span style="line-height:1.0;">ВЛИЯНИЕ ГРАФЕНА НА МИКРОТВЕРДОСТЬ И ТРИБОЛОГИЧЕСКИЕ СВОЙСТВА НАНОКОМПОЗИТНОЙ КЕРАМИКИ</span></b></a><br><font color=#00008f><i>Пахомов М.А., Московских Д.О., Столяров В.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=60390583">Материаловедение</a>. 
+2024. <a href="/contents.asp?id=60390583&selid=60390593">№&nbsp;2</a>.  С. 18-22.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a82973172">
+<td align=center valign=top><font color=#00008f><b>153</b></font><br><input type=checkbox name="tid82973172" id="tid82973172"  onClick='if (this.checked) {RowSelect(a82973172,1)} else {RowSelect(a82973172,0)}'><div id="pdf_82973172" name="pdf_82973172"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82973172"><b><span style="line-height:1.0;">ПРОЧНОСТЬ И ЭЛЕКТРОПРОВОДНОСТЬ БЕТОННЫХ КОМПОЗИТОВ, МОДИФИЦИРОВАННЫХ ОКСИДОМ ГРАФЕНА</span></b></a><br><font color=#00008f><i>Лепов В.В., Попов Д.Н., Анисимов А.С.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82973158">Природные ресурсы Арктики и Субарктики</a>. 
+2025. Т. 30. <a href="/contents.asp?id=82973158&selid=82973172">№&nbsp;3</a>.  С. 510-520.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a82878834">
+<td align=center valign=top><font color=#00008f><b>154</b></font><br><input type=checkbox name="tid82878834" id="tid82878834"  onClick='if (this.checked) {RowSelect(a82878834,1)} else {RowSelect(a82878834,0)}'><div id="pdf_82878834" name="pdf_82878834"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82878834"><b><span style="line-height:1.0;">ОСОБЕННОСТИ ТЕПЛОПРОВОДНОСТИ КОМПОЗИТОВ "МАТРИЦА - BI2TE2,1SE0,9"/"НАПОЛНИТЕЛЬ - ВОССТАНОВЛЕННЫЙ ОКСИД ГРАФЕНА"</span></b></a><br><font color=#00008f><i>Жуй В., Павлов А.А., Япрынцев М.Н., Иванов О.Н.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82871851">Композиты и наноструктуры</a>. 
+2025. Т. 17. <a href="/contents.asp?id=82871851&selid=82878834">№&nbsp;3</a>.  С. 179-189.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a67962956">
+<td align=center valign=top><font color=#00008f><b>155</b></font><br><input type=checkbox name="tid67962956" id="tid67962956"  onClick='if (this.checked) {RowSelect(a67962956,1)} else {RowSelect(a67962956,0)}'><div id="pdf_67962956" name="pdf_67962956"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67962956"><b><span style="line-height:1.0;">СОРБЦИЯ РАДИЯ-226 НА МАЛОСЛОЙНОМ ГРАФЕНЕ, СИНТЕЗИРОВАННОМ В УСЛОВИЯХ САМОРАСПРОСТРАНЯЮЩЕГОСЯ ВЫСОКОТЕМПЕРАТУРНОГО СИНТЕЗА</span></b></a><br><font color=#00008f><i>Возняковский А.А., Возняковский А.П., Кидалов С.В., Карманов А.П., Рачкова Н.Г., Подложнюк Н.Д.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=67962952">Коллоидный журнал</a>. 
+2024. Т. 86. <a href="/contents.asp?id=67962952&selid=67962956">№&nbsp;2</a>.  С. 162-168.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a91243681">
+<td align=center valign=top><font color=#00008f><b>156</b></font><br><input type=checkbox name="tid91243681" id="tid91243681"  onClick='if (this.checked) {RowSelect(a91243681,1)} else {RowSelect(a91243681,0)}'><div id="pdf_91243681" name="pdf_91243681"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91243681"><b><span style="line-height:1.0;">CИНТЕЗ ГРАФЕНА НА ПОВЕРХНОСТЬ МЕТАЛЛИЧЕСКИХ ТОКОСЪЕМНИКОВ ДЛЯ ЭЛЕКТРОХИМИЧЕСКИХ НАКОПИТЕЛЕЙ ЭНЕРГИИ В УГЛЕВОДОРОДНОМ ПЛАМЕНИ</span></b></a><br><font color=#00008f><i>Әбдiсаттар Ә.Ә., Приходько Н.Г., Елеуов М.А., Рахымжан Н.Б., Толынбеков А.Б., Саитова Н.К., Асқарұлы Қ., Таурбеков А.Т.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=90695610">Горение и плазмохимия</a>. 
+2026. Т. 24. <a href="/contents.asp?id=90695610&selid=91243681">№&nbsp;1</a>.  С. 9-20.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a83895749">
+<td align=center valign=top><font color=#00008f><b>157</b></font><br><input type=checkbox name="tid83895749" id="tid83895749"  onClick='if (this.checked) {RowSelect(a83895749,1)} else {RowSelect(a83895749,0)}'><div id="pdf_83895749" name="pdf_83895749"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83895749"><b><span style="line-height:1.0;">УСТОЙЧИВОСТЬ К СВОБОДНОРАДИКАЛЬНЫМ АТАКАМ НАНОКОМПОЗИТА ИОНООБМЕННЫЙ ПОЛИМЕР NAFION-МАЛОСЛОЙНЫЙ ГРАФЕН</span></b></a><br><font color=#00008f><i>Касцова А.Г., Нечитайлов А.А., Глебова Н.В., Пелагейкина А.О., Краснова А.О.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=83070520">Журнал технической физики</a>. 
+2025. Т. 95. <a href="/contents.asp?id=83070520&selid=83895749">№&nbsp;11</a>.  С. 2176-2184.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88788404">
+<td align=center valign=top><font color=#00008f><b>158</b></font><br><input type=checkbox name="tid88788404" id="tid88788404"  onClick='if (this.checked) {RowSelect(a88788404,1)} else {RowSelect(a88788404,0)}'><div id="pdf_88788404" name="pdf_88788404"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88788404"><b><span style="line-height:1.0;">АНИОНООБМЕННИК НА ПОЛИМЕРНОЙ ОСНОВЕ С АДСОРБИРОВАННЫМ СЛОЕМ ОКСИДА ГРАФЕНА: АНАЛИТИЧЕСКАЯ И ТЕРМОДИНАМИЧЕСКАЯ ХАРАКТЕРИЗАЦИЯ</span></b></a><br><font color=#00008f><i>Тимичев А.А., Чичканова Е.С., Каплин А.В., Горбовская А.В., Пирогов А.В., Шпигун О.А., Ужель А.С.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=88788393">Сорбционные и хроматографические процессы</a>. 
+2025. Т. 25. <a href="/contents.asp?id=88788393&selid=88788404">№&nbsp;5</a>.  С. 739-749.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a53935251">
+<td align=center valign=top><font color=#00008f><b>159</b></font><br><input type=checkbox name="tid53935251" id="tid53935251"  onClick='if (this.checked) {RowSelect(a53935251,1)} else {RowSelect(a53935251,0)}'><div id="pdf_53935251" name="pdf_53935251"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=53935251"><b><span style="line-height:1.0;">ВЛИЯНИЕ ДИСЛОКАЦИОННЫХ ДИПОЛЕЙ С РАЗНЫМ ПЛЕЧОМ НА ДЕФОРМАЦИОННОЕ ПОВЕДЕНИЕ ГРАФЕНА: МОЛЕКУЛЯРНАЯ ДИНАМИКА</span></b></a><br><font color=#00008f><i>Ахунова А.Х., Баимова Ю.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=53935248">Журнал технической физики</a>. 
+2023. Т. 93. <a href="/contents.asp?id=53935248&selid=53935251">№&nbsp;4</a>.  С. 445-452.
+</span>
+
+</td><td align=center valign=middle>6</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a67222703">
+<td align=center valign=top><font color=#00008f><b>160</b></font><br><input type=checkbox name="tid67222703" id="tid67222703"  onClick='if (this.checked) {RowSelect(a67222703,1)} else {RowSelect(a67222703,0)}'><div id="pdf_67222703" name="pdf_67222703"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67222703"><b><span style="line-height:1.0;">СИНТЕЗ ОКСИДА ГРАФЕНА МЕТОДОМ ХИМИЧЕСКОГО ОСАЖДЕНИЯ ПАРОВ</span></b></a><br><font color=#00008f><i>Ильинский Р.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=67222664">Научный Лидер</a>. 
+2024. <a href="/contents.asp?id=67222664&selid=67222703">№&nbsp;19&nbsp;(169)</a>.  С. 159-161.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a65384330">
+<td align=center valign=top><font color=#00008f><b>161</b></font><br><input type=checkbox name="tid65384330" id="tid65384330"  onClick='if (this.checked) {RowSelect(a65384330,1)} else {RowSelect(a65384330,0)}'><div id="pdf_65384330" name="pdf_65384330"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65384330"><b><span style="line-height:1.0;">ФУНКЦИОНАЛИЗАЦИЯ ОКСИДА ГРАФЕНА КАК СПОСОБ УВЕЛИЧЕНИЯ БИОСОВМЕСТИМОСТИ</span></b></a><br><font color=#00008f><i>Семенов К.Н., Агеев С.В., Юрьев Г.О., Молчанов О.Е., Майстренко Д.М., Самбук Е.В., Румянцев А.М., Мурин И.В., Шаройко В.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=65384325">Учёные записки Первого Санкт-Петербургского государственного медицинского университета имени академика И.П. Павлова</a>. 
+2023. Т. 30. <a href="/contents.asp?id=65384325&selid=65384330">№&nbsp;3</a>.  С. 48-57.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a82460633">
+<td align=center valign=top><font color=#00008f><b>162</b></font><br><input type=checkbox name="tid82460633" id="tid82460633"  onClick='if (this.checked) {RowSelect(a82460633,1)} else {RowSelect(a82460633,0)}'><div id="pdf_82460633" name="pdf_82460633"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82460633"><b><span style="line-height:1.0;">НЕСТАЦИОНАРНЫЙ МАССОПЕРЕНОС В ГЕЛЕВЫХ СИСТЕМАХ С ОКСИДОМ ГРАФЕНА ПРИМЕНИТЕЛЬНО К ТЕХНОЛОГИЯМ 3D-БИОПЕЧАТИ</span></b></a><br><font color=#00008f><i>Храмцов Д.П., Мошин А.А., Покусаев Б.Г., Некрасов Д.А., Захаров Н.С.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82460627">Теоретические основы химической технологии</a>. 
+2025. Т. 59. <a href="/contents.asp?id=82460627&selid=82460633">№&nbsp;1</a>.  С. 47-56.
+</span>
+
+</td><td align=center valign=middle>2</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a50461714">
+<td align=center valign=top><font color=#00008f><b>163</b></font><br><input type=checkbox name="tid50461714" id="tid50461714"  onClick='if (this.checked) {RowSelect(a50461714,1)} else {RowSelect(a50461714,0)}'><div id="pdf_50461714" name="pdf_50461714"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50461714"><b><span style="line-height:1.0;">ИССЛЕДОВАНИЕ ХАРАКТЕРИСТИК ТЕРМОИНТЕРФЕЙСА НА ОСНОВЕ ГРАФЕНА ДЛЯ ОХЛАЖДЕНИЯ ИНТЕГРАЛЬНЫХ МИКРОСХЕМ</span></b></a><br><font color=#00008f><i>Прохоров Д.А., Зуев С.М.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=50461703">Физикохимия поверхности и защита материалов</a>. 
+2023. Т. 59. <a href="/contents.asp?id=50461703&selid=50461714">№&nbsp;2</a>.  С. 167-174.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a56712119">
+<td align=center valign=top><font color=#00008f><b>164</b></font><br><input type=checkbox name="tid56712119" id="tid56712119"  onClick='if (this.checked) {RowSelect(a56712119,1)} else {RowSelect(a56712119,0)}'><div id="pdf_56712119" name="pdf_56712119"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=56712119"><b><span style="line-height:1.0;">ТВЕРДОФАЗНОЕ ПОЛУЧЕНИЕ КОМПОЗИЦИЙ ПОЛИЭТИЛЕНА НИЗКОЙ ПЛОТНОСТИ С ВОССТАНОВЛЕННЫМ ОКСИДОМ ГРАФЕНА ПОД ДЕЙСТВИЕМ СДВИГОВЫХ ДЕФОРМАЦИЙ</span></b></a><br><font color=#00008f><i>Гасымов М.М., Роговина С.З., Кузнецова О.П., Шевченко В.Г., Берлин А.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=56712066">Высокомолекулярные соединения. Серия А</a>. 
+2023. Т. 65. <a href="/contents.asp?id=56712066&selid=56712119">№&nbsp;5</a>.  С. 384-390.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a91670058">
+<td align=center valign=top><font color=#00008f><b>165</b></font><br><input type=checkbox name="tid91670058" id="tid91670058"  onClick='if (this.checked) {RowSelect(a91670058,1)} else {RowSelect(a91670058,0)}'><div id="pdf_91670058" name="pdf_91670058"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91670058"><b><span style="line-height:1.0;">ЛАЗЕРНО-ИНДУЦИРОВАННЫЕ СУХИЕ ЭЛЕКТРОДЫ НА ОСНОВЕ УГЛЕРОДНЫХ НАНОТРУБОК И ГРАФЕНА ДЛЯ РЕГИСТРАЦИИ ЭКГ</span></b></a><br><font color=#00008f><i>Куксин А.В., Морозова А.С., Василевская Ю.О., Герасименко А.Ю.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91670046">Журнал технической физики</a>. 
+2026. Т. 96. <a href="/contents.asp?id=91670046&selid=91670058">№&nbsp;5</a>.  С. 958-967.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a54500829">
+<td align=center valign=top><font color=#00008f><b>166</b></font><br><input type=checkbox name="tid54500829" id="tid54500829"  onClick='if (this.checked) {RowSelect(a54500829,1)} else {RowSelect(a54500829,0)}'><div id="pdf_54500829" name="pdf_54500829"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54500829"><b><span style="line-height:1.0;">ОПТИЧЕСКИЕ СПЕКТРЫ ФОТОННО-КРИСТАЛЛИЧЕСКОЙ СТРУКТУРЫ СО СЛОЯМИ ГРАФЕНА</span></b></a><br><font color=#00008f><i>Елисеева С.В., Семенцов Д.И.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54500819">Оптика и спектроскопия</a>. 
+2023. Т. 131. <a href="/contents.asp?id=54500819&selid=54500829">№&nbsp;7</a>.  С. 958-964.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a90478599">
+<td align=center valign=top><font color=#00008f><b>167</b></font><br><input type=checkbox name="tid90478599" id="tid90478599"  onClick='if (this.checked) {RowSelect(a90478599,1)} else {RowSelect(a90478599,0)}'><div id="pdf_90478599" name="pdf_90478599"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=90478599"><b><span style="line-height:1.0;">ДИСПЕРСИЯ КОЛЛЕКТИВНЫХ ПЛАЗМЕННЫХ ВОЗБУЖДЕНИЙ В СВОБОДНО ПОДВЕШЕННОМ ГРАФЕНЕ</span></b></a><br><font color=#00008f><i>Кирпичев В.Е., Кукушкин И.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=90478592">Письма в Журнал экспериментальной и теоретической физики</a>. 
+2026. Т. 123. <a href="/contents.asp?id=90478592&selid=90478599">№&nbsp;1-2</a>.  С. 48-54.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a91799117">
+<td align=center valign=top><font color=#00008f><b>168</b></font><br><input type=checkbox name="tid91799117" id="tid91799117"  onClick='if (this.checked) {RowSelect(a91799117,1)} else {RowSelect(a91799117,0)}'><div id="pdf_91799117" name="pdf_91799117"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91799117"><b><span style="line-height:1.0;">НАНОМОДИФИКАЦИЯ ВЫСОКОПРОЧНЫХ ЦЕМЕНТОВ НИЗКОЙ ВОДОПОТРЕБНОСТИ ДОБАВКАМИ КРЕМНЕЗОЛЯ И НАНОПЛАСТИНАМИ ГРАФЕНА</span></b></a><br><font color=#00008f><i>Гуляков Е.Г., Хозин В.Г., Боровских И.В., Кропачев Р.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91718858">Известия Казанского государственного архитектурно-строительного университета</a>. 
+2026. <a href="/contents.asp?id=91718858&selid=91799117">№&nbsp;1&nbsp;(75)</a>.  С. 51-63.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a81710172">
+<td align=center valign=top><font color=#00008f><b>169</b></font><br><input type=checkbox name="tid81710172" id="tid81710172"  onClick='if (this.checked) {RowSelect(a81710172,1)} else {RowSelect(a81710172,0)}'><div id="pdf_81710172" name="pdf_81710172"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=81710172"><b><span style="line-height:1.0;">ОЦІНКА ВЗАЄМОДІЇ ОКИСНЕНОГО ГРАФЕНУ З МЕМБРАНАМИ ЕРИТРОЦИТІВ І БІЛКАМИ ПЛАЗМИ КРОВІ ЩУРІВ МЕТОДОМ СПІНОВИХ ЗОНДІВ</span></b></a><br><font color=#00008f><i>Картель М.Т., Іванов Л.В., Карачевцев В.О., Ляпунов О.М., Нардід О.А., Черкашина Я.О., Леонтьєв В.С., Іванов О.Ю.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=81664808">Доклады Национальной академии наук Украины</a>. 
+2024. <a href="/contents.asp?id=81664808&selid=81710172">№&nbsp;8</a>.  С. 71-79.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a80585489">
+<td align=center valign=top><font color=#00008f><b>170</b></font><br><input type=checkbox name="tid80585489" id="tid80585489"  onClick='if (this.checked) {RowSelect(a80585489,1)} else {RowSelect(a80585489,0)}'><div id="pdf_80585489" name="pdf_80585489"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80585489"><b><span style="line-height:1.0;">ОКСИДЫ ГРАФЕНА, КАК СОРБЕНТЫ ДЛЯ ОЧИСТКИ И РАЗДЕЛЕНИЯ ЖИДКОСТЕЙ: ФИЗИКО-ХИМИЧЕСКОЕ ИССЛЕДОВАНИЕ</span></b></a><br><font color=#00008f><i>Каплин А.В., Еремина Е.А., Иванов А.В., Дивицкая Д.А., Авдеев В.В., Аствацатуров Д.А., Дворяк С.В., Хрыкина О.Н., Филиппова Т.В., Коробов М.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=80585479">Журнал технической физики</a>. 
+2025. Т. 95. <a href="/contents.asp?id=80585479&selid=80585489">№&nbsp;3</a>.  С. 512-519.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a50461708">
+<td align=center valign=top><font color=#00008f><b>171</b></font><br><input type=checkbox name="tid50461708" id="tid50461708"  onClick='if (this.checked) {RowSelect(a50461708,1)} else {RowSelect(a50461708,0)}'><div id="pdf_50461708" name="pdf_50461708"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50461708"><b><span style="line-height:1.0;">ОЧИСТКА ВОДНЫХ СРЕД ОТ ИОНОВ СВИНЦА КРИОГЕЛЕМ НА ОСНОВЕ ОКСИДА ГРАФЕНА, МОДИФИЦИРОВАННОГО ЛИГНОСУЛЬФОНАТОМ: КИНЕТИЧЕСКИЕ ИССЛЕДОВАНИЯ</span></b></a><br><font color=#00008f><i>Мкртчян Э.С., Ананьева О.А., Буракова И.В., Меметова А.Е., Бураков А.Е., Ткачев А.Г.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=50461703">Физикохимия поверхности и защита материалов</a>. 
+2023. Т. 59. <a href="/contents.asp?id=50461703&selid=50461708">№&nbsp;2</a>.  С. 139-144.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a87418005">
+<td align=center valign=top><font color=#00008f><b>172</b></font><br><input type=checkbox name="tid87418005" id="tid87418005"  onClick='if (this.checked) {RowSelect(a87418005,1)} else {RowSelect(a87418005,0)}'><div id="pdf_87418005" name="pdf_87418005"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=87418005"><b><span style="line-height:1.0;">МОДЕЛИРОВАНИЕ МУАРОВОЙ СТРУКТУРЫ ГРАФЕНА НА ПОДЛОЖКЕ IR(111) МЕТОДОМ МОНТЕ-КАРЛО</span></b></a><br><font color=#00008f><i>Белим С.В., Тихомиров И.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=87417996">Поверхность. Рентгеновские, синхротронные и нейтронные исследования</a>. 
+2025. <a href="/contents.asp?id=87417996&selid=87418005">№&nbsp;6</a>.  С. 62-70.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a91229028">
+<td align=center valign=top><font color=#00008f><b>173</b></font><br><input type=checkbox name="tid91229028" id="tid91229028"  onClick='if (this.checked) {RowSelect(a91229028,1)} else {RowSelect(a91229028,0)}'><div id="pdf_91229028" name="pdf_91229028"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91229028"><b><span style="line-height:1.0;">ОПРЕДЕЛЕНИЕ КОЛИЧЕСТВА ГРАФЕНА ПО СПЕКТРАМ КОМБИНАЦИОННОГО РАССЕЯНИЯ ТВЕРДОФАЗНОЙ УГЛЕРОДНОЙ СМЕСИ</span></b></a><br><font color=#00008f><i>Доломатов М.Ю., Левашов Д.А., Вершинин С.С., Субханкулов В.Р., Доломатова М.М., Белотелов О.А., Абдульминев К.Г.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91229027">Материаловедение</a>. 
+2026. <a href="/contents.asp?id=91229027&selid=91229028">№&nbsp;5</a>.  С. 3-8.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a54385486">
+<td align=center valign=top><font color=#00008f><b>174</b></font><br><input type=checkbox name="tid54385486" id="tid54385486"  onClick='if (this.checked) {RowSelect(a54385486,1)} else {RowSelect(a54385486,0)}'><div id="pdf_54385486" name="pdf_54385486"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54385486"><b><span style="line-height:1.0;">ПОЛЯРИЗАЦИОННЫЕ СВОЙСТВА ЙОДНО-ПОЛИВИНИЛСПИРТОВЫХ ПОЛЯРИЗАТОРОВ, СЕНСИБИЛИЗИРОВАННЫХ ОКСИДОМ ГРАФЕНА</span></b></a><br><font color=#00008f><i>Лихоманова С.В., Зубцова Ю.А., Каманина Н.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54385472">Оптический журнал</a>. 
+2023. Т. 90. <a href="/contents.asp?id=54385472&selid=54385486">№&nbsp;7</a>.  С. 101-106.
+</span>
+
+</td><td align=center valign=middle>11</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a84219332">
+<td align=center valign=top><font color=#00008f><b>175</b></font><br><input type=checkbox name="tid84219332" id="tid84219332"  onClick='if (this.checked) {RowSelect(a84219332,1)} else {RowSelect(a84219332,0)}'><div id="pdf_84219332" name="pdf_84219332"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=84219332"><b><span style="line-height:1.0;">СПИНТРОННЫЕ ТГЦ ЭМИТТЕРЫ НА ОСНОВЕ ГРАФЕНА И АНТИФЕРРОМАГНЕТИКОВ</span></b></a><br><font color=#00008f><i>Алферьев А.Л., Горбатова А.В., Булавинцева Е.А., Карцев А.И., Климов А.А., Буряков А.М., Гусев Н.С., Сапожников М.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=84219330">Журнал радиоэлектроники</a>. 
+2025. <a href="/contents.asp?id=84219330&selid=84219332">№&nbsp;11</a>. 
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a82285485">
+<td align=center valign=top><font color=#00008f><b>176</b></font><br><input type=checkbox name="tid82285485" id="tid82285485"  onClick='if (this.checked) {RowSelect(a82285485,1)} else {RowSelect(a82285485,0)}'><div id="pdf_82285485" name="pdf_82285485"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82285485"><b><span style="line-height:1.0;">ЭКСПЕРИМЕНТАЛЬНОЕ ИССЛЕДОВАНИЕ МЕХАНИЧЕСКИХ И ФИЗИЧЕСКИХ СВОЙСТВ КОМПОЗИТОВ С МЕТАЛЛИЧЕСКОЙ МАТРИЦЕЙ НА ОСНОВЕ MG, АРМИРОВАННОЙ НАНОЧАСТИЦАМИ ГРАФЕНА</span></b></a><br><font color=#00008f><i>Шарма С.К., Шарма Л.К.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82285480">Металловедение и термическая обработка металлов</a>. 
+2025. <a href="/contents.asp?id=82285480&selid=82285485">№&nbsp;4&nbsp;(838)</a>.  С. 34-39.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a54493870">
+<td align=center valign=top><font color=#00008f><b>177</b></font><br><input type=checkbox name="tid54493870" id="tid54493870"  onClick='if (this.checked) {RowSelect(a54493870,1)} else {RowSelect(a54493870,0)}'><div id="pdf_54493870" name="pdf_54493870"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54493870"><b><span style="line-height:1.0;">ВЛИЯНИЕ СПОСОБА ВВЕДЕНИЯ ГРАФЕНА НА ФИЗИКО-МЕХАНИЧЕСКИЕ ХАРАКТЕРИСТИКИ ТЕРМОЭЛАСТОПЛАСТА</span></b></a><br><font color=#00008f><i>Тимошенко М.В., Балабанов С.В., Сычев М.М.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54493831">Физика и химия стекла</a>. 
+2023. Т. 49. <a href="/contents.asp?id=54493831&selid=54493870">№&nbsp;5</a>.  С. 546-553.
+</span>
+
+</td><td align=center valign=middle>3</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a89068867">
+<td align=center valign=top><font color=#00008f><b>178</b></font><br><input type=checkbox name="tid89068867" id="tid89068867"  onClick='if (this.checked) {RowSelect(a89068867,1)} else {RowSelect(a89068867,0)}'><div id="pdf_89068867" name="pdf_89068867"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=89068867"><b><span style="line-height:1.0;">РАЗРАБОТКА И ИССЛЕДОВАНИЕ ИМПЕДИМЕТРИЧЕСКОГО ИММУНОСЕНСОРА НА ОСНОВЕ ВОССТАНОВЛЕННОГО ОКСИДА ГРАФЕНА</span></b></a><br><font color=#00008f><i>Епифанова Е.И., Ситков Н.О.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=89068832">Наука настоящего и будущего</a>. 
+2025. Т. 3.  С. 137-140.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a89244676">
+<td align=center valign=top><font color=#00008f><b>179</b></font><br><input type=checkbox name="tid89244676" id="tid89244676"  onClick='if (this.checked) {RowSelect(a89244676,1)} else {RowSelect(a89244676,0)}'><div id="pdf_89244676" name="pdf_89244676"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=89244676"><b><span style="line-height:1.0;">ЭЛЕКТРОФИЗИЧЕСКИЕ СВОЙСТВА ГИБРИДНЫХ ГРАФЕН-НАНОТРУБНЫХ КВАЗИ-2D-СТРУКТУР</span></b></a><br><font color=#00008f><i>Слепченков М.М., Барков П.В., Глухова О.Е.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=89217862">Физика твердого тела</a>. 
+2025. Т. 67. <a href="/contents.asp?id=89217862&selid=89244676">№&nbsp;12</a>.  С. 2430-2434.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a75135932">
+<td align=center valign=top><font color=#00008f><b>180</b></font><br><input type=checkbox name="tid75135932" id="tid75135932"  onClick='if (this.checked) {RowSelect(a75135932,1)} else {RowSelect(a75135932,0)}'><div id="pdf_75135932" name="pdf_75135932"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=75135932"><b><span style="line-height:1.0;">ВЛИЯНИЕ ТЕМПЕРАТУРНОГО ВОЗДЕЙСТВИЯ НА ХИМИЧЕСКУЮ РЕАКЦИЮ РАСПАДА ФТОРИДА ГРАФЕНА В ПОРОХЕ ПРИ ЕГО ГОРЕНИИ</span></b></a><br><font color=#00008f><i>Бакланов Д.В., Минаков Е.И., Тычков А.Ю., Васильев И.М., Пониматкин В.П.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=75135892">Известия Тульского государственного университета. Технические науки</a>. 
+2024. <a href="/contents.asp?id=75135892&selid=75135932">№&nbsp;9</a>.  С. 188-195.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a79729481">
+<td align=center valign=top><font color=#00008f><b>181</b></font><br><input type=checkbox name="tid79729481" id="tid79729481"  onClick='if (this.checked) {RowSelect(a79729481,1)} else {RowSelect(a79729481,0)}'><div id="pdf_79729481" name="pdf_79729481"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=79729481"><b><span style="line-height:1.0;">ГРАФЕН ДЛЯ ОХОЛОДЖЕННЯ РАКЕТНОГО ДВИГУНА, ТЕПЛОЗАХИСТУ ГОЛОВНОГО ОБТІЧНИКА</span></b></a><br><font color=#00008f><i>Зелений В.П., Носова Т.В., Мамчур С.І.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=69002500">Journal of Rocket-Space Technology</a>. 
+2024. Т. 33. <a href="/contents.asp?id=69002500&selid=79729481">№&nbsp;4</a>.  С. 59-62.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a91648409">
+<td align=center valign=top><font color=#00008f><b>182</b></font><br><input type=checkbox name="tid91648409" id="tid91648409"  onClick='if (this.checked) {RowSelect(a91648409,1)} else {RowSelect(a91648409,0)}'><div id="pdf_91648409" name="pdf_91648409"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91648409"><b><span style="line-height:1.0;">ОСОБЕННОСТИ ТЕРМИЧЕСКОГО ПОВЕДЕНИЯ НАНОКРИСТАЛЛИЧЕСКОГО СEO<SUB>2</SUB> В ПРИСУТСТВИИ БЕСКИСЛОРОДНОГО ГРАФЕНА</span></b></a><br><font color=#00008f><i>Пономарев И.В., Трусова Е.А., Лысенков А.С., Румянцев Б.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91648406">Перспективные материалы</a>. 
+2026. <a href="/contents.asp?id=91648406&selid=91648409">№&nbsp;6</a>.  С. 26-38.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a91565166">
+<td align=center valign=top><font color=#00008f><b>183</b></font><br><input type=checkbox name="tid91565166" id="tid91565166"  onClick='if (this.checked) {RowSelect(a91565166,1)} else {RowSelect(a91565166,0)}'><div id="pdf_91565166" name="pdf_91565166"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91565166"><b><span style="line-height:1.0;">ИССЛЕДОВАНИЕ ЭФФЕКТИВНОСТИ CPU И GPU В МОДЕЛИРОВАНИИ СИСТЕМ ЭЛЕКТРОЛИТ/ГРАФЕН/МЕТАЛЛ МЕТОДОМ JDFT</span></b></a><br><font color=#00008f><i>Гордиенко Д.В., Павлов С.В., Кисленко В.А., Кисленко С.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91565159">Вестник Объединенного института высоких температур</a>. 
+2026. Т. 21. <a href="/contents.asp?id=91565159&selid=91565166">№&nbsp;1</a>.  С. 31-37.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88953436">
+<td align=center valign=top><font color=#00008f><b>184</b></font><br><input type=checkbox name="tid88953436" id="tid88953436"  onClick='if (this.checked) {RowSelect(a88953436,1)} else {RowSelect(a88953436,0)}'><div id="pdf_88953436" name="pdf_88953436"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88953436"><b><span style="line-height:1.0;">ЗОННАЯ СТРУКТУРА НАПРЯЖЕННО-ДЕФОРМИРОВАННОГО ГРАФЕНА</span></b></a><br><font color=#00008f><i>Бондарь А.С., Лебедева О.С., Лебедев Н.Г.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=88953431">Математическая физика и компьютерное моделирование</a>. 
+2025. Т. 28. <a href="/contents.asp?id=88953431&selid=88953436">№&nbsp;4</a>.  С. 107-119.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a82738946">
+<td align=center valign=top><font color=#00008f><b>185</b></font><br><input type=checkbox name="tid82738946" id="tid82738946"  onClick='if (this.checked) {RowSelect(a82738946,1)} else {RowSelect(a82738946,0)}'><div id="pdf_82738946" name="pdf_82738946"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82738946"><b><span style="line-height:1.0;">ИССЛЕДОВАНИЕ ХАРАКТЕРИСТИК УПРАВЛЯЕМЫХ МЕТАПОВЕРХНОСТЕЙ, СОДЕРЖАЩИХ СЛОИ ДИОКСИДА ВАНАДИЯ И ГРАФЕНА</span></b></a><br><font color=#00008f><i>Иванова И.Н., Кравченко В.И., Ячменов А.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82738938">Инфокоммуникационные и радиоэлектронные технологии</a>. 
+2025. Т. 8. <a href="/contents.asp?id=82738938&selid=82738946">№&nbsp;5</a>.  С. 804-820.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a73535346">
+<td align=center valign=top><font color=#00008f><b>186</b></font><br><input type=checkbox name="tid73535346" id="tid73535346"  onClick='if (this.checked) {RowSelect(a73535346,1)} else {RowSelect(a73535346,0)}'><div id="pdf_73535346" name="pdf_73535346"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=73535346"><b><span style="line-height:1.0;">ПОЛУЧЕНИЕ ПОРИСТЫХ ЭЛЕКТРОПРОВОДЯЩИХ КОМПОЗИТОВ НА ОСНОВЕ СОПОЛИУРЕТАНИМИДОВ И НАНОЧАСТИЦ ГРАФЕНА ДЛЯ КЛЕТОЧНЫХ ТЕХНОЛОГИЙ</span></b></a><br><font color=#00008f><i>Диденко А.Л., Камалов А.М., Шишов М.А., Смирнова Н.В., Колбе К.А., Нестерова А.С., Ваганов Г.В., Юдин В.Е., Кудрявцев В.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=73535334">Журнал прикладной химии</a>. 
+2024. Т. 97. <a href="/contents.asp?id=73535334&selid=73535346">№&nbsp;4</a>.  С. 335-346.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a50404837">
+<td align=center valign=top><font color=#00008f><b>187</b></font><br><input type=checkbox name="tid50404837" id="tid50404837"  onClick='if (this.checked) {RowSelect(a50404837,1)} else {RowSelect(a50404837,0)}'><div id="pdf_50404837" name="pdf_50404837"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50404837"><b><span style="line-height:1.0;">ЭФФЕКТ УВЛЕЧЕНИЯ ЭЛЕКТРОНОВ БРИЗЕРОМ В СВЕРХРЕШЕТКЕ НА ОСНОВЕ ГРАФЕНА</span></b></a><br><font color=#00008f><i>Бадикова П.В., Завьялов Д.В., Конченков В.И., Крючков С.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=50404830">Известия Российской академии наук. Серия физическая</a>. 
+2023. Т. 87. <a href="/contents.asp?id=50404830&selid=50404837">№&nbsp;1</a>.  С. 38-43.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a54663493">
+<td align=center valign=top><font color=#00008f><b>188</b></font><br><input type=checkbox name="tid54663493" id="tid54663493"  onClick='if (this.checked) {RowSelect(a54663493,1)} else {RowSelect(a54663493,0)}'><div id="pdf_54663493" name="pdf_54663493"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54663493"><b><span style="line-height:1.0;">ИСПОЛЬЗОВАНИЕ ГРАФЕНА В ЭЛЕКТРОНИКЕ И ЕГО СВОЙСТВА</span></b></a><br><font color=#00008f><i>Бороздин И.Е.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54663491">Студенческий</a>. 
+2023. <a href="/contents.asp?id=54663491&selid=54663493">№&nbsp;31-2&nbsp;(243)</a>.  С. 7-8.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a74530140">
+<td align=center valign=top><font color=#00008f><b>189</b></font><br><input type=checkbox name="tid74530140" id="tid74530140"  onClick='if (this.checked) {RowSelect(a74530140,1)} else {RowSelect(a74530140,0)}'><div id="pdf_74530140" name="pdf_74530140"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=74530140"><b><span style="line-height:1.0;">ОБ ЭЛЕКТРОХИМИЧЕСКОМ ОСАЖДЕНИИ И СВОЙСТВАХ КОМПОЗИЦИОННЫХ ПОКРЫТИЙ НИКЕЛЬ-ОКСИД ГРАФЕНА</span></b></a><br><font color=#00008f><i>Целуйкин В.Н., Джумиева А.С., Яковлев А.В., Тихонов Д.А., Трибис А.И., Неверная О.Г., Стрилец А.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=74530134">Физикохимия поверхности и защита материалов</a>. 
+2024. Т. 60. <a href="/contents.asp?id=74530134&selid=74530140">№&nbsp;3</a>.  С. 270-275.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a65614895">
+<td align=center valign=top><font color=#00008f><b>190</b></font><br><input type=checkbox name="tid65614895" id="tid65614895"  onClick='if (this.checked) {RowSelect(a65614895,1)} else {RowSelect(a65614895,0)}'><div id="pdf_65614895" name="pdf_65614895"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65614895"><b><span style="line-height:1.0;">ПОДХОДЫ К МОДЕЛИРОВАНИЮ МАССОПРОВОДНЫХ ПРОЦЕССОВ В ГЕЛЕ ПРИ НАЛИЧИИ ЧАСТИЦ ОКСИДА ГРАФЕНА</span></b></a><br><font color=#00008f><i>Храмцов Д.П.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=65614842">Наукосфера</a>. 
+2024. <a href="/contents.asp?id=65614842&selid=65614895">№&nbsp;3-2</a>.  С. 308-316.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a59820301">
+<td align=center valign=top><font color=#00008f><b>191</b></font><br><input type=checkbox name="tid59820301" id="tid59820301"  onClick='if (this.checked) {RowSelect(a59820301,1)} else {RowSelect(a59820301,0)}'><div id="pdf_59820301" name="pdf_59820301"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59820301"><b><span style="line-height:1.0;">РОЛЬ ЛИСТОВ ГРАФЕНА В ФОРМИРОВАНИИ ГИБРИДНОЙ СТРУКТУРЫ НА ОСНОВЕ НАНО-СЕО2</span></b></a><br><font color=#00008f><i>Артемова А.Д., Пономарев И.В., Трусова Е.А., Бояринцев А.В., Степанов С.И.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=59820300">Успехи в химии и химической технологии</a>. 
+2023. Т. 37. <a href="/contents.asp?id=59820300&selid=59820301">№&nbsp;9&nbsp;(271)</a>.  С. 6-10.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a79698140">
+<td align=center valign=top><font color=#00008f><b>192</b></font><br><input type=checkbox name="tid79698140" id="tid79698140"  onClick='if (this.checked) {RowSelect(a79698140,1)} else {RowSelect(a79698140,0)}'><div id="pdf_79698140" name="pdf_79698140"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=79698140"><b><span style="line-height:1.0;">МИКРОСТРУКТУРА КОМПОЗИТА МЕДЬ/ГРАФЕН, ПОЛУЧЕННОГО МЕТОДОМ КРУЧЕНИЯ ПОД ВЫСОКИМ ДАВЛЕНИЕМ</span></b></a><br><font color=#00008f><i>Корзникова Г.Ф., Алетдинов А.Ф., Халикова Г.Р.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=79698132">Materials. Technologies. Design</a>. 
+2024. Т. 6. <a href="/contents.asp?id=79698132&selid=79698140">№&nbsp;4&nbsp;(19)</a>.  С. 79-88.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a54803324">
+<td align=center valign=top><font color=#00008f><b>193</b></font><br><input type=checkbox name="tid54803324" id="tid54803324"  onClick='if (this.checked) {RowSelect(a54803324,1)} else {RowSelect(a54803324,0)}'><div id="pdf_54803324" name="pdf_54803324"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54803324"><b><span style="line-height:1.0;">СТРУКТУРА И ФИЗИКО-ХИМИЧЕСКИЕ СВОЙСТВА НАНОСТРУКТУРИРОВАННОГО СОРБЦИОННОГО МАТЕРИАЛА НА ОСНОВЕ ОКСИДА ГРАФЕНА, МОДИФИЦИРОВАННОГО ОРГАНИЧЕСКИМИ ПОЛИМЕРАМИ</span></b></a><br><font color=#00008f><i>Бураков А.Е., Мкртчян Э.С., Буракова И.В., Ананьева О.А., Дьячкова Т.П., Ткачев А.Г.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54803319">Перспективные материалы</a>. 
+2023. <a href="/contents.asp?id=54803319&selid=54803324">№&nbsp;8</a>.  С. 27-36.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a54253856">
+<td align=center valign=top><font color=#00008f><b>194</b></font><br><input type=checkbox name="tid54253856" id="tid54253856"  onClick='if (this.checked) {RowSelect(a54253856,1)} else {RowSelect(a54253856,0)}'><div id="pdf_54253856" name="pdf_54253856"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54253856"><b><span style="line-height:1.0;">ОЦЕНКА КСЕНОБИОТИЧЕСКИХ СВОЙСТВ НАНОЧАСТИЦ ОКИСЛЕННОГО ГРАФЕНА В ОДНОКЛЕТОЧНОЙ ЭУКАРИОТИЧЕСКОЙ ТЕСТ-СИСТЕМЕ</span></b></a><br><font color=#00008f><i>Корочкин Р.Б., Красочко П.А., Понаськов М.А., Ронишенко Б.В., Шманай В.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54253848">Эпизоотология, иммунобиология, фармакология и санитария</a>. 
+2023. <a href="/contents.asp?id=54253848&selid=54253856">№&nbsp;1</a>.  С. 46-52.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a59459240">
+<td align=center valign=top><font color=#00008f><b>195</b></font><br><input type=checkbox name="tid59459240" id="tid59459240"  onClick='if (this.checked) {RowSelect(a59459240,1)} else {RowSelect(a59459240,0)}'><div id="pdf_59459240" name="pdf_59459240"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59459240"><b><span style="line-height:1.0;">РОЛЬ ГРАФЕНА В ФОРМИРОВАНИИ КАТАЛИТИЧЕСКОЙ АКТИВНОСТИ MN-CE-ОКСИДНОГО КОМПОЗИТА В ОКИСЛЕНИИ СО</span></b></a><br><font color=#00008f><i>Климова М.А., Пономарев И.В., Трусова Е.А., Вартанян М.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=59459223">Успехи в химии и химической технологии</a>. 
+2023. Т. 37. <a href="/contents.asp?id=59459223&selid=59459240">№&nbsp;5&nbsp;(267)</a>.  С. 53-56.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a53835938">
+<td align=center valign=top><font color=#00008f><b>196</b></font><br><input type=checkbox name="tid53835938" id="tid53835938"  onClick='if (this.checked) {RowSelect(a53835938,1)} else {RowSelect(a53835938,0)}'><div id="pdf_53835938" name="pdf_53835938"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=53835938"><b><span style="line-height:1.0;">МОДЕЛИРОВАНИЕ АДСОРБЦИИ И ДИФФУЗИИ АТОМОВ ЛИТИЯ НА ДЕФЕКТНОМ ГРАФЕНЕ ДЛЯ LI-ИОННОЙ БАТАРЕИ</span></b></a><br><font color=#00008f><i>Асадов М.М., Маммадова С.О., Гусейнова С.С., Мустафаева С.Н., Лукичев В.Ф.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=53835923">Микроэлектроника</a>. 
+2023. Т. 52. <a href="/contents.asp?id=53835923&selid=53835938">№&nbsp;3</a>.  С. 207-226.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a58801766">
+<td align=center valign=top><font color=#00008f><b>197</b></font><br><input type=checkbox name="tid58801766" id="tid58801766"  onClick='if (this.checked) {RowSelect(a58801766,1)} else {RowSelect(a58801766,0)}'><div id="pdf_58801766" name="pdf_58801766"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=58801766"><b><span style="line-height:1.0;">ЭЛЕКТРОН-ЭЛЕКТРОННОЕ ВЗАИМОДЕЙСТВИЕ В ПОДКРУЧЕННОМ ДВУХСЛОЙНОМ ГРАФЕНЕ ПРИ БОЛЬШИХ УГЛАХ ПОДКРУТКИ: ПЕРЕНОРМИРОВКА ПАРАМЕТРОВ ФЕРМИ-ЖИДКОСТИ</span></b></a><br><font color=#00008f><i>Сбойчаков А.О., Рожков А.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=58801764">Современная электродинамика</a>. 
+2023. <a href="/contents.asp?id=58801764&selid=58801766">№&nbsp;5&nbsp;(7)</a>.  С. 4-14.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a53214577">
+<td align=center valign=top><font color=#00008f><b>198</b></font><br><input type=checkbox name="tid53214577" id="tid53214577"  onClick='if (this.checked) {RowSelect(a53214577,1)} else {RowSelect(a53214577,0)}'><div id="pdf_53214577" name="pdf_53214577"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=53214577"><b><span style="line-height:1.0;">МОМЕНТНО-МЕМБРАННАЯ ТЕОРИЯ УПРУГИХ ГИБКИХ ПЛАСТИН КАК КОНТИНУАЛЬНАЯ ГЕОМЕТРИЧЕСКИ НЕЛИНЕЙНАЯ ТЕОРИЯ ЛИСТА ГРАФЕНА</span></b></a><br><font color=#00008f><i>Саркисян С.О.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=53214520">Доклады Российской академии наук. Физика, технические науки</a>. 
+2023. Т. 509. <a href="/contents.asp?id=53214520&selid=53214577">№&nbsp;1</a>.  С. 56-62.
+</span>
+
+</td><td align=center valign=middle>3</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a75994937">
+<td align=center valign=top><font color=#00008f><b>199</b></font><br><input type=checkbox name="tid75994937" id="tid75994937"  onClick='if (this.checked) {RowSelect(a75994937,1)} else {RowSelect(a75994937,0)}'><div id="pdf_75994937" name="pdf_75994937"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=75994937"><b><span style="line-height:1.0;">ПЕРСПЕКТИВЫ ПРИМЕНЕНИЯ ГЕОМОДИФИКАТОРОВ ТРЕНИЯ И ГРАФЕНА В СЕРИЙНОЙ СМАЗКЕ ЛИТОЛ-24</span></b></a><br><font color=#00008f><i>Комарова Т.А., Гвоздев А.А., Мардасов А.С.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=75994844">Физика волокнистых материалов: структура, свойства, наукоемкие технологии и материалы (SMARTEX)</a>. 
+2024. <a href="/contents.asp?id=75994844&selid=75994937">№&nbsp;1</a>.  С. 411-416.
+</span>
+
+</td><td align=center valign=middle>1</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a53742894">
+<td align=center valign=top><font color=#00008f><b>200</b></font><br><input type=checkbox name="tid53742894" id="tid53742894"  onClick='if (this.checked) {RowSelect(a53742894,1)} else {RowSelect(a53742894,0)}'><div id="pdf_53742894" name="pdf_53742894"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=53742894"><b><span style="line-height:1.0;">ОРГАНИЧЕСКАЯ МАКРОМОЛЕКУЛА НА ГРАФЕНЕ СО СТРУКТУРНЫМИ ДЕФЕКТАМИ: ОЦЕНКИ ПЕРЕХОДА ЗАРЯДА И ЭНЕРГИИ АДГЕЗИИ</span></b></a><br><font color=#00008f><i>Давыдов С.Ю.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=53742876">Физика твердого тела</a>. 
+2023. Т. 65. <a href="/contents.asp?id=53742876&selid=53742894">№&nbsp;3</a>.  С. 497-501.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+</table>
+
+
+<table width=580 cellspacing=1 cellpadding=3 border=0 bgcolor=#ffffff>
+<tr align=center valign=middle class="menus">
+<td width=15% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=1">В&nbsp;начало</a></td>
+<td width=10% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=1"><<</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=1">1</a></td>
+
+<td width=5% bgcolor=#5c6aa6 nowrap><font color=#ffffff>2</font></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=3">3</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=4">4</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=5">5</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=6">6</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=7">7</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=8">8</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=9">9</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=10">10</a></td>
+
+<td width=10% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=3">>></a></td>
+<td width=15% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=11">В&nbsp;конец</a></td>
+</tr></table>
+
+</td></tr></table>
+
+
+</td>
+<td width=10>&nbsp;</td>
+<td width=200 align=right valign=top>
+
+<img src="/pic/1pix.gif" vspace=14><br>
+<table width=200 cellspacing=0 cellpadding=3 border=0 bgcolor=#eeeeee>
+<tr><td colspan=2 bgcolor=#555555 valign=middle align=center>
+<font color=#ffffff>Возможные действия</font>
+</td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<a href="query_results.asp?pagenum=3"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="query_results.asp?pagenum=3">Следующая страница</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="query_results.asp?pagenum=1"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="query_results.asp?pagenum=1">Предыдущая страница</a>
+</td></tr>
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:select_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:select_all()">Выделить все публикации на этой странице</a>
+</td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:deselect_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:deselect_all()">Снять выделение</a>
+</td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:itembox_add()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:itembox_add()">Добавить выделенные статьи в подборку:</a></td></tr>
+
+<tr><td colspan=2 align=center><select name="itemboxid" style="width:190px" class="input">
+
+<option value="0" selected>Новая подборка
+</select>&nbsp;</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:itembox_add_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:itembox_add_all()">Добавить все страницы с результатами поиска в указанную выше подборку</a></td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="querybox.asp?scope=current"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="querybox.asp?scope=current">Вернуться к поисковой форме и изменить условия запроса</a></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="querybox.asp?scope=newquery"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="querybox.asp?scope=newquery">Создать новый поисковый запрос</a></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="querybox.asp?scope=infound"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="querybox.asp?scope=infound">Продолжить поиск среди найденных результатов</a></td></tr>
+
+
+
+
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=8><br></td></tr>
+</table><br><br>
+
+</FORM>
+
+<img src="/pic/1pix.gif" vspace=9><br>
+
+
+</td></tr></table>
+</td></tr></table>
+
+<br><br>
+</div>
+</html>

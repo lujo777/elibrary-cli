@@ -1,0 +1,126 @@
+{
+ "meta": {
+  "count": 1,
+  "db_response_time_ms": 19,
+  "page": 1,
+  "per_page": 3,
+  "groups_count": null,
+  "x_query": {
+   "oql": "get works where title has (Противоречивость традиционных представлений об атеросклерозе и эффективности гиполипидемической терапии. Перспективные направления)",
+   "oqo": {
+    "get_rows": "works",
+    "filter_rows": [
+     {
+      "column_id": "display_name.search",
+      "value": "Противоречивость традиционных представлений об атеросклерозе и эффективности гиполипидемической терапии. Перспективные направления",
+      "operator": "has"
+     }
+    ]
+   },
+   "url": "/works?filter=display_name.search:%D0%9F%D1%80%D0%BE%D1%82%D0%B8%D0%B2%D0%BE%D1%80%D0%B5%D1%87%D0%B8%D0%B2%D0%BE%D1%81%D1%82%D1%8C %D1%82%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D1%85 %D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B9 %D0%BE%D0%B1 %D0%B0%D1%82%D0%B5%D1%80%D0%BE%D1%81%D0%BA%D0%BB%D0%B5%D1%80%D0%BE%D0%B7%D0%B5 %D0%B8 %D1%8D%D1%84%D1%84%D0%B5%D0%BA%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D1%81%D1%82%D0%B8 %D0%B3%D0%B8%D0%BF%D0%BE%D0%BB%D0%B8%D0%BF%D0%B8%D0%B4%D0%B5%D0%BC%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B9 %D1%82%D0%B5%D1%80%D0%B0%D0%BF%D0%B8%D0%B8. %D0%9F%D0%B5%D1%80%D1%81%D0%BF%D0%B5%D0%BA%D1%82%D0%B8%D0%B2%D0%BD%D1%8B%D0%B5 %D0%BD%D0%B0%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F&per_page=3"
+  },
+  "cost_usd": 0.001
+ },
+ "results": [
+  {
+   "id": "https://openalex.org/W7119241675",
+   "doi": null,
+   "display_name": "Противоречивость традиционных представлений об атеросклерозе и эффективности гиполипидемической терапии. Перспективные направления",
+   "publication_year": null,
+   "language": null,
+   "open_access": {
+    "is_oa": true,
+    "oa_status": "green",
+    "oa_url": "https://cyberleninka.ru/article/n/protivorechivost-traditsionnyh-predstavleniy-ob-ateroskleroze-i-effektivnosti-gipolipidemicheskoy-terapii-perspektivnye",
+    "any_repository_has_fulltext": true
+   },
+   "authorships": [
+    {
+     "author_position": "first",
+     "author": {
+      "id": "https://openalex.org/A5010038069",
+      "display_name": "Васильев Александр Петрович",
+      "orcid": null,
+      "observed_orcids": []
+     },
+     "is_corresponding": false,
+     "raw_author_name": "Васильев Александр Петрович",
+     "raw_orcid": null
+    },
+    {
+     "author_position": "last",
+     "author": {
+      "id": "https://openalex.org/A5061562870",
+      "display_name": "Стрельцова Нина Николаевна",
+      "orcid": null,
+      "observed_orcids": []
+     },
+     "is_corresponding": false,
+     "raw_author_name": "Стрельцова Нина Николаевна",
+     "raw_orcid": null
+    }
+   ],
+   "best_oa_location": {
+    "id": "pmh:https://cyberleninka.ru/article/n/protivorechivost-traditsionnyh-predstavleniy-ob-ateroskleroze-i-effektivnosti-gipolipidemicheskoy-terapii-perspektivnye",
+    "doi": null,
+    "is_oa": true,
+    "landing_page_url": "https://cyberleninka.ru/article/n/protivorechivost-traditsionnyh-predstavleniy-ob-ateroskleroze-i-effektivnosti-gipolipidemicheskoy-terapii-perspektivnye",
+    "pdf_url": null,
+    "source": {
+     "id": "https://openalex.org/S4306401404",
+     "display_name": "CyberLeninK (CyberLeninka)",
+     "issn_l": null,
+     "issn": null,
+     "is_oa": false,
+     "is_in_doaj": false,
+     "is_core": false,
+     "listed_in": [],
+     "host_organization": null,
+     "host_organization_name": null,
+     "host_organization_lineage": [],
+     "host_organization_lineage_names": [],
+     "type": "repository"
+    },
+    "license": null,
+    "license_id": null,
+    "version": "submittedVersion",
+    "is_accepted": false,
+    "is_published": false,
+    "raw_source_name": null,
+    "raw_type": "text"
+   },
+   "locations": [
+    {
+     "id": "pmh:https://cyberleninka.ru/article/n/protivorechivost-traditsionnyh-predstavleniy-ob-ateroskleroze-i-effektivnosti-gipolipidemicheskoy-terapii-perspektivnye",
+     "doi": null,
+     "is_oa": true,
+     "landing_page_url": "https://cyberleninka.ru/article/n/protivorechivost-traditsionnyh-predstavleniy-ob-ateroskleroze-i-effektivnosti-gipolipidemicheskoy-terapii-perspektivnye",
+     "pdf_url": null,
+     "source": {
+      "id": "https://openalex.org/S4306401404",
+      "display_name": "CyberLeninK (CyberLeninka)",
+      "issn_l": null,
+      "issn": null,
+      "is_oa": false,
+      "is_in_doaj": false,
+      "is_core": false,
+      "listed_in": [],
+      "host_organization": null,
+      "host_organization_name": null,
+      "host_organization_lineage": [],
+      "host_organization_lineage_names": [],
+      "type": "repository"
+     },
+     "license": null,
+     "license_id": null,
+     "version": "submittedVersion",
+     "is_accepted": false,
+     "is_published": false,
+     "raw_source_name": null,
+     "raw_type": "text"
+    }
+   ]
+  }
+ ],
+ "group_by": []
+}
