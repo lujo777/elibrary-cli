@@ -1,0 +1,2291 @@
+
+<html>
+<head>
+<style type="text/css">
+BODY, P, TR, TD, INPUT, SELECT, OPTION, TEXTAREA, UL {font-family: Tahoma, Verdana, Arial Cyr, Arial, Helvetica, sans-serif; font-size: 8pt;}
+A {text-decoration: none; color: #00008f}
+H1 {font-family: Tahoma, Verdana, Arial Cyr, Arial, Helvetica, sans-serif; font-size: 9pt;}
+H2 {font-family: Tahoma, Verdana, Arial Cyr, Arial, Helvetica, sans-serif; font-size: 9pt;}
+FORM, H1, H2 {margin: 0}
+A:hover {color: #ff0000; text-decoration: underline}
+.menus A {color: #ffffff}
+.menus A:hover {color: #ffffff; text-decoration: underline}
+.menub A {color: #000000}
+.expandable {cursor:pointer;}
+img.expandable {filter:alpha(opacity=70); opacity: 0.7;}
+.win_expandable {cursor:pointer}
+.expanded {display:}
+.collapsed {display:none}
+.menug A {color: #555555}
+.redref A {color: #ED1C24}
+P.break {page-break-before: always}
+.input {border: #7f9db9 1px solid; background: #f5f5f5; height: 20px}
+.inputw {border: #7f9db9 1px solid; background: #ffffff; height: 20px}
+.inputr {border: #7f9db9 1px solid; background: #f5f5f5}
+.inputrw {border: #7f9db9 1px solid; background: #ffffff}
+.ast A:hover {text-decoration: none; color: #F26C4F}
+.ast A {font-family: Times New Roman, Garamond, Times, Georgia, serif; font-size: 30pt; color: #F26C4F}
+.astb A:hover {text-decoration: none; color: #00008f}
+.astb A {font-family: Times New Roman, Times, serif; font-size: 30pt; color: #00008f}
+.aster {color: #F26C4F; font-family: Times New Roman, Times, serif; font-size: 16pt; cursor:pointer;}
+.tooltip {
+	background-color:#000;
+	border:1px solid #fff;
+	padding:10px 15px;
+	width:250px;
+	display:none;
+	color:#fff;
+	text-align:left;
+	font-size:8pt;
+	/* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:0 0 10px #000;
+}
+.tooltip A:hover {color: #ffffff; text-decoration: underline}
+.tooltip A {color: #ffffff; text-decoration: underline}
+.redtext {color: #F26C4F;}
+.bluetext {color: #00008f;}
+</style>
+<meta property="og:image" content="https://elibrary.ru/images/elibrary_fb.png" />
+
+<title>Результаты поискового запроса</title>
+
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<SCRIPT LANGUAGE="JavaScript">
+//window.onerror=null;
+w_down=new Image();
+w_down.src="/pic/w_show.gif";
+w_up=new Image();
+w_up.src="/pic/w_hide.gif";
+
+function hideShow(elem,parent) {
+  var child =  document.getElementById(elem);
+  child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+  if (parent.className == "win_expandable") parent.src = child.className == "collapsed" ? w_down.src : w_up.src;
+}
+function RowSelect(row,sel){
+  row.bgColor = sel==1 ? "#dddddd" : "#f5f5f5";
+}
+function show_help(topic){
+  var frm = document.forms["results"];
+  anewwin=window.open("", "addwin", "resizable=yes,scrollbars=yes,height=300,width=500,top=0,left=0");
+  frm.action=topic;
+  frm.target="addwin";
+  frm.submit()
+}
+function select_all(){
+  var frm = document.forms["results"];
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       frm.elements[i].checked=1;
+       document.all.restab.rows["a" + frm.elements[i].name.substring(3, frm.elements[i].name.length)].bgColor = "#dddddd";}
+  }
+}
+function deselect_all(){
+  var frm = document.forms["results"];
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       frm.elements[i].checked=0;
+       document.all.restab.rows["a" + frm.elements[i].name.substring(3, frm.elements[i].name.length)].bgColor = "#f5f5f5";}
+  }
+}
+function itembox_add(){
+  var frm = document.forms["results"];
+  var issel=0;
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       if (frm.elements[i].checked) {issel=1; break}
+    }
+  }
+  if (issel==0) {
+    alert ("Не выделено ни одной статьи")}
+  else {
+    anewwin=window.open("", "dialog", "resizable=no,scrollbars=no,height=200,width=400,top=200,left=200");
+    anewwin.resizeTo(400,200);
+    frm.add_all.value=0;
+    frm.action="itembox_item_add.asp";
+    frm.target="dialog";
+    frm.submit()
+  }
+}
+function itembox_add_all(){
+  var frm = document.forms["results"];
+  anewwin=window.open("", "dialog", "resizable=no,scrollbars=no,height=200,width=400,top=200,left=200");
+  anewwin.resizeTo(400,200);
+  frm.add_all.value=1;
+  frm.action="itembox_item_add.asp";
+  frm.target="dialog";
+  frm.submit()
+}
+function itembox_new(aid,anam){
+  var frm = document.forms["results"];
+  var el = document.createElement("OPTION");
+  el.text=anam;
+  el.value=aid;
+  frm.itemboxid.options[frm.itemboxid.options.length]=el;
+  frm.itemboxid[frm.itemboxid.length-1].selected=true;
+}
+function load_article(id){
+
+  alert("Для доступа к полному тексту необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function url_article(idid, urlnum){
+
+  alerts("Для просмотра документа необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function order_item(id, pr){
+
+  alert("Для заказа полного текста публикации необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+
+var didScroll = false;
+var didScroll2 = false;
+
+function isVisible(tag) {
+    var t = $(tag);
+    var w = $(window);
+    var wt = w.scrollTop();
+    var tt = t.offset().top;
+    var tb = tt + t.height();
+    return ((tb <= wt + w.height()) && (tt >= wt));
+}
+function pdf_icon(b) {
+  if (!b.prop("shown") && isVisible(b)) {
+    b.prop("shown", true);
+    b.load("ispdf.asp?itemid=" + b.attr('name').substring(4) + "&rand=" + Math.random());
+  }
+}
+function get_pdfs(){
+  $('div[id^="pdf_"]:not(prop("shown"))').each(function(){
+    pdf_icon($(this))
+  });
+}
+setInterval(function() {
+  if ( didScroll2 ) {
+	didScroll2=false;
+	get_pdfs();
+    }
+ }, 200);
+
+$(document).ready(function() { 
+
+$(window).scroll(function() {
+     didScroll = true;
+ });
+
+setInterval(function() {
+  if ( didScroll ) {
+	didScroll=false;
+	didScroll2=true;
+    }
+ }, 500);
+
+	didScroll=true;
+})
+	
+</SCRIPT>
+</head>
+
+<body bgcolor=#f5f5f5 onLoad='document.all.loading.style.display="none"; document.all.thepage.style.display=""'>
+
+<div id="loading" style="position:absolute; width:100%; text-align:center; top:300px;">
+Пожалуйста, подождите, <br>пока Ваш запрос будет обработан
+<br><img src="/pic/query_wait.gif" border=0 width=31 height=31 vspace=5></div>
+
+<div id="thepage" style="display: none">
+
+<table width=100% cellpadding=0 cellspacing=0 border=0>
+<tr><td width=100% align=center valign=top>
+
+<table width=970 cellpadding=0 cellspacing=0 border=0 background="/pic/bg5.gif">
+<tr><td width=165 align=left valign=top>
+
+<table border=0 cellspacing=0 cellpadding=0 width=150>
+
+<tr><td><img src="/pic/1pix.gif" vspace=14></td></tr>
+
+<tr><td><a href="/defaultx.asp"><img src="/images/elibrary_logo.gif" width=150 height=33 border=0 title="eLIBRARY.RU - НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА"></a></td></tr>
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_search(){
+if (document.forms["search"].ftext.value.length > 1) {
+  var frm = document.forms["search"];
+  frm.action="/query_results.asp";
+  frm.target="";
+  frm.submit();
+  return false}
+else {
+   alert("Введите не менее двух символов");
+   return false}
+}
+</SCRIPT>
+<FORM name="search" action="/query_results.asp" method=POST onSubmit="return check_search()">
+<input type="hidden" name="where_fulltext" value="on">
+<input type="hidden" name="where_name" value="on">
+<input type="hidden" name="where_abstract" value="on">
+<input type="hidden" name="where_keywords" value="on">
+<input type="hidden" name="where_affiliation" value="">
+<input type="hidden" name="where_references" value="">
+<input type="hidden" name="type_article" value="on">
+<input type="hidden" name="type_disser" value="on">
+<input type="hidden" name="type_book" value="on">
+<input type="hidden" name="type_report" value="on">
+<input type="hidden" name="type_conf" value="on">
+<input type="hidden" name="type_patent" value="on">
+<input type="hidden" name="type_preprint" value="on">
+<input type="hidden" name="type_grant" value="on">
+<input type="hidden" name="type_dataset" value="on">
+<input type="hidden" name="search_freetext" value="">
+<input type="hidden" name="search_morph" value="on">
+<input type="hidden" name="search_fulltext" value="">
+<input type="hidden" name="search_open" value="">
+<input type="hidden" name="search_results" value="">
+<input type="hidden" name="titles_all" value="">
+<input type="hidden" name="authors_all" value="">
+<input type="hidden" name="rubrics_all" value="">
+<input type="hidden" name="queryboxid" value="">
+<input type="hidden" name="itemboxid" value="">
+<input type="hidden" name="begin_year" value="">
+<input type="hidden" name="end_year" value="">
+<input type="hidden" name="issues" value="all">
+<input type="hidden" name="orderby" value="rank">
+<input type="hidden" name="order" value="rev">
+<input type="hidden" name="changed" value="1">
+
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#555555>
+<tr><td width=100% bgcolor=#555555>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#555555 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Поиск в библиотеке</font><td width=15><img src="/pic/w_show.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_search',this)"></td>
+</td></tr></table></td></tr></table>
+<div ID="win_search" class="collapsed">
+
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#eeeeee width=100%>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+<tr><td width=100% align=center valign=top>
+<input type=text name="ftext" value="" size=10 maxlength=255 style="width:120px; border-left: #5c6aa6 1px solid; border-right: #5c6aa6 1px solid; border-top: #5c6aa6 1px solid; border-bottom: #5c6aa6 1px solid"><br>
+<img src="/pic/1pix.gif" vspace=4><br>
+<input type=submit value="Поиск" style="color:#ffffff; width:50px; background:#F26C4F; border-left: #F26C4F 0px solid; border-right: #F26C4F 0px solid; border-top: #F26C4F 0px solid; border-bottom: #F26C4F 0px solid">
+</td></tr>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+</table>
+
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#dddddd class="menub" width=100%>
+<tr valign=middle align=center><td><a href="/querybox.asp?scope=newquery">Расширенный поиск</a></td></tr></table>
+
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#dddddd class="menub" width=100%>
+<tr valign=middle align=center><td><a href="/neural_search.asp">Нейропоиск</a></td></tr></table>
+
+</div>
+
+</FORM>
+
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_all(){
+  jn=0;
+  if (document.forms["login"].login.value==""){jn=1}
+  if (document.forms["login"].password.value==""){jn=1}
+ if (jn==0){return true}
+ if (jn==1){alert("Не указан пароль или имя читателя!");
+            return false}
+}
+</SCRIPT>
+
+<FORM name="login" action="/start_session.asp" method=POST onSubmit="return check_all()">
+<input type=hidden name="rpage" value=https://elibrary.ru/query_results.asp?changed=1&queryid=&ftext=нейронные сети&where_name=on&where_references=&end_year=0&where_abstract=on&queryboxid=0&where_keywords=on&type_patent=on&search_freetext=on&begin_year=0&order=rev&issues=all&orderby=date>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#555555 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Вход в библиотеку</font>
+</td><td width=15><img src="/pic/w_hide.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_login',this)" id="img_login"></td></tr></table></td></tr></table>
+<div ID="win_login" class="expanded">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#5c6aa6 width=100%>
+<tr valign=top><td width=100% bgcolor=#5c6aa6 align=center>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#eeeeee width=100%>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Имя пользователя<br>&nbsp;или адрес эл. почты:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<input type=text name="login" value="" size=10 maxlength=255 style="width:120px; border-left: #5c6aa6 1px solid; border-right: #5c6aa6 1px solid; border-top: #5c6aa6 1px solid; border-bottom: #5c6aa6 1px solid; text-align: center">
+</td></tr>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Пароль:</font></td></tr>
+<tr><td align=center width=100%>
+<input type=password name="password" value="" size=10 maxlength=255 style="width:120px; border-left: #5c6aa6 1px solid; border-right: #5c6aa6 1px solid; border-top: #5c6aa6 1px solid; border-bottom: #5c6aa6 1px solid; text-align: center">
+</td></tr>
+
+<tr><td align=center width=100%>
+<img src="/pic/1pix.gif" vspace=2><br>
+<input type=submit value="Вход" style="color:#ffffff; width:50px; background:#F26C4F; border-left: #F26C4F 0px solid; border-right: #F26C4F 0px solid; border-top: #F26C4F 0px solid; border-bottom: #F26C4F 0px solid">
+</td></tr></table>
+
+<table border=0 cellspacing=0 cellpadding=2 bgcolor=#eeeeee width=100%>
+<tr><td width=14 align=right valign=middle><input type=checkbox name="knowme"></td><td align=left valign=middle nowrap><font color=#00008f>Запомнить меня</font></td></tr>
+<tr><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td><td align=left valign=middle nowrap><a href="/access_terms.asp">Правила доступа</a></td></tr>
+<tr><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td><td align=left valign=middle nowrap><a href="/author_info.asp?isnew=1&rpage=https%3A%2F%2Felibrary%2Eru%2Fquery%5Fresults%2Easp%3Fchanged%3D1%26queryid%3D%26ftext%3D%D0%BD%D0%B5%D0%B9%D1%80%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5+%D1%81%D0%B5%D1%82%D0%B8%26where%5Fname%3Don%26where%5Freferences%3D%26end%5Fyear%3D0%26where%5Fabstract%3Don%26queryboxid%3D0%26where%5Fkeywords%3Don%26type%5Fpatent%3Don%26search%5Ffreetext%3Don%26begin%5Fyear%3D0%26order%3Drev%26issues%3Dall%26orderby%3Ddate">Регистрация</a></td></tr>
+<tr><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td><td align=left valign=middle nowrap><a href="/pass_request.asp">Забыли пароль?</a></td></tr>
+<tr><td colspan=2><img src="/pic/1pix.gif"></td></tr>
+</table>
+</td></tr></table>
+</div>
+</td></tr>
+</FORM>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Навигатор</font>
+</td><td width=15><img src="/pic/w_hide.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_goto',this)"></td></tr></table></td></tr></table>
+<div ID="win_goto" class="expanded">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#5c6aa6 width=100%>
+<tr valign=top><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=2 bgcolor=#eeeeee width=100%>
+
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/titles.asp">ЖУРНАЛЫ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/books.asp">КНИГИ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/patents.asp">ПАТЕНТЫ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/querybox.asp">ПОИСК</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/authors.asp">АВТОРЫ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/orgs.asp">ОРГАНИЗАЦИИ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/keywords.asp">КЛЮЧЕВЫЕ СЛОВА</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/rubrics.asp">РУБРИКАТОР</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+<tr><td align=right valign=middle bgcolor=#eeeeee><a href="/region_compare.asp">РЕГИОНЫ</a></td><td width=14 align=right valign=middle><img src="/pic/tr_gray.gif" border=0 width=5 height=9 hspace=2></td></tr>
+
+
+<tr><td colspan=2 ><img src="/pic/1pix.gif"></td></tr>
+<tr bgcolor=#dddddd align=center valign=middle><td colspan=2 class="menub"><a href="/defaultx.asp">Начальная страница</a></td></tr>
+</table>
+</td></tr></table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function end_session(){
+
+  document.forms["session"].saveuser.value="1";
+
+  document.forms["session"].action="/end_session.asp";
+  document.forms["session"].target="";
+  document.forms["session"].submit()
+}
+</SCRIPT>
+<FORM action="/end_session.asp" method=POST name="session">
+<input type="hidden" name="saveuser" value="1">
+
+
+
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Текущая сессия</font>
+</td><td width=15><img src="/pic/w_show.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_session',this)"></td></tr></table></td></tr></table>
+<div ID="win_session" class="collapsed">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#5c6aa6 width=100%>
+<tr valign=top><td width=100% bgcolor=#5c6aa6 align=center>
+<table border=0 cellspacing=0 cellpadding=1 bgcolor=#eeeeee width=100%>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Имя пользователя:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>Незарегистрированный пользователь</font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Начало работы:</font></td></tr>
+
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>13.10.2026 14:43</font></td></tr>
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Время работы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>00:13</font></td></tr>
+
+<tr><td align=center width=100% bgcolor=#dddddd class="menub">
+<a href="/project_user_office.asp">Личный кабинет</a></td></tr>
+
+<tr><td align=center width=100% bgcolor=#dddddd class="menub">
+<a href="javascript:end_session()">Закрыть сессию</a></td></tr>
+</table>
+</td></tr></table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+</FORM>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Легенда</font>
+</td><td width=15><img src="/pic/w_hide.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_legend',this)"></td></tr></table></td></tr></table>
+<div ID="win_legend" class="expanded">
+
+<table width=100% cellspacing=0 cellpadding=3 border=0 bgcolor=#eeeeee>
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=2><br></td></tr>
+<tr><td width=15% align=right valign=top><img src="/images/download_green.png" width=16 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Доступ к полному тексту документа открыт</font></td></tr>
+<tr><td width=15% align=right valign=top><img src="/images/download_blue.png" width=16 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Полный текст доступен на сайте издателя</font></td></tr>
+<tr><td width=15% align=right valign=top><img src="/images/download_yellow.png" width=16 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Полный текст может быть получен через систему заказа</font></td></tr>
+<tr><td width=15% align=right valign=top><img src="/images/download_orange.png" width=16 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Доступ к полному тексту закрыт</font></td></tr>
+<tr><td valign=top align=center><font color=#00008f>-</font></td><td align=left><font color=#00008f>Если иконки нет - полный текст документа отсутствует в НЭБ</font></td></tr>
+
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=2><br></td></tr>
+</table>
+
+</div>
+</td></tr>
+
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Контакты</font>
+</td><td width=15><img src="/pic/w_show.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_contact',this)"></td></tr></table></td></tr></table>
+<div ID="win_contact" class="collapsed">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#eeeeee width=100%>
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=2><br></td></tr>
+<tr valign=top><td width=100% bgcolor=#5c6aa6 align=center>
+<table border=0 cellspacing=0 cellpadding=1 bgcolor=#eeeeee width=100%>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Служба поддержки:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>(7-495) 544-2494 доб. 1<br></font>
+<font color=#00008f><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font></td></tr>
+</td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Издателям журналов:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>(7-495) 544-2494 доб. 2<br></font>
+<font color=#00008f><a href="mailto:publish@elibrary.ru">publish@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Издателям книг:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>(7-495) 544-2494 доб. 3<br></font>
+<font color=#00008f><a href="mailto:book@elibrary.ru">book@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Издателям (Science Space):</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:info@sciencespace.ru">info@sciencespace.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Организациям (Science Index):</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:org@scienceindex.ru">org@scienceindex.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Доступ к API:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:api@elibrary.ru">api@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Подписчикам:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 6<br></font>
+<font color=#00008f><a href="mailto:sales.team@elibrary.ru">sales.team@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+<font color=#000000>Конференции и семинары:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7(495) 544-2494 доб. 7<br></font>
+<font color=#00008f><a href="mailto:conf@elibrary.ru">conf@elibrary.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Почтовый адрес:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>117246, г. Москва, Научный проезд, д. 14А, стр. 3, таунхаус 1</font><br><a href="/contact_new.asp"><b>схема проезда</b></a></font></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Веб-сайт:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://elibrary.ru">https://elibrary.ru</a></font></td></tr>
+<tr><td width=100% align=center valign=top>
+</td></tr>
+
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Размещение рекламы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:reklama@elibrary.ru">reklama@elibrary.ru</a></font></td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=1></td></tr>
+
+<tr><td width=100% align=left valign=top bgcolor=#dddddd>
+&nbsp;<font color=#000000>Вакансии:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:info@elibrary.ru">info@elibrary.ru</a></font></td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=1></td></tr>
+
+</table>
+</td></tr>
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=2><br></td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<table border=0 cellspacing=0 cellpadding=0 width=100% bgcolor=#5c6aa6>
+<tr><td width=100% bgcolor=#5c6aa6>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#5c6aa6 width=100%>
+<tr valign=middle align=center><td width=135><font color=#ffffff>Копирайт</font>
+</td><td width=15><img src="/pic/w_show.gif" width=12 height=12 class="win_expandable" onClick="hideShow('win_copyright',this)"></td></tr></table></td></tr></table>
+<div ID="win_copyright" class="collapsed">
+<table border=0 cellspacing=0 cellpadding=0 bgcolor=#5c6aa6 width=100%>
+<tr valign=top><td width=100% bgcolor=#5c6aa6 align=center>
+<table border=0 cellspacing=0 cellpadding=3 bgcolor=#eeeeee width=100%>
+<tr><td width=100% align=center valign=top bgcolor=#eeeeee>
+<img src="/pic/1pix.gif" vspace=2><br><font color=#00008f><a href="/copyright.asp">&copy; 2000-2026<br>ООО НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА</a></font><br><img src="/pic/1pix.gif" vspace=2></td></tr>
+<tr><td align=center width=100% bgcolor=#dddddd class="menub"><a href="/copyright.asp">
+Все права защищены.</a></td></tr>
+
+</table>
+</td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+
+<!-- Yandex.Metrika -->
+<div style="display:none;"><script type="text/javascript">
+(function(w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter171463 = new Ya.Metrika(171463);
+        } catch(e) {}
+    });
+})(window, 'yandex_metrika_callbacks');
+</script></div>
+<script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script>
+<noscript><div style="position:absolute"><img src="//mc.yandex.ru/watch/171463" alt="" /></div></noscript>
+<!-- /Yandex.Metrika -->
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9339902-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })();
+</script>
+
+
+</td></tr>
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+
+
+
+</table>
+
+</td><td width=580 align=center valign=top>
+
+
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+
+<tr><td width=100% align=center valign=top>
+<img src="/pic/1pix.gif" vspace=6><br>
+
+
+<table border=0 cellspacing=0 cellpadding=0 width=580>
+<FORM method=post name="results" action="query_results.asp">
+<input type="hidden" name="add_all" value="">
+<input type="hidden" name="paysum" value="">
+<input type="hidden" name="payitemid" value="">
+<input type="hidden" name="id" value="">
+<input type="hidden" name="authorid" value="">
+<input type="hidden" name="did" value="1">
+<input type="hidden" name="urlnum" value="1">
+
+<tr><td width=10 height=14></td>
+<td width=75 height=65 rowspan=5 align=center valign=middle>
+<table width=100% height=100% border=0 cellspacing=1 cellpadding=0 bgcolor=#ffffff>
+<tr><td width=100% height=100% bgcolor=#eeeeee align=center valign=middle><img src="images/menu_journ.jpg" width=73 height=63 border=0 style="filter:alpha(opacity=70)" onMouseover="this.filters.alpha.opacity=90" onMouseout="this.filters.alpha.opacity=70"></td></tr></table></td>
+<td width=495></td></tr>
+<tr><td bgcolor=#555555><img src="/pic/1pix.gif"></td>
+<td height=19 align=right valign=middle bgcolor=#555555><font color=#ffffff><b>РЕЗУЛЬТАТЫ ПОИСКОВОГО ЗАПРОСА</b><img src="/pic/1pix.gif" hspace=10></font></td></tr>
+<tr><td height=1 bgcolor=#ffffff></td><td bgcolor=#ffffff></td></tr>
+<tr><td height=14 bgcolor=#dddddd></td><td bgcolor=#f5f5f5 background="/pic/line1_gr.gif"></td></tr>
+<tr><td height=9></td><td></td></tr>
+</table>
+</td></tr>
+
+<tr><td width=100% align=center valign=top>
+
+<img src="/pic/1pix.gif" vspace=3><br>
+<b><font color=#00008f>&nbsp;&nbsp;&nbsp;ВСЕГО НАЙДЕНО ПУБЛИКАЦИЙ: </font><font color=#ff0000>27920</font><font color=#00008f> из </font><font color=#ff0000>82293065</font></font></b><br>
+
+<img src="/pic/1pix.gif" vspace=3><br>
+
+
+
+
+
+<table width=580 cellspacing=1 cellpadding=3 bgcolor=#ffffff id="restab">
+<tr align=center valign=middle>
+<td width=30 bgcolor=#555555><font color=#ffffff>№</font></td>
+<td width=520 bgcolor=#555555><font color=#ffffff>Публикация</font></td>
+<td width=30 bgcolor=#555555><font color=#ffffff>Цит.</font></td></tr>
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918718">
+<td align=center valign=top><font color=#00008f><b>1</b></font><br><input type=checkbox name="tid88918718" id="tid88918718"  onClick='if (this.checked) {RowSelect(a88918718,1)} else {RowSelect(a88918718,0)}'><div id="pdf_88918718" name="pdf_88918718"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918718"><b><span style="line-height:1.0;">ПРОГРАММА МНОГОКРИТЕРИАЛЬНОЙ ОПТИМИЗАЦИИ МАРШРУТА МОНИТОРИНГА СЕТИ ЛЭП С ИСПОЛЬЗОВАНИЕМ БПЛА НА ОСНОВЕ МОДЕЛИ ПОВЕДЕНИЯ ДОЖДЕВЫХ ЧЕРВЕЙ</span></b></a><br><font color=#00008f><i>Борисов В.В., Булыгина О.В., Зубарева В.Н., Соколов А.М.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610196, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025697041&nbsp;от&nbsp;16.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918557">
+<td align=center valign=top><font color=#00008f><b>2</b></font><br><input type=checkbox name="tid88918557" id="tid88918557"  onClick='if (this.checked) {RowSelect(a88918557,1)} else {RowSelect(a88918557,0)}'><div id="pdf_88918557" name="pdf_88918557"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918557"><b><span style="line-height:1.0;">ВСТРОЕННОЕ ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ДЛЯ ОДНОФАЗНЫХ МНОГОФУНКЦИОНАЛЬНЫХ СЧЕТЧИКОВ ЭЛ. ЭНЕРГИИ ПУЛЬСАР В КОМПАКТНОМ И СПЛИТ КОРПУСАХ</span></b></a><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610035, 12.01.2026.
+ Заявка&nbsp;№&nbsp;2025692119&nbsp;от&nbsp;13.11.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918620">
+<td align=center valign=top><font color=#00008f><b>3</b></font><br><input type=checkbox name="tid88918620" id="tid88918620"  onClick='if (this.checked) {RowSelect(a88918620,1)} else {RowSelect(a88918620,0)}'><div id="pdf_88918620" name="pdf_88918620"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918620"><b><span style="line-height:1.0;">U-NET С ПОДХОДОМ EXTREME LEARNER В СЕГМЕНТАЦИИ ИЗОБРАЖЕНИЙ СОСУДОВ СЕТЧАТКИ</span></b></a><br><font color=#00008f><i>Аль-Мешхедани А.Ф.С., Медведев А.Н., Медведева М.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610098, 12.01.2026.
+ Заявка&nbsp;№&nbsp;2025697658&nbsp;от&nbsp;22.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918540">
+<td align=center valign=top><font color=#00008f><b>4</b></font><br><input type=checkbox name="tid88918540" id="tid88918540"  onClick='if (this.checked) {RowSelect(a88918540,1)} else {RowSelect(a88918540,0)}'><div id="pdf_88918540" name="pdf_88918540"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918540"><b><span style="line-height:1.0;">ИСКРА ЭМТЭКС</span></b></a><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610018, 12.01.2026.
+ Заявка&nbsp;№&nbsp;2025697183&nbsp;от&nbsp;24.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88916961">
+<td align=center valign=top><font color=#00008f><b>5</b></font><br><input type=checkbox name="tid88916961" id="tid88916961"  onClick='if (this.checked) {RowSelect(a88916961,1)} else {RowSelect(a88916961,0)}'><div id="pdf_88916961" name="pdf_88916961"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88916961"><b><span style="line-height:1.0;">БАЗА ДАННЫХ ЗВУКОВ ДЛЯ КЛАССИФИКАЦИИ ЭКСТРЕННЫХ СИТУАЦИЙ НА ПЕРЕКРЕСТКАХ</span></b></a><br><font color=#00008f><i>Аптинова Д.Л., Келлер А.В., Макарова Д.А., Медедов М., Фурлетов Ю.М., Шадрин С.С.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации базы данных RU&nbsp;2026620112, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025626397&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88917029">
+<td align=center valign=top><font color=#00008f><b>6</b></font><br><input type=checkbox name="tid88917029" id="tid88917029"  onClick='if (this.checked) {RowSelect(a88917029,1)} else {RowSelect(a88917029,0)}'><div id="pdf_88917029" name="pdf_88917029"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88917029"><b><span style="line-height:1.0;">БАЗА ГРАФ-СТРУКТУРИРОВАННЫХ ГЕОЛОГИЧЕСКИХ ДАННЫХ МЕСТОРОЖДЕНИЯ БРЮГГЕ</span></b></a><br><font color=#00008f><i>Мерзликин Б.С., Шишаев Г.Ю., Исмагилов Р.Р., Веткина А.В., Чумакова Л.С., Рукавишников В.С., Левочко Е.Г.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации базы данных RU&nbsp;2026620181, 16.01.2026.
+ Заявка&nbsp;№&nbsp;2025626456&nbsp;от&nbsp;26.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918727">
+<td align=center valign=top><font color=#00008f><b>7</b></font><br><input type=checkbox name="tid88918727" id="tid88918727"  onClick='if (this.checked) {RowSelect(a88918727,1)} else {RowSelect(a88918727,0)}'><div id="pdf_88918727" name="pdf_88918727"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918727"><b><span style="line-height:1.0;">«МОДУЛЬ КЛАСТЕРИЗАЦИИ КОММЕНТАРИЕВ ПОЛЬЗОВАТЕЛЕЙ ГРУПП СООБЩЕСТВ СОЦИАЛЬНОЙ СЕТИ ВКОНТАКТЕ»</span></b></a><br><font color=#00008f><i>Пилипенко С.А., Бонч-Бруевич А.М., Джунковский А.В., Ваничкина А.С., Заминалов А.М., Васильев Д.С.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610205, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025696736&nbsp;от&nbsp;16.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88916966">
+<td align=center valign=top><font color=#00008f><b>8</b></font><br><input type=checkbox name="tid88916966" id="tid88916966"  onClick='if (this.checked) {RowSelect(a88916966,1)} else {RowSelect(a88916966,0)}'><div id="pdf_88916966" name="pdf_88916966"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88916966"><b><span style="line-height:1.0;">«БАЗА АНАЛИТИЧЕСКИХ ДАННЫХ TALENTTEST ИНТЕРВЬЮ»</span></b></a><br><font color=#00008f><i>Дубровин В.В.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации базы данных RU&nbsp;2026620117, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025623888&nbsp;от&nbsp;24.09.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918962">
+<td align=center valign=top><font color=#00008f><b>9</b></font><br><input type=checkbox name="tid88918962" id="tid88918962"  onClick='if (this.checked) {RowSelect(a88918962,1)} else {RowSelect(a88918962,0)}'><div id="pdf_88918962" name="pdf_88918962"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918962"><b><span style="line-height:1.0;">ВЕБ-СИСТЕМА ДЛЯ ОБУЧЕНИЯ, ТЕСТИРОВАНИЯ И ВИЗУАЛИЗАЦИИ РАБОТЫ НЕЙРОННЫХ СЕТЕЙ С ИСПОЛЬЗОВАНИЕМ БИБЛИОТЕКИ BRAIN.JS</span></b></a><br><font color=#00008f><i>Ванюшев А.А., Сытник А.С.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610440, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2026610098&nbsp;от&nbsp;14.01.2026.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918586">
+<td align=center valign=top><font color=#00008f><b>10</b></font><br><input type=checkbox name="tid88918586" id="tid88918586"  onClick='if (this.checked) {RowSelect(a88918586,1)} else {RowSelect(a88918586,0)}'><div id="pdf_88918586" name="pdf_88918586"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918586"><b><span style="line-height:1.0;">«ГРАФИЧЕСКИЙ ПОЛЬЗОВАТЕЛЬСКИЙ ИНТЕРФЕЙС ДЛЯ РЕШЕНИЯ ЗАДАЧ КЛАССИФИКАЦИИ И СЕГМЕНТАЦИИ ИЗОБРАЖЕНИЙ»</span></b></a><br><font color=#00008f><i>Бастракова М.В., Ивлев А.Д., Линев А.В.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610064, 12.01.2026.
+ Заявка&nbsp;№&nbsp;2025696798&nbsp;от&nbsp;22.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918655">
+<td align=center valign=top><font color=#00008f><b>11</b></font><br><input type=checkbox name="tid88918655" id="tid88918655"  onClick='if (this.checked) {RowSelect(a88918655,1)} else {RowSelect(a88918655,0)}'><div id="pdf_88918655" name="pdf_88918655"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918655"><b><span style="line-height:1.0;">МОДУЛЬ СКАНИРОВАНИЯ И СБОРА ДАННЫХ О КОШЕЛЬКАХ И ТРАНЗАКЦИЯХ СЕТИ BITCOIN</span></b></a><br><font color=#00008f><i>Басыня Е.А., Карапетьянц Н.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610133, 12.01.2026.
+ Заявка&nbsp;№&nbsp;2025696890&nbsp;от&nbsp;18.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918543">
+<td align=center valign=top><font color=#00008f><b>12</b></font><br><input type=checkbox name="tid88918543" id="tid88918543"  onClick='if (this.checked) {RowSelect(a88918543,1)} else {RowSelect(a88918543,0)}'><div id="pdf_88918543" name="pdf_88918543"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918543"><b><span style="line-height:1.0;">«ПРОГРАММНЫЙ МОДУЛЬ ДЛЯ ОПТИМИЗАЦИИ ЭЛЕКТРИЧЕСКОГО РЕЖИМА РАСПРЕДЕЛИТЕЛЬНОЙ СЕТИ С ПРИМЕНЕНИЕМ ТЕХНОЛОГИИ ИСКУССТВЕННОГО ИНТЕЛЛЕКТА»</span></b></a><br><font color=#00008f><i>Паздерин А.В., Банных П.Ю., Валиев Р.Т., Губин П.Ю.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610021, 12.01.2026.
+ Заявка&nbsp;№&nbsp;2025694989&nbsp;от&nbsp;03.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88917106">
+<td align=center valign=top><font color=#00008f><b>13</b></font><br><input type=checkbox name="tid88917106" id="tid88917106"  onClick='if (this.checked) {RowSelect(a88917106,1)} else {RowSelect(a88917106,0)}'><div id="pdf_88917106" name="pdf_88917106"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88917106"><b><span style="line-height:1.0;">НАБОР КОНЦЕПТУАЛЬНЫХ КАРТ НОВИЧКОВ И ЭКСПЕРТОВ НА ТЕМУ АНАЛИЗ ДАННЫХ В СОЦИАЛЬНЫХ НАУКАХ</span></b></a><br><font color=#00008f><i>Капуза А.В.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации базы данных RU&nbsp;2026620258, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2025626430&nbsp;от&nbsp;25.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918539">
+<td align=center valign=top><font color=#00008f><b>14</b></font><br><input type=checkbox name="tid88918539" id="tid88918539"  onClick='if (this.checked) {RowSelect(a88918539,1)} else {RowSelect(a88918539,0)}'><div id="pdf_88918539" name="pdf_88918539"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918539"><b><span style="line-height:1.0;">АНАЛИЗАТОР ПАРАМЕТРОВ LTE-СЕТИ</span></b></a><br><font color=#00008f><i>Удальцов А.В., Бобров С.В., Ладонкин О.В.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610017, 12.01.2026.
+ Заявка&nbsp;№&nbsp;2025696995&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918936">
+<td align=center valign=top><font color=#00008f><b>15</b></font><br><input type=checkbox name="tid88918936" id="tid88918936"  onClick='if (this.checked) {RowSelect(a88918936,1)} else {RowSelect(a88918936,0)}'><div id="pdf_88918936" name="pdf_88918936"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918936"><b><span style="line-height:1.0;">АВТОМАТИЧЕСКОЕ РАСПОЗНАВАНИЕ ОБЪЕКТОВ И ПРИВЯЗКИ КООРДИНАТ ДЛЯ ОДНОПЛАТНЫХ ВЫЧИСЛИТЕЛЕЙ</span></b></a><br><font color=#00008f><i>Сокольников В.В., Агеев А.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610414, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025697595&nbsp;от&nbsp;19.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918717">
+<td align=center valign=top><font color=#00008f><b>16</b></font><br><input type=checkbox name="tid88918717" id="tid88918717"  onClick='if (this.checked) {RowSelect(a88918717,1)} else {RowSelect(a88918717,0)}'><div id="pdf_88918717" name="pdf_88918717"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918717"><b><span style="line-height:1.0;">ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ АВТОМАТИЧЕСКОГО ПЕРЕКЛЮЧЕНИЯ И КОНТРОЛЯ СОСТОЯНИЯ БЕСПРОВОДНОГО СОЕДИНЕНИЯ</span></b></a><br><font color=#00008f><i>Никитин С.В., Кудряшов К.В.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610195, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025697036&nbsp;от&nbsp;16.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919049">
+<td align=center valign=top><font color=#00008f><b>17</b></font><br><input type=checkbox name="tid88919049" id="tid88919049"  onClick='if (this.checked) {RowSelect(a88919049,1)} else {RowSelect(a88919049,0)}'><div id="pdf_88919049" name="pdf_88919049"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919049"><b><span style="line-height:1.0;">ПРОГРАММА КЛАССИФИКАЦИИ ПАТТЕРНОВ ЦЕЛЕВЫХ ОДОРАНТОВ БИОЭЛЕКТРИЧЕСКОЙ АКТИВНОСТИ ОБОНЯТЕЛЬНОЙ ЛУКОВИЦЫ КРЫСЫ В СВОБОДНОМ ПОВЕДЕНИИ НА ОСНОВЕ СВЕРТОЧНОЙ СЕТИ С ИНТЕГРАЦИЕЙ ДОПОЛНИТЕЛЬНЫХ ИНФОРМАТИВНЫХ ПРИЗНАКОВ</span></b></a><br><font color=#00008f><i>Кириленко Н.Е., Косенко П.О., Мирошниченко М.К.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610527, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025697292&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919152">
+<td align=center valign=top><font color=#00008f><b>18</b></font><br><input type=checkbox name="tid88919152" id="tid88919152"  onClick='if (this.checked) {RowSelect(a88919152,1)} else {RowSelect(a88919152,0)}'><div id="pdf_88919152" name="pdf_88919152"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919152"><b><span style="line-height:1.0;">НЕЙРОСЕТЕВАЯ МОДЕЛЬ МАШИННОГО ПЕРЕВОДА ДЛЯ ЯЗЫКОВОЙ ПАРЫ ТАДЖИКСКИЙ-РУССКИЙ «ASM_TGK_RUS_TR»</span></b></a><br><font color=#00008f><i>Котов М.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610630, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025697877&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918806">
+<td align=center valign=top><font color=#00008f><b>19</b></font><br><input type=checkbox name="tid88918806" id="tid88918806"  onClick='if (this.checked) {RowSelect(a88918806,1)} else {RowSelect(a88918806,0)}'><div id="pdf_88918806" name="pdf_88918806"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918806"><b><span style="line-height:1.0;">NO-CODE ПЛАТФОРМА ДЛЯ АВТОМАТИЧЕСКОЙ РАЗМЕТКИ ДАТАСЕТА И ОБУЧЕНИЯ НЕЙРОННОЙ СЕТИ V1</span></b></a><br><font color=#00008f><i>Бушмелев Я.В., Гончаров И.Д., Попова А.В., Сурин В.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610285, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025696659&nbsp;от&nbsp;15.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918630">
+<td align=center valign=top><font color=#00008f><b>20</b></font><br><input type=checkbox name="tid88918630" id="tid88918630"  onClick='if (this.checked) {RowSelect(a88918630,1)} else {RowSelect(a88918630,0)}'><div id="pdf_88918630" name="pdf_88918630"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918630"><b><span style="line-height:1.0;">ПРОГРАММНЫЙ МОДУЛЬ ПОСТРОЕНИЯ ДИНАМИЧЕСКИХ ГРАФОВ АТАК</span></b></a><br><font color=#00008f><i>Козин Д.Д.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610108, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025697631&nbsp;от&nbsp;20.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918619">
+<td align=center valign=top><font color=#00008f><b>21</b></font><br><input type=checkbox name="tid88918619" id="tid88918619"  onClick='if (this.checked) {RowSelect(a88918619,1)} else {RowSelect(a88918619,0)}'><div id="pdf_88918619" name="pdf_88918619"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918619"><b><span style="line-height:1.0;">ПРОГРАММА ДЛЯ ПОСТРОЕНИЯ КРИВЫХ БЛЕСКА ЭЛЛИПСОИДАЛЬНЫХ АСТЕРОИДОВ</span></b></a><br><font color=#00008f><i>Перминов А.С.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610097, 12.01.2026.
+ Заявка&nbsp;№&nbsp;2025697659&nbsp;от&nbsp;22.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918568">
+<td align=center valign=top><font color=#00008f><b>22</b></font><br><input type=checkbox name="tid88918568" id="tid88918568"  onClick='if (this.checked) {RowSelect(a88918568,1)} else {RowSelect(a88918568,0)}'><div id="pdf_88918568" name="pdf_88918568"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918568"><b><span style="line-height:1.0;">ЛИЧНЫЙ КАБИНЕТ ПАРТНЕРА B2B</span></b></a><br><font color=#00008f><i>Артемьева Н.Ю., Палайдович Д.Ю., Исанбаева Г.М.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610046, 12.01.2026.
+ Заявка&nbsp;№&nbsp;2025697486&nbsp;от&nbsp;26.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919003">
+<td align=center valign=top><font color=#00008f><b>23</b></font><br><input type=checkbox name="tid88919003" id="tid88919003"  onClick='if (this.checked) {RowSelect(a88919003,1)} else {RowSelect(a88919003,0)}'><div id="pdf_88919003" name="pdf_88919003"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919003"><b><span style="line-height:1.0;">НЕЙРОСЕТЕВАЯ МОДЕЛЬ МАШИННОГО ПЕРЕВОДА ДЛЯ ЯЗЫКОВОЙ ПАРЫ НОРВЕЖСКИЙ-РУССКИЙ «ASM_NOR_RUS_TR»</span></b></a><br><font color=#00008f><i>Котов М.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610481, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025697842&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918833">
+<td align=center valign=top><font color=#00008f><b>24</b></font><br><input type=checkbox name="tid88918833" id="tid88918833"  onClick='if (this.checked) {RowSelect(a88918833,1)} else {RowSelect(a88918833,0)}'><div id="pdf_88918833" name="pdf_88918833"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918833"><b><span style="line-height:1.0;">ПРОГРАММНЫЙ МОДУЛЬ ДЛЯ ГЕНЕРАЦИИ СИНТЕТИЧЕСКИХ ИЗОБРАЖЕНИЙ С СЕМАНТИЧЕСКОЙ РАЗМЕТКОЙ</span></b></a><br><font color=#00008f><i>Гаврилов Д.А., Татаринова Е.А., Ищук И.Н., Фортунатов А.А., Фатеев А.С., Зиновчик О.Ю., Терентьев М.С., Родионов П.Б., Киселев Е.Л., Шкатула С.В., Солодовников А.А., Михайлов И.М., Меркелов А.А., Косицын П.В., Кричевец Д.П.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610311, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025696537&nbsp;от&nbsp;12.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919232">
+<td align=center valign=top><font color=#00008f><b>25</b></font><br><input type=checkbox name="tid88919232" id="tid88919232"  onClick='if (this.checked) {RowSelect(a88919232,1)} else {RowSelect(a88919232,0)}'><div id="pdf_88919232" name="pdf_88919232"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919232"><b><span style="line-height:1.0;">ПРОГРАММА РЕШЕНИЯ ЗАДАЧ ЛИНЕЙНОГО ПРОГРАММИРОВАНИЯ МЕТОДОМ НЕЙРОСЕТЕВОГО АНАЛИЗА МНОГОМЕРНОГО ОБРАЗА ALEM-ANN</span></b></a><br><font color=#00008f><i>Жулев А.Э.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610709, 15.01.2026.
+ Заявка&nbsp;№&nbsp;2025697722&nbsp;от&nbsp;22.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919456">
+<td align=center valign=top><font color=#00008f><b>26</b></font><br><input type=checkbox name="tid88919456" id="tid88919456"  onClick='if (this.checked) {RowSelect(a88919456,1)} else {RowSelect(a88919456,0)}'><div id="pdf_88919456" name="pdf_88919456"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919456"><b><span style="line-height:1.0;">ИНДУСТРИАЛЬНЫЕ ЦИФРОВЫЕ МОДУЛИ</span></b></a><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610933, 16.01.2026.
+ Заявка&nbsp;№&nbsp;2025698128&nbsp;от&nbsp;26.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918861">
+<td align=center valign=top><font color=#00008f><b>27</b></font><br><input type=checkbox name="tid88918861" id="tid88918861"  onClick='if (this.checked) {RowSelect(a88918861,1)} else {RowSelect(a88918861,0)}'><div id="pdf_88918861" name="pdf_88918861"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918861"><b><span style="line-height:1.0;">БИБЛИОТЕКА РЕШЕНИЯ ПРЯМЫХ И ОБРАТНЫХ ЗАДАЧ РАСПРОСТРАНЕНИЯ ВОЛН В НЕОДНОРОДНЫХ СРЕДАХ</span></b></a><br><font color=#00008f><i>Соколов А.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610339, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025698189&nbsp;от&nbsp;22.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918665">
+<td align=center valign=top><font color=#00008f><b>28</b></font><br><input type=checkbox name="tid88918665" id="tid88918665"  onClick='if (this.checked) {RowSelect(a88918665,1)} else {RowSelect(a88918665,0)}'><div id="pdf_88918665" name="pdf_88918665"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918665"><b><span style="line-height:1.0;">ПРОГРАММА ДЛЯ ТЕСТИРОВАНИЯ И ИЗУЧЕНИЯ ВЕКТОРНОГО ПРЕДСТАВЛЕНИЯ СЛОВ В НЕЙРОННОЙ СЕТИ</span></b></a><br><font color=#00008f><i>Мифтахова Р.Г.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610143, 12.01.2026.
+ Заявка&nbsp;№&nbsp;2025697053&nbsp;от&nbsp;17.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918825">
+<td align=center valign=top><font color=#00008f><b>29</b></font><br><input type=checkbox name="tid88918825" id="tid88918825"  onClick='if (this.checked) {RowSelect(a88918825,1)} else {RowSelect(a88918825,0)}'><div id="pdf_88918825" name="pdf_88918825"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918825"><b><span style="line-height:1.0;">«МОДУЛЬ КЛАСТЕРИЗАЦИИ НОВОСТНЫХ ИЗДАНИЙ ГРУПП И СООБЩЕСТВ СОЦИАЛЬНОЙ СЕТИ ВКОНТАКТЕ»</span></b></a><br><font color=#00008f><i>Пилипенко С.А., Ваничкина А.С., Джунковский А.В., Изюмская-Капитонова В.В., Васильев Д.С., Аветисян К.Р.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610303, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025696437&nbsp;от&nbsp;16.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918661">
+<td align=center valign=top><font color=#00008f><b>30</b></font><br><input type=checkbox name="tid88918661" id="tid88918661"  onClick='if (this.checked) {RowSelect(a88918661,1)} else {RowSelect(a88918661,0)}'><div id="pdf_88918661" name="pdf_88918661"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918661"><b><span style="line-height:1.0;">«ПРОГРАММА ДЛЯ ОЦЕНКИ ПРОСТРАНСТВЕННОЙ ГЛАДКОСТИ РЕЗУЛЬТАТОВ СЕГМЕНТАЦИИ, ПОЛУЧЕННЫХ НЕЙРОННОЙ СЕТЬЮ НА ТОМОГРАФИЧЕСКИХ ДАННЫХ С НЕЧЕТКО ВЫРАЖЕННЫМИ ГРАНИЦАМИ ОБЪЕКТОВ»</span></b></a><br><font color=#00008f><i>Карякина В.А., Полевой Д.В., Гильманов М.И.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610139, 12.01.2026.
+ Заявка&nbsp;№&nbsp;2025696641&nbsp;от&nbsp;17.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919006">
+<td align=center valign=top><font color=#00008f><b>31</b></font><br><input type=checkbox name="tid88919006" id="tid88919006"  onClick='if (this.checked) {RowSelect(a88919006,1)} else {RowSelect(a88919006,0)}'><div id="pdf_88919006" name="pdf_88919006"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919006"><b><span style="line-height:1.0;">ПРОГРАММА КОНФИГУРИРОВАНИЯ РОЯ БПЛА ДЛЯ ОРГАНИЗАЦИИ MESH-СЕТИ РЕТРАНСЛЯЦИИ «DRONESWARM MESHCONﬁGURATOR»</span></b></a><br><font color=#00008f><i>Никитин Д.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610484, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025697845&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918920">
+<td align=center valign=top><font color=#00008f><b>32</b></font><br><input type=checkbox name="tid88918920" id="tid88918920"  onClick='if (this.checked) {RowSelect(a88918920,1)} else {RowSelect(a88918920,0)}'><div id="pdf_88918920" name="pdf_88918920"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918920"><b><span style="line-height:1.0;">ПРОГРАММА РАСПОЗНАВАНИЯ ИСКУССТВЕННЫХ ДОРОЖНЫХ НЕРОВНОСТЕЙ ДЛЯ ИНТЕГРАЦИИ В ADAS</span></b></a><br><font color=#00008f><i>Келлер А.В., Макарова Д.А., Фурлетов Ю.М., Шадрин С.С.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610398, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025697790&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919408">
+<td align=center valign=top><font color=#00008f><b>33</b></font><br><input type=checkbox name="tid88919408" id="tid88919408"  onClick='if (this.checked) {RowSelect(a88919408,1)} else {RowSelect(a88919408,0)}'><div id="pdf_88919408" name="pdf_88919408"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919408"><b><span style="line-height:1.0;">«МОДУЛЬ ИНТЕГРАЦИИ РАСПИСАНИЯ ЗАНЯТИЙ С МИНИ-ПРИЛОЖЕНИЕМ И ЧАТ-БОТОМ «РАСПИСАНИЕ» В МАХ И ВКОНТАКТЕ ДЛЯ ИНФОРМАЦИОННЫХ СИСТЕМ «РАСПИСАНИЕ», РАЗРАБОТАННЫХ НА ПЛАТФОРМЕ MOODLE»</span></b></a><br><font color=#00008f><i>Иванчихин Б.В., Немцев С.Н., Еремин О.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610885, 15.01.2026.
+ Заявка&nbsp;№&nbsp;2025697943&nbsp;от&nbsp;25.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919691">
+<td align=center valign=top><font color=#00008f><b>34</b></font><br><input type=checkbox name="tid88919691" id="tid88919691"  onClick='if (this.checked) {RowSelect(a88919691,1)} else {RowSelect(a88919691,0)}'><div id="pdf_88919691" name="pdf_88919691"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919691"><b><span style="line-height:1.0;">МОДУЛЬ ОБНАРУЖЕНИЯ ДЕФЕКТОВ ПАЯНОГО СОЕДИНЕНИЯ В ПРОЦЕССЕ ИНДУКЦИОННОЙ ПАЙКИ С ИСПОЛЬЗОВАНИЕМ СВЕРТОЧНЫХ НЕЙРОННЫХ СЕТЕЙ С ОДНОЭТАПНОЙ АРХИТЕКТУРОЙ ДЕТЕКЦИИ ОБЪЕКТОВ</span></b></a><br><font color=#00008f><i>Тынченко В.С., Мурыгин А.В., Шуткина Е.В., Курашкин С.О.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611168, 19.01.2026.
+ Заявка&nbsp;№&nbsp;2025698040&nbsp;от&nbsp;25.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918980">
+<td align=center valign=top><font color=#00008f><b>35</b></font><br><input type=checkbox name="tid88918980" id="tid88918980"  onClick='if (this.checked) {RowSelect(a88918980,1)} else {RowSelect(a88918980,0)}'><div id="pdf_88918980" name="pdf_88918980"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918980"><b><span style="line-height:1.0;">НЕЙРОСЕТЕВАЯ МОДЕЛЬ МАШИННОГО ПЕРЕВОДА ДЛЯ ЯЗЫКОВОЙ ПАРЫ УЗБЕКСКИЙ-РУССКИЙ «ASM_UZB_RUS_TR»</span></b></a><br><font color=#00008f><i>Котов М.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610458, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025697822&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918790">
+<td align=center valign=top><font color=#00008f><b>36</b></font><br><input type=checkbox name="tid88918790" id="tid88918790"  onClick='if (this.checked) {RowSelect(a88918790,1)} else {RowSelect(a88918790,0)}'><div id="pdf_88918790" name="pdf_88918790"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918790"><b><span style="line-height:1.0;">РЕГИСТР АБОНЕНТСКИХ БАЗ ДАННЫХ HLR/HSS</span></b></a><br><font color=#00008f><i>Клименков С.В.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610269, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025697663&nbsp;от&nbsp;19.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918973">
+<td align=center valign=top><font color=#00008f><b>37</b></font><br><input type=checkbox name="tid88918973" id="tid88918973"  onClick='if (this.checked) {RowSelect(a88918973,1)} else {RowSelect(a88918973,0)}'><div id="pdf_88918973" name="pdf_88918973"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918973"><b><span style="line-height:1.0;">НЕЙРОСЕТЕВАЯ МОДЕЛЬ МАШИННОГО ПЕРЕВОДА ДЛЯ ЯЗЫКОВОЙ ПАРЫ БОЛГАРСКИЙ-РУССКИЙ "ASM_BUL_RUS_TR"</span></b></a><br><font color=#00008f><i>Котов М.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610451, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025697820&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918870">
+<td align=center valign=top><font color=#00008f><b>38</b></font><br><input type=checkbox name="tid88918870" id="tid88918870"  onClick='if (this.checked) {RowSelect(a88918870,1)} else {RowSelect(a88918870,0)}'><div id="pdf_88918870" name="pdf_88918870"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918870"><b><span style="line-height:1.0;">ПРОГРАММА ДЛЯ ОБУЧЕНИЯ ИМПУЛЬСНЫХ НЕЙРОННЫХ СЕТЕЙ, ПРЕДНАЗНАЧЕННЫХ ДЛЯ ЗАДАЧ ДЕТЕКЦИИ ОБЪЕКТОВ</span></b></a><br><font color=#00008f><i>Корсаков А.М.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610348, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025697747&nbsp;от&nbsp;22.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919151">
+<td align=center valign=top><font color=#00008f><b>39</b></font><br><input type=checkbox name="tid88919151" id="tid88919151"  onClick='if (this.checked) {RowSelect(a88919151,1)} else {RowSelect(a88919151,0)}'><div id="pdf_88919151" name="pdf_88919151"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919151"><b><span style="line-height:1.0;">НЕЙРОСЕТЕВАЯ МОДЕЛЬ МАШИННОГО ПЕРЕВОДА ДЛЯ ЯЗЫКОВОЙ ПАРЫ СЛОВЕНСКИЙ-РУССКИЙ «ASM_SLV_RUS_TR»</span></b></a><br><font color=#00008f><i>Котов М.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610629, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025697804&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919051">
+<td align=center valign=top><font color=#00008f><b>40</b></font><br><input type=checkbox name="tid88919051" id="tid88919051"  onClick='if (this.checked) {RowSelect(a88919051,1)} else {RowSelect(a88919051,0)}'><div id="pdf_88919051" name="pdf_88919051"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919051"><b><span style="line-height:1.0;">ПРОГРАММА ДЛЯ ЗАПУСКА БОЛЬШИХ ЯЗЫКОВЫХ МОДЕЛЕЙ В ЛОКАЛЬНОЙ СЕТИ ЧЕРЕЗ ВЕБ-ИНТЕРФЕЙС</span></b></a><br><font color=#00008f><i>Лапкин Я.Д., Матвеев В.Д.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610529, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025697753&nbsp;от&nbsp;22.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919556">
+<td align=center valign=top><font color=#00008f><b>41</b></font><br><input type=checkbox name="tid88919556" id="tid88919556"  onClick='if (this.checked) {RowSelect(a88919556,1)} else {RowSelect(a88919556,0)}'><div id="pdf_88919556" name="pdf_88919556"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919556"><b><span style="line-height:1.0;">ПРОГРАММА ДЛЯ СБОРА ПОКАЗАНИЙ С СЕНСОРНОЙ СЕТИ АВТОМАТИЗИРОВАННОГО ПТИЧНИКА</span></b></a><br><font color=#00008f><i>Эфендиев Б.Ш., Бжихатлов К.Ч.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611033, 16.01.2026.
+ Заявка&nbsp;№&nbsp;2025697774&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919906">
+<td align=center valign=top><font color=#00008f><b>42</b></font><br><input type=checkbox name="tid88919906" id="tid88919906"  onClick='if (this.checked) {RowSelect(a88919906,1)} else {RowSelect(a88919906,0)}'><div id="pdf_88919906" name="pdf_88919906"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919906"><b><span style="line-height:1.0;">«ИМИТАЦИОННАЯ РЕСУРСНАЯ МОДЕЛЬ ИСПОЛЬЗОВАНИЯ ИНФРАСТРУКТУРЫ ОАО «РЖД» НОВОГО ПОКОЛЕНИЯ (АС ПРОГРЕСС НП)»</span></b></a><br><font color=#00008f><i>Бородин А.Ф., Дмитриев Е.О., Жук Л.В., Кравченко А.А., Лаханкин Е.А., Лысов Г.В., Панин В.В., Панин Е.В., Рось С.В., Терехов Д.Д., Тросиненко В.А., Ходыкин Д.А., Чичков Д.А., Шатаев Б.Е., Шелюхин В.П., Щепанов А.Л., Щепанов С.Л.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611367, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2025698280&nbsp;от&nbsp;26.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919134">
+<td align=center valign=top><font color=#00008f><b>43</b></font><br><input type=checkbox name="tid88919134" id="tid88919134"  onClick='if (this.checked) {RowSelect(a88919134,1)} else {RowSelect(a88919134,0)}'><div id="pdf_88919134" name="pdf_88919134"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919134"><b><span style="line-height:1.0;">«СИСТЕМА АВТОМАТИЧЕСКОГО АНАЛИЗА ПРАВИЛЬНОСТИ ВЫПОЛНЕНИЯ УПРАЖНЕНИЯ ГТО «НАКЛОН ВПЕРЕД ИЗ ПОЛОЖЕНИЯ СТОЯ» НА ОСНОВЕ НЕЙРОННОЙ СЕТИ И КОМПЬЮТЕРНОГО ЗРЕНИЯ»</span></b></a><br><font color=#00008f><i>Попова А.В., Лифарь Е.В., Жевтун Д.А., Вдовина В.В., Терентьев М.Н., Портнягин И.С., Ли К.В., Марусин А.С., Пучкова Н.А., Теньшов М.В., Карась Ю.В., Пьянов Д.С., Аникеев Н.В.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610612, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025697758&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918906">
+<td align=center valign=top><font color=#00008f><b>44</b></font><br><input type=checkbox name="tid88918906" id="tid88918906"  onClick='if (this.checked) {RowSelect(a88918906,1)} else {RowSelect(a88918906,0)}'><div id="pdf_88918906" name="pdf_88918906"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918906"><b><span style="line-height:1.0;">ПРОГРАММА КЛАССИФИКАЦИИ ЛЕДОВОГО ПОКРОВА</span></b></a><br><font color=#00008f><i>Печеркин Н.Д.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610384, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025697696&nbsp;от&nbsp;22.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919133">
+<td align=center valign=top><font color=#00008f><b>45</b></font><br><input type=checkbox name="tid88919133" id="tid88919133"  onClick='if (this.checked) {RowSelect(a88919133,1)} else {RowSelect(a88919133,0)}'><div id="pdf_88919133" name="pdf_88919133"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919133"><b><span style="line-height:1.0;">АВТОМАТИЧЕСКОЕ ПЕРЕРАСПРЕДЕЛЕНИЕ ЭНЕРГИИ ПРИ АВАРИЯХ В РАСПРЕДЕЛИТЕЛЬНЫХ СЕТЯХ</span></b></a><br><font color=#00008f><i>Колдина А.Э.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610611, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025697771&nbsp;от&nbsp;22.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918934">
+<td align=center valign=top><font color=#00008f><b>46</b></font><br><input type=checkbox name="tid88918934" id="tid88918934"  onClick='if (this.checked) {RowSelect(a88918934,1)} else {RowSelect(a88918934,0)}'><div id="pdf_88918934" name="pdf_88918934"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918934"><b><span style="line-height:1.0;">АВТОМАТИЗИРОВАННОЕ ОБНОВЛЕНИЕ И СРАВНЕНИЕ МОДЕЛЕЙ НЕЙРОННЫХ СЕТЕЙ ДЛЯ ОДНОПЛАТНЫХ ВЫЧИСЛИТЕЛЕЙ</span></b></a><br><font color=#00008f><i>Сокольников В.В., Агеев А.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610412, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025697582&nbsp;от&nbsp;19.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919394">
+<td align=center valign=top><font color=#00008f><b>47</b></font><br><input type=checkbox name="tid88919394" id="tid88919394"  onClick='if (this.checked) {RowSelect(a88919394,1)} else {RowSelect(a88919394,0)}'><div id="pdf_88919394" name="pdf_88919394"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919394"><b><span style="line-height:1.0;">КОНВЕЙЕР ПРЕДОБРАБОТКИ ВИДЕОПОТОКА ДЛЯ ЗАДАЧ РАСПОЗНАВАНИЯ ЖЕСТОВ</span></b></a><br><font color=#00008f><i>Артамонов А.С., Соловьев А.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610871, 15.01.2026.
+ Заявка&nbsp;№&nbsp;2025696311&nbsp;от&nbsp;18.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919231">
+<td align=center valign=top><font color=#00008f><b>48</b></font><br><input type=checkbox name="tid88919231" id="tid88919231"  onClick='if (this.checked) {RowSelect(a88919231,1)} else {RowSelect(a88919231,0)}'><div id="pdf_88919231" name="pdf_88919231"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919231"><b><span style="line-height:1.0;">ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ РАСПОЗНАВАНИЯ ДЕФЕКТОВ РЕЛЬСОВ ПО РЕЗУЛЬТАТАМ УЛЬТРАЗВУКОВОГО КОНТРОЛЯ</span></b></a><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610708, 15.01.2026.
+ Заявка&nbsp;№&nbsp;2025698440&nbsp;от&nbsp;25.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919948">
+<td align=center valign=top><font color=#00008f><b>49</b></font><br><input type=checkbox name="tid88919948" id="tid88919948"  onClick='if (this.checked) {RowSelect(a88919948,1)} else {RowSelect(a88919948,0)}'><div id="pdf_88919948" name="pdf_88919948"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919948"><b><span style="line-height:1.0;">МОДУЛЬ СОВМЕСТНОГО ИСПОЛЬЗОВАНИЯ АППАРАТОВ НЕЙРОННЫХ СЕТЕЙ И ВАРИАЦИОННЫХ НЕРАВЕНСТВ</span></b></a><br><font color=#00008f><i>Шарун И.В.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611409, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2025697861&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919961">
+<td align=center valign=top><font color=#00008f><b>50</b></font><br><input type=checkbox name="tid88919961" id="tid88919961"  onClick='if (this.checked) {RowSelect(a88919961,1)} else {RowSelect(a88919961,0)}'><div id="pdf_88919961" name="pdf_88919961"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919961"><b><span style="line-height:1.0;">«ПРОГРАММА НА ОСНОВЕ ПОЛНОСВЯЗНОЙ НЕЙРОННОЙ СЕТИ ДЛЯ КЛАССИФИКАЦИИ И ОПИСАНИЯ ЭЛЕКТРОННОГО СТРОЕНИЯ ХИМИЧЕСКИХ СВЯЗЕЙ»</span></b></a><br><font color=#00008f><i>Верхов В.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611422, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2025697370&nbsp;от&nbsp;18.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919487">
+<td align=center valign=top><font color=#00008f><b>51</b></font><br><input type=checkbox name="tid88919487" id="tid88919487"  onClick='if (this.checked) {RowSelect(a88919487,1)} else {RowSelect(a88919487,0)}'><div id="pdf_88919487" name="pdf_88919487"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919487"><b><span style="line-height:1.0;">МОБИЛЬНОЕ ПРИЛОЖЕНИЕ ДЛЯ СМАРТФОНА ОПЕРАТОРА «СИСТЕМЫ КОНТРОЛЯ ПАРАМЕТРОВ ЗАЩИТЫ ОТ КОРРОЗИИ ГАЗОРАСПРЕДЕЛИТЕЛЬНЫХ СЕТЕЙ С ИСПОЛЬЗОВАНИЕМ БЕСКОНТАКТНОЙ ПЕРЕДАЧИ ДАННЫХ МАЛОГО РАДИУСА ДЕЙСТВИЯ»</span></b></a><br><font color=#00008f><i>Усманов Р.Р., Чучкалов М.В., Шопин М.А., Мансуров Д.Е., Шагиахмитов Д.Р.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610964, 16.01.2026.
+ Заявка&nbsp;№&nbsp;2025698135&nbsp;от&nbsp;26.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918909">
+<td align=center valign=top><font color=#00008f><b>52</b></font><br><input type=checkbox name="tid88918909" id="tid88918909"  onClick='if (this.checked) {RowSelect(a88918909,1)} else {RowSelect(a88918909,0)}'><div id="pdf_88918909" name="pdf_88918909"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918909"><b><span style="line-height:1.0;">ПРОГРАММА ДЛЯ ИССЛЕДОВАНИЯ СЕГМЕНТНОЙ СПАЙКОВОЙ МОДЕЛИ НЕЙРОНА (CSNM) НА БАЗЕ БИБЛИОТЕКИ SNNTORCH</span></b></a><br><font color=#00008f><i>Барымова Е.А., Тамм А.Ю.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610387, 13.01.2026.
+ Заявка&nbsp;№&nbsp;2025697750&nbsp;от&nbsp;22.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919251">
+<td align=center valign=top><font color=#00008f><b>53</b></font><br><input type=checkbox name="tid88919251" id="tid88919251"  onClick='if (this.checked) {RowSelect(a88919251,1)} else {RowSelect(a88919251,0)}'><div id="pdf_88919251" name="pdf_88919251"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919251"><b><span style="line-height:1.0;">ПРОГРАММНЫЙ КОМПОНЕНТ «АНАЛИЗ ПАРАМЕТРИЧЕСКОЙ ИНФОРМАЦИИ И ОЦЕНКА ПОЛЕТНЫХ ДАННЫХ БВС»</span></b></a><br><font color=#00008f><i>Минаев В.А., Пахомов А.К., Толпыгин А.С., Мясникова О.А., Сениченкова А.С., Толпыгин В.С., Штамм Е.В., Гречанюк Ф.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610728, 15.01.2026.
+ Заявка&nbsp;№&nbsp;2025698391&nbsp;от&nbsp;25.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918963">
+<td align=center valign=top><font color=#00008f><b>54</b></font><br><input type=checkbox name="tid88918963" id="tid88918963"  onClick='if (this.checked) {RowSelect(a88918963,1)} else {RowSelect(a88918963,0)}'><div id="pdf_88918963" name="pdf_88918963"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918963"><b><span style="line-height:1.0;">ВЕБ-СИСТЕМА ОБУЧЕНИЯ И ТЕСТИРОВАНИЯ НЕЙРОННОЙ СЕТИ С УЧИТЕЛЕМ НА ОСНОВЕ ВЕКТОРНЫХ ИЗОБРАЖЕНИЙ</span></b></a><br><font color=#00008f><i>Ванюшев А.А., Сытник А.С.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610441, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2026610101&nbsp;от&nbsp;14.01.2026.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88920027">
+<td align=center valign=top><font color=#00008f><b>55</b></font><br><input type=checkbox name="tid88920027" id="tid88920027"  onClick='if (this.checked) {RowSelect(a88920027,1)} else {RowSelect(a88920027,0)}'><div id="pdf_88920027" name="pdf_88920027"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88920027"><b><span style="line-height:1.0;">MUZОБМЕН - СОЦИАЛЬНАЯ СЕТЬ С ОБМЕНОМ МУЗЫКИ И СОВМЕСТНЫМ ПРОСЛУШИВАНИЕМ</span></b></a><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611487, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2026610699&nbsp;от&nbsp;19.01.2026.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919346">
+<td align=center valign=top><font color=#00008f><b>56</b></font><br><input type=checkbox name="tid88919346" id="tid88919346"  onClick='if (this.checked) {RowSelect(a88919346,1)} else {RowSelect(a88919346,0)}'><div id="pdf_88919346" name="pdf_88919346"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919346"><b><span style="line-height:1.0;">ПРОГРАММА ДЛЯ РАСПОЗНАВАНИЯ ОБЪЕКТОВ В СИСТЕМЕ ТЕХНИЧЕСКОГО ЗРЕНИЯ НАЗЕМНОГО РОБОТОТЕХНИЧЕСКОГО КОМПЛЕКСА НА ОСНОВЕ КОМПЛЕКСИРОВАНИЯ РАЗНОДИАПАЗОННОЙ ИНФОРМАЦИИ</span></b></a><br><font color=#00008f><i>Безумнов Д.Н., Чиров Д.С.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610823, 15.01.2026.
+ Заявка&nbsp;№&nbsp;2026610247&nbsp;от&nbsp;15.01.2026.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919951">
+<td align=center valign=top><font color=#00008f><b>57</b></font><br><input type=checkbox name="tid88919951" id="tid88919951"  onClick='if (this.checked) {RowSelect(a88919951,1)} else {RowSelect(a88919951,0)}'><div id="pdf_88919951" name="pdf_88919951"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919951"><b><span style="line-height:1.0;">ПРОГРАММА МОНИТОРИНГА СЕТИ ДЛЯ ВИЗУАЛЬНОГО КОНТРОЛЯ И АНАЛИЗА СЕТЕВЫХ СОЕДИНЕНИЙ НА КОМПЬЮТЕРЕ</span></b></a><br><font color=#00008f><i>Трусов В.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611412, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2025697869&nbsp;от&nbsp;24.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88922592">
+<td align=center valign=top><font color=#00008f><b>58</b></font><br><input type=checkbox name="tid88922592" id="tid88922592"  onClick='if (this.checked) {RowSelect(a88922592,1)} else {RowSelect(a88922592,0)}'><div id="pdf_88922592" name="pdf_88922592"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88922592"><b><span style="line-height:1.0;">СИСТЕМА ИНФОРМАЦИОННОГО ОБМЕНА ДЛЯ УПРАВЛЕНИЯ БЕСПИЛОТНЫМИ КОМПЛЕКСАМИ В ОРБИТАЛЬНО-НАЗЕМНЫХ ГИБРИДНЫХ СЕТЯХ СВЯЗИ</span></b></a><br><font color=#00008f><i>Березкин А.А., Паршин А.А., Кукунин Д.С., Киричек Р.В.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2855032&nbsp;C2, 23.01.2026.
+ Заявка&nbsp;№&nbsp;2024110639&nbsp;от&nbsp;17.04.2024.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919734">
+<td align=center valign=top><font color=#00008f><b>59</b></font><br><input type=checkbox name="tid88919734" id="tid88919734"  onClick='if (this.checked) {RowSelect(a88919734,1)} else {RowSelect(a88919734,0)}'><div id="pdf_88919734" name="pdf_88919734"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919734"><b><span style="line-height:1.0;">ПРОГРАММА ДЛЯ ОПТИМИЗАЦИИ СЕТИ БПЛА МЕТОДОМ РЕДУКЦИОННОЙ КЛАСТЕРИЗАЦИИ</span></b></a><br><font color=#00008f><i>Деркач А.Е.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611211, 19.01.2026.
+ Заявка&nbsp;№&nbsp;2026610135&nbsp;от&nbsp;12.01.2026.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919121">
+<td align=center valign=top><font color=#00008f><b>60</b></font><br><input type=checkbox name="tid88919121" id="tid88919121"  onClick='if (this.checked) {RowSelect(a88919121,1)} else {RowSelect(a88919121,0)}'><div id="pdf_88919121" name="pdf_88919121"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919121"><b><span style="line-height:1.0;">СФ-БЛОК УСТРОЙСТВА УПРАВЛЕНИЯ МАСШТАБИРУЕМОЙ ВЫЧИСЛИТЕЛЬНОЙ СИСТЕМОЙ ДЛЯ ИИ-ЗАДАЧ</span></b></a><br><font color=#00008f><i>Харченко М.И.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610599, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025697108&nbsp;от&nbsp;22.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919492">
+<td align=center valign=top><font color=#00008f><b>61</b></font><br><input type=checkbox name="tid88919492" id="tid88919492"  onClick='if (this.checked) {RowSelect(a88919492,1)} else {RowSelect(a88919492,0)}'><div id="pdf_88919492" name="pdf_88919492"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919492"><b><span style="line-height:1.0;">ИНТЕЛЛЕКТУАЛЬНАЯ СИСТЕМА АНАЛИЗА СЕТЕВОЙ АКТИВНОСТИ И ВЫЯВЛЕНИЯ АНОМАЛИЙ ПОВЕДЕНИЯ ПОЛЬЗОВАТЕЛЕЙ</span></b></a><br><font color=#00008f><i>Басыня Е.А., Антропов Д.С.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610969, 16.01.2026.
+ Заявка&nbsp;№&nbsp;2025698101&nbsp;от&nbsp;26.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88918966">
+<td align=center valign=top><font color=#00008f><b>62</b></font><br><input type=checkbox name="tid88918966" id="tid88918966"  onClick='if (this.checked) {RowSelect(a88918966,1)} else {RowSelect(a88918966,0)}'><div id="pdf_88918966" name="pdf_88918966"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88918966"><b><span style="line-height:1.0;">ПРОГРАММНЫЙ МОДУЛЬ ДЛЯ МОДЕЛИРОВАНИЯ ДИНАМИЧЕСКИХ САМООРГАНИЗУЮЩИХСЯ СЕТЕЙ</span></b></a><br><font color=#00008f><i>Конюхов Р.Д.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610444, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2026610107&nbsp;от&nbsp;14.01.2026.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88920111">
+<td align=center valign=top><font color=#00008f><b>63</b></font><br><input type=checkbox name="tid88920111" id="tid88920111"  onClick='if (this.checked) {RowSelect(a88920111,1)} else {RowSelect(a88920111,0)}'><div id="pdf_88920111" name="pdf_88920111"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88920111"><b><span style="line-height:1.0;">ПРОГРАММНЫЙ КОМПОНЕНТ ДЛЯ ВИЗУАЛИЗАЦИИ ОПТИМАЛЬНОЙ КОНФИГУРАЦИИ СЕТИ МЕТЕОРОЛОГИЧЕСКИХ СТАНЦИЙ С УЧЕТОМ ПРОСТРАНСТВЕННЫХ ОГРАНИЧЕНИЙ</span></b></a><br><font color=#00008f><i>Буланов Д.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611571, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2026610016&nbsp;от&nbsp;02.01.2026.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919462">
+<td align=center valign=top><font color=#00008f><b>64</b></font><br><input type=checkbox name="tid88919462" id="tid88919462"  onClick='if (this.checked) {RowSelect(a88919462,1)} else {RowSelect(a88919462,0)}'><div id="pdf_88919462" name="pdf_88919462"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919462"><b><span style="line-height:1.0;">ИНТЕЛЛЕКТУАЛЬНАЯ СИСТЕМА ПОДДЕРЖКИ ПРИНЯТИЯ РЕШЕНИЙ В ЗАДАЧАХ ОБЕСПЕЧЕНИЯ СЕТЕВОЙ ИНФОРМАЦИОННОЙ БЕЗОПАСНОСТИ</span></b></a><br><font color=#00008f><i>Басыня Е.А., Антропов Д.С.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610939, 16.01.2026.
+ Заявка&nbsp;№&nbsp;2025698102&nbsp;от&nbsp;26.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88920041">
+<td align=center valign=top><font color=#00008f><b>65</b></font><br><input type=checkbox name="tid88920041" id="tid88920041"  onClick='if (this.checked) {RowSelect(a88920041,1)} else {RowSelect(a88920041,0)}'><div id="pdf_88920041" name="pdf_88920041"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88920041"><b><span style="line-height:1.0;">ПРОГРАММНЫЙ МОДУЛЬ ОБНАРУЖЕНИЯ ТРАНСПОРТНЫХ СРЕДСТВ В УСЛОВИЯХ ПЛОХОЙ ВИДИМОСТИ</span></b></a><br><font color=#00008f><i>Городничев М.Г., Матюнина Д.Д., Полянцева К.А., Фионин М.Д.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611501, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2026610475&nbsp;от&nbsp;15.01.2026.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88922618">
+<td align=center valign=top><font color=#00008f><b>66</b></font><br><input type=checkbox name="tid88922618" id="tid88922618"  onClick='if (this.checked) {RowSelect(a88922618,1)} else {RowSelect(a88922618,0)}'><div id="pdf_88922618" name="pdf_88922618"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88922618"><b><span style="line-height:1.0;">ПАКЕТНЫЙ СПОСОБ ПЕРЕДАЧИ ЭЛЕКТРИЧЕСКОЙ ЭНЕРГИИ</span></b></a><br><font color=#00008f><i>Смоленцев Н.И.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2855051&nbsp;C1, 23.01.2026.
+ Заявка&nbsp;№&nbsp;2025115891&nbsp;от&nbsp;06.06.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919998">
+<td align=center valign=top><font color=#00008f><b>67</b></font><br><input type=checkbox name="tid88919998" id="tid88919998"  onClick='if (this.checked) {RowSelect(a88919998,1)} else {RowSelect(a88919998,0)}'><div id="pdf_88919998" name="pdf_88919998"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919998"><b><span style="line-height:1.0;">«ПРОГРАММНЫЙ КОМПЛЕКС АВТОМАТИЗИРОВАННОЙ СИСТЕМЫ МАШИННОГО ОБУЧЕНИЯ ДЛЯ ИНТЕЛЛЕКТУАЛЬНЫХ ФУНКЦИЙ И ПОДСИСТЕМ ПЕРСПЕКТИВНОГО СГС»</span></b></a><br><font color=#00008f><i>Трухтанов Н.В., Кульгильдин Б.Н., Бойко С.М., Емельянов С.М.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611458, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2025698468&nbsp;от&nbsp;29.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919384">
+<td align=center valign=top><font color=#00008f><b>68</b></font><br><input type=checkbox name="tid88919384" id="tid88919384"  onClick='if (this.checked) {RowSelect(a88919384,1)} else {RowSelect(a88919384,0)}'><div id="pdf_88919384" name="pdf_88919384"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919384"><b><span style="line-height:1.0;">ИНФОРМАЦИОННАЯ СИСТЕМА МАШИННОГО ОБУЧЕНИЯ И ПОСТРОЕНИЯ ПРЕДИКТИВНЫХ МОДЕЛЕЙ, НЕ ТРЕБУЮЩАЯ ОТ ПОЛЬЗОВАТЕЛЯ ЗНАНИЙ И УМЕНИЙ ПРОГРАММИРОВАНИЯ (AUTOML)</span></b></a><br><font color=#00008f><i>Фартушный Э.Н., Емельяненко А.Ю., Лебедев Г.С., Свистунов А.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610861, 15.01.2026.
+ Заявка&nbsp;№&nbsp;2025697897&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919512">
+<td align=center valign=top><font color=#00008f><b>69</b></font><br><input type=checkbox name="tid88919512" id="tid88919512"  onClick='if (this.checked) {RowSelect(a88919512,1)} else {RowSelect(a88919512,0)}'><div id="pdf_88919512" name="pdf_88919512"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919512"><b><span style="line-height:1.0;">ПРОГРАММНЫЙ МОДУЛЬ МОДЕЛИРОВАНИЯ ОЦЕНКИ ЗАЩИЩЁННОСТИ ОБЪЕКТА ЗАЩИТЫ МЕТОДОМ ТЕХНОЛОГИИ MTD, НАПРАВЛЕННЫМ НА ИЗМЕНЕНИЕ ТОПОЛОГИИ СЕТИ</span></b></a><br><font color=#00008f><i>Кушко Е.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610989, 16.01.2026.
+ Заявка&nbsp;№&nbsp;2025698079&nbsp;от&nbsp;26.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919204">
+<td align=center valign=top><font color=#00008f><b>70</b></font><br><input type=checkbox name="tid88919204" id="tid88919204"  onClick='if (this.checked) {RowSelect(a88919204,1)} else {RowSelect(a88919204,0)}'><div id="pdf_88919204" name="pdf_88919204"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919204"><b><span style="line-height:1.0;">ПРОГРАММА ВИЗУАЛЬНОЙ ЛОКАЛИЗАЦИИ МОБИЛЬНОГО РОБОТА ПО ДАННЫМ ОБНАРУЖЕНИЯ ОБЪЕКТОВ С ИСПОЛЬЗОВАНИЕМ СЕГМЕНТНОГО СПАЙКОВОГО НЕЙРОНА</span></b></a><br><font color=#00008f><i>Фомин И.С.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610681, 15.01.2026.
+ Заявка&nbsp;№&nbsp;2025697717&nbsp;от&nbsp;22.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88922103">
+<td align=center valign=top><font color=#00008f><b>71</b></font><br><input type=checkbox name="tid88922103" id="tid88922103"  onClick='if (this.checked) {RowSelect(a88922103,1)} else {RowSelect(a88922103,0)}'><div id="pdf_88922103" name="pdf_88922103"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88922103"><b><span style="line-height:1.0;">УСТРОЙСТВО МОДЕЛИРОВАНИЯ ПРОЦЕССОВ ФУНКЦИОНИРОВАНИЯ СЕТИ СВЯЗИ С УЧЕТОМ ВОЗДЕЙСТВИЯ ДЕСТАБИЛИЗИРУЮЩИХ ФАКТОРОВ</span></b></a><br><font color=#00008f><i>Катанович А.А., Вахрушева Ю.В., Ильюшина Н.Н., Южакова А.А., Цыванюк В.А.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2854610&nbsp;C1, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2025112572&nbsp;от&nbsp;12.05.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919497">
+<td align=center valign=top><font color=#00008f><b>72</b></font><br><input type=checkbox name="tid88919497" id="tid88919497"  onClick='if (this.checked) {RowSelect(a88919497,1)} else {RowSelect(a88919497,0)}'><div id="pdf_88919497" name="pdf_88919497"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919497"><b><span style="line-height:1.0;">МОДУЛЬ СИМУЛЯЦИИ ПЕРЕДАЧИ СООБЩЕНИЙ В СЕТЯХ С ТРАНСПОРТНЫМ КОДИРОВАНИЕМ</span></b></a><br><font color=#00008f><i>Петрованов И.С., Сергеев А.В.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026610974, 16.01.2026.
+ Заявка&nbsp;№&nbsp;2025697876&nbsp;от&nbsp;23.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88920102">
+<td align=center valign=top><font color=#00008f><b>73</b></font><br><input type=checkbox name="tid88920102" id="tid88920102"  onClick='if (this.checked) {RowSelect(a88920102,1)} else {RowSelect(a88920102,0)}'><div id="pdf_88920102" name="pdf_88920102"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88920102"><b><span style="line-height:1.0;">СЕРВЕР АВТОМАТИЗИРОВАННОЙ ОБРАБОТКИ ПОТОКОВЫХ ДАННЫХ С ИСПОЛЬЗОВАНИЕМ МОДЕЛЕЙ ИНС</span></b></a><br><font color=#00008f><i>Захаров Д.Н., Карюк А.С., Нагорный В.А., Дума Э.Г., Косарич М.Б.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611562, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2025698551&nbsp;от&nbsp;30.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88926390">
+<td align=center valign=top><font color=#00008f><b>74</b></font><br><input type=checkbox name="tid88926390" id="tid88926390"  onClick='if (this.checked) {RowSelect(a88926390,1)} else {RowSelect(a88926390,0)}'><div id="pdf_88926390" name="pdf_88926390"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88926390"><b><span style="line-height:1.0;">СПОСОБ ДУБЛИРОВАНИЯ РАБОТЫ УСТРОЙСТВ ЗАПУСКА ЭЛЕКТРОСИРЕН ЧЕРЕЗ СЕТЬ ТОРГОВЫХ АВТОМАТОВ</span></b></a><br><font color=#00008f><i>Бакалейко В.В.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2856041&nbsp;C1, 10.02.2026.
+ Заявка&nbsp;№&nbsp;2025121460&nbsp;от&nbsp;04.08.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88920033">
+<td align=center valign=top><font color=#00008f><b>75</b></font><br><input type=checkbox name="tid88920033" id="tid88920033"  onClick='if (this.checked) {RowSelect(a88920033,1)} else {RowSelect(a88920033,0)}'><div id="pdf_88920033" name="pdf_88920033"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88920033"><b><span style="line-height:1.0;">ПРОГРАММНЫЙ КОМПЛЕКС ДЛЯ ОБНАРУЖЕНИЯ ГРАФФИТИ</span></b></a><br><font color=#00008f><i>Матюнина Д.Д., Полянцева К.А., Ярмов Д.Т.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611493, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2026610604&nbsp;от&nbsp;15.01.2026.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919561">
+<td align=center valign=top><font color=#00008f><b>76</b></font><br><input type=checkbox name="tid88919561" id="tid88919561"  onClick='if (this.checked) {RowSelect(a88919561,1)} else {RowSelect(a88919561,0)}'><div id="pdf_88919561" name="pdf_88919561"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919561"><b><span style="line-height:1.0;">КОНТРОЛЬ И ОТПРАВКА ЗНАЧЕНИЙ ТЕМПЕРАТУР, ТЕПЛОВОГО ПОТОКА И НАПРЯЖЕНИЙ С ПОМОЩЬЮ ARDUINO 1.0</span></b></a><br><font color=#00008f><i>Абдуллин Т.Р., Базукова Э.Р., Ваньков Ю.В., Кондратьев А.Е.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611038, 16.01.2026.
+ Заявка&nbsp;№&nbsp;2025698176&nbsp;от&nbsp;29.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919550">
+<td align=center valign=top><font color=#00008f><b>77</b></font><br><input type=checkbox name="tid88919550" id="tid88919550"  onClick='if (this.checked) {RowSelect(a88919550,1)} else {RowSelect(a88919550,0)}'><div id="pdf_88919550" name="pdf_88919550"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919550"><b><span style="line-height:1.0;">«ПРОГРАММНЫЙ МОДУЛЬ КЛАССИФИКАЦИИ ЗАШУМЛЕННЫХ И ИСКАЖЕННЫХ ИЗОБРАЖЕНИЙ КВАНТОВО-КЛАССИЧЕСКИМИ НЕЙРОННЫМИ СЕТЯМИ»</span></b></a><br><font color=#00008f><i>Рафиков А.С., Иванченко М.В., Лаптева Т., Бастракова М.В.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611027, 16.01.2026.
+ Заявка&nbsp;№&nbsp;2025697372&nbsp;от&nbsp;22.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919592">
+<td align=center valign=top><font color=#00008f><b>78</b></font><br><input type=checkbox name="tid88919592" id="tid88919592"  onClick='if (this.checked) {RowSelect(a88919592,1)} else {RowSelect(a88919592,0)}'><div id="pdf_88919592" name="pdf_88919592"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919592"><b><span style="line-height:1.0;">GYNLAB 2.0</span></b></a><br><font color=#00008f><i>Чистогов М.Д., Потураев П.С.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611069, 16.01.2026.
+ Заявка&nbsp;№&nbsp;2025697600&nbsp;от&nbsp;19.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88922277">
+<td align=center valign=top><font color=#00008f><b>79</b></font><br><input type=checkbox name="tid88922277" id="tid88922277"  onClick='if (this.checked) {RowSelect(a88922277,1)} else {RowSelect(a88922277,0)}'><div id="pdf_88922277" name="pdf_88922277"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88922277"><b><span style="line-height:1.0;">СПОСОБ КОДИРОВАНИЯ И ДЕКОДИРОВАНИЯ ХАРАКТЕРИСТИЧЕСКИХ ДАННЫХ И УСТРОЙСТВО</span></b></a><br><font color=#00008f><i>Мао Ц., Чжао И., Янь Н., Ян Х., Чжан Л., Ван Ц., Ши И.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2854759&nbsp;C2, 16.01.2026.
+ Заявка&nbsp;№&nbsp;2023135295&nbsp;от&nbsp;01.06.2022.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919700">
+<td align=center valign=top><font color=#00008f><b>80</b></font><br><input type=checkbox name="tid88919700" id="tid88919700"  onClick='if (this.checked) {RowSelect(a88919700,1)} else {RowSelect(a88919700,0)}'><div id="pdf_88919700" name="pdf_88919700"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919700"><b><span style="line-height:1.0;">ПРОГРАММНЫЙ МОДУЛЬ, ФОРМИРУЮЩИЙ ТОПОЛОГИЮ СЕТЕВОГО УРОВНЯ МЕТОДОМ ТЕХНОЛОГИИ MTD</span></b></a><br><font color=#00008f><i>Кушко Е.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611177, 19.01.2026.
+ Заявка&nbsp;№&nbsp;2025698126&nbsp;от&nbsp;26.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88925712">
+<td align=center valign=top><font color=#00008f><b>81</b></font><br><input type=checkbox name="tid88925712" id="tid88925712"  onClick='if (this.checked) {RowSelect(a88925712,1)} else {RowSelect(a88925712,0)}'><div id="pdf_88925712" name="pdf_88925712"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88925712"><b><span style="line-height:1.0;">СПОСОБ ОБНАРУЖЕНИЯ ФИШИНГОВОЙ АКТИВНОСТИ НА ВЕБ-РЕСУРСАХ НА ОСНОВЕ ЭВРИСТИЧЕСКОГО АНАЛИЗА С ИСПОЛЬЗОВАНИЕМ НЕЙРОСЕТЕВЫХ ТЕХНОЛОГИЙ</span></b></a><br><font color=#00008f><i>Немцев Н.А., Лунегов Л.В., Якунин А.С.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2855383&nbsp;C1, 30.01.2026.
+ Заявка&nbsp;№&nbsp;2024132554&nbsp;от&nbsp;30.10.2024.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88927197">
+<td align=center valign=top><font color=#00008f><b>82</b></font><br><input type=checkbox name="tid88927197" id="tid88927197"  onClick='if (this.checked) {RowSelect(a88927197,1)} else {RowSelect(a88927197,0)}'><div id="pdf_88927197" name="pdf_88927197"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88927197"><b><span style="line-height:1.0;">КАБЕЛЬ ДЛЯ САМОХОДНЫХ ВАГОНОВ С УПРОЧНЁННОЙ ОБОЛОЧКОЙ</span></b></a><br><font color=#00008f><i>Щиренко В.А., Кузнецова Л.Н.</i></font><br>
+<font color=#00008f>
+
+Патент на полезную модель RU&nbsp;241000&nbsp;U1, 02.02.2026.
+ Заявка&nbsp;№&nbsp;2025118579&nbsp;от&nbsp;04.07.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88920091">
+<td align=center valign=top><font color=#00008f><b>83</b></font><br><input type=checkbox name="tid88920091" id="tid88920091"  onClick='if (this.checked) {RowSelect(a88920091,1)} else {RowSelect(a88920091,0)}'><div id="pdf_88920091" name="pdf_88920091"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88920091"><b><span style="line-height:1.0;">ПРОГНОЗИРОВАНИЕ РАЗВИТИЯ ХРОНИЧЕСКОЙ ОБСТРУКТИВНОЙ БОЛЕЗНИ ЛЁГКИХ V1.1</span></b></a><br><font color=#00008f><i>Акинин А.А., Бубченко Е.И., Кайдаракова Е.А., Шиганов С.В., Яковлев Д.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611551, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2025698370&nbsp;от&nbsp;30.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919805">
+<td align=center valign=top><font color=#00008f><b>84</b></font><br><input type=checkbox name="tid88919805" id="tid88919805"  onClick='if (this.checked) {RowSelect(a88919805,1)} else {RowSelect(a88919805,0)}'><div id="pdf_88919805" name="pdf_88919805"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919805"><b><span style="line-height:1.0;">КОНТРОЛЬ И ОТПРАВКА ЗНАЧЕНИЙ ТЕМПЕРАТУР С ПОМОЩЬЮ ARDUINO ПО WIFI СОЕДИНЕНИЮ</span></b></a><br><font color=#00008f><i>Абдуллин Т.Р., Базукова Э.Р., Ваньков Ю.В., Кондратьев А.Е.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611267, 19.01.2026.
+ Заявка&nbsp;№&nbsp;2025698155&nbsp;от&nbsp;29.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919730">
+<td align=center valign=top><font color=#00008f><b>85</b></font><br><input type=checkbox name="tid88919730" id="tid88919730"  onClick='if (this.checked) {RowSelect(a88919730,1)} else {RowSelect(a88919730,0)}'><div id="pdf_88919730" name="pdf_88919730"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919730"><b><span style="line-height:1.0;">КОНТРОЛЬ И ОТПРАВКА ЗНАЧЕНИЙ ТЕМПЕРАТУР С ПОМОЩЬЮ ARDUINO 1.0</span></b></a><br><font color=#00008f><i>Абдуллин Т.Р., Базукова Э.Р., Ваньков Ю.В., Кондратьев А.Е.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611207, 19.01.2026.
+ Заявка&nbsp;№&nbsp;2025698067&nbsp;от&nbsp;29.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919595">
+<td align=center valign=top><font color=#00008f><b>86</b></font><br><input type=checkbox name="tid88919595" id="tid88919595"  onClick='if (this.checked) {RowSelect(a88919595,1)} else {RowSelect(a88919595,0)}'><div id="pdf_88919595" name="pdf_88919595"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919595"><b><span style="line-height:1.0;">CPA-СЕТЬ IRCLEAD</span></b></a><br><font color=#00008f><i>Василенко Д.С.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611072, 16.01.2026.
+ Заявка&nbsp;№&nbsp;2025693783&nbsp;от&nbsp;28.11.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88925724">
+<td align=center valign=top><font color=#00008f><b>87</b></font><br><input type=checkbox name="tid88925724" id="tid88925724"  onClick='if (this.checked) {RowSelect(a88925724,1)} else {RowSelect(a88925724,0)}'><div id="pdf_88925724" name="pdf_88925724"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88925724"><b><span style="line-height:1.0;">СПОСОБ СИНХРОНИЗАЦИИ МНОЖЕСТВА ВЫСОКОЧАСТОТНЫХ БАЗОВЫХ СТАНЦИЙ В СИСТЕМАХ МОБИЛЬНОГО ШИРОКОПОЛОСНОГО БЕСПРОВОДНОГО ДОСТУПА</span></b></a><br><font color=#00008f><i>Бобровский В.И., Комиссаров А.Е., Григорьев В.А., Аксенов В.О.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2855395&nbsp;C1, 30.01.2026.
+ Заявка&nbsp;№&nbsp;2025117901&nbsp;от&nbsp;27.06.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88920072">
+<td align=center valign=top><font color=#00008f><b>88</b></font><br><input type=checkbox name="tid88920072" id="tid88920072"  onClick='if (this.checked) {RowSelect(a88920072,1)} else {RowSelect(a88920072,0)}'><div id="pdf_88920072" name="pdf_88920072"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88920072"><b><span style="line-height:1.0;">ГЕНЕТИЧЕСКАЯ ОПТИМИЗАЦИЯ НЕЙРОСЕТЕВЫХ МОДЕЛЕЙ УПРАВЛЕНИЯ</span></b></a><br><font color=#00008f><i>Неусыпин К.А.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611532, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2026610152&nbsp;от&nbsp;12.01.2026.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88926403">
+<td align=center valign=top><font color=#00008f><b>89</b></font><br><input type=checkbox name="tid88926403" id="tid88926403"  onClick='if (this.checked) {RowSelect(a88926403,1)} else {RowSelect(a88926403,0)}'><div id="pdf_88926403" name="pdf_88926403"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88926403"><b><span style="line-height:1.0;">СПОСОБ, СИСТЕМА И УСТРОЙСТВО ДЛЯ СИНХРОНИЗАЦИИ ЧАСОВ ПРИ ПОЛУЧЕНИИ ДАННЫХ ЧЕЛОВЕКО-МАШИННОЙ СРЕДЫ И НОСИТЕЛЬ ДАННЫХ</span></b></a><br><font color=#00008f><i>Чжао Ц., Ян Ж.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2856054&nbsp;C1, 10.02.2026.
+ Заявка&nbsp;№&nbsp;2025121284&nbsp;от&nbsp;01.08.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a89120352">
+<td align=center valign=top><font color=#00008f><b>90</b></font><br><input type=checkbox name="tid89120352" id="tid89120352"  onClick='if (this.checked) {RowSelect(a89120352,1)} else {RowSelect(a89120352,0)}'><div id="pdf_89120352" name="pdf_89120352"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=89120352"><b><span style="line-height:1.0;">МОДЕЛЬ КЛАСТЕРИЗАЦИИ НАПРАВЛЕНИЙ ИННОВАЦИОННОГО РЕГИОНАЛЬНОГО РАЗВИТИЯ АРХАНГЕЛЬСКОЙ ОБЛАСТИ И НЕНЕЦКОГО АВТОНОМНОГО ОКРУГА НА ОСНОВЕ АНАЛИЗА КОМПЬЮТЕРНЫХ СОЦИАЛЬНЫХ СЕТЕЙ</span></b></a><br><font color=#00008f><i>Богданова Е.Н.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации базы данных RU&nbsp;2026620319, 21.01.2026.
+ Заявка&nbsp;№&nbsp;2025626604&nbsp;от&nbsp;30.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88922115">
+<td align=center valign=top><font color=#00008f><b>91</b></font><br><input type=checkbox name="tid88922115" id="tid88922115"  onClick='if (this.checked) {RowSelect(a88922115,1)} else {RowSelect(a88922115,0)}'><div id="pdf_88922115" name="pdf_88922115"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88922115"><b><span style="line-height:1.0;">СЕГМЕНТАЦИЯ ИЗОБРАЖЕНИЯ СО СВЕРХВЫСОКИМ РАЗРЕШЕНИЕМ И УЛУЧШЕНИЕМ В ЧАСТОТНОЙ ОБЛАСТИ</span></b></a><br><font color=#00008f><i>Дылов Д.В., Рогов О.Ю., Вито М.Л., Сарачаков А.Е., Шипицын В.В.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2854619&nbsp;C2, 14.01.2026.
+ Заявка&nbsp;№&nbsp;2024120651&nbsp;от&nbsp;30.12.2021.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919962">
+<td align=center valign=top><font color=#00008f><b>92</b></font><br><input type=checkbox name="tid88919962" id="tid88919962"  onClick='if (this.checked) {RowSelect(a88919962,1)} else {RowSelect(a88919962,0)}'><div id="pdf_88919962" name="pdf_88919962"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919962"><b><span style="line-height:1.0;">«NATIVE ON-DEVICE VISION ANALYTICS» («NOVA»)</span></b></a><br><font color=#00008f><i>Вишняков Б.В., Пасюк А.Н., Швыркин А.Н.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611423, 20.01.2026.
+ Заявка&nbsp;№&nbsp;2026610610&nbsp;от&nbsp;14.01.2026.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919759">
+<td align=center valign=top><font color=#00008f><b>93</b></font><br><input type=checkbox name="tid88919759" id="tid88919759"  onClick='if (this.checked) {RowSelect(a88919759,1)} else {RowSelect(a88919759,0)}'><div id="pdf_88919759" name="pdf_88919759"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919759"><b><span style="line-height:1.0;">CATRINIX: ПРОГНОЗИРОВАНИЕ СПРОСА</span></b></a><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611235, 19.01.2026.
+ Заявка&nbsp;№&nbsp;2026610441&nbsp;от&nbsp;14.01.2026.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88919740">
+<td align=center valign=top><font color=#00008f><b>94</b></font><br><input type=checkbox name="tid88919740" id="tid88919740"  onClick='if (this.checked) {RowSelect(a88919740,1)} else {RowSelect(a88919740,0)}'><div id="pdf_88919740" name="pdf_88919740"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88919740"><b><span style="line-height:1.0;">СПЕЦИАЛИЗИРОВАННОЕ ПО ДЛЯ ОПТИМИЗАЦИИ ПРОЦЕССОВ ПЛАНИРОВАНИЯ ТЕЛЕКОММУНИКАЦИОННЫХ СЕТЕЙ (IOSS.PLANNER)</span></b></a><br>
+<font color=#00008f>
+
+Свидетельство о регистрации программы для ЭВМ RU&nbsp;2026611216, 19.01.2026.
+ Заявка&nbsp;№&nbsp;2025698566&nbsp;от&nbsp;30.12.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88926958">
+<td align=center valign=top><font color=#00008f><b>95</b></font><br><input type=checkbox name="tid88926958" id="tid88926958"  onClick='if (this.checked) {RowSelect(a88926958,1)} else {RowSelect(a88926958,0)}'><div id="pdf_88926958" name="pdf_88926958"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88926958"><b><span style="line-height:1.0;">КОНТРОЛЛЕР МИНИ-ПИВОВАРНИ</span></b></a><br><font color=#00008f><i>Кронидов Т.В., Строганов К.А., Вихров К.Н., Быков К.С.</i></font><br>
+<font color=#00008f>
+
+Патент на полезную модель RU&nbsp;240761&nbsp;U1, 29.01.2026.
+ Заявка&nbsp;№&nbsp;2024140247&nbsp;от&nbsp;30.06.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88921878">
+<td align=center valign=top><font color=#00008f><b>96</b></font><br><input type=checkbox name="tid88921878" id="tid88921878"  onClick='if (this.checked) {RowSelect(a88921878,1)} else {RowSelect(a88921878,0)}'><div id="pdf_88921878" name="pdf_88921878"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88921878"><b><span style="line-height:1.0;">УСТРОЙСТВО ДЛЯ КОММУТАЦИИ ЭЛЕКТРИЧЕСКОЙ СЕТИ</span></b></a><br><font color=#00008f><i>Курочкин Д.С.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2854449&nbsp;C1, 12.01.2026.
+ Заявка&nbsp;№&nbsp;2025117738&nbsp;от&nbsp;26.06.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88926406">
+<td align=center valign=top><font color=#00008f><b>97</b></font><br><input type=checkbox name="tid88926406" id="tid88926406"  onClick='if (this.checked) {RowSelect(a88926406,1)} else {RowSelect(a88926406,0)}'><div id="pdf_88926406" name="pdf_88926406"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88926406"><b><span style="line-height:1.0;">СПОСОБ ВЫЯВЛЕНИЯ ИСТОЧНИКОВ НЕСИММЕТРИИ В ТРЕХФАЗНОЙ ЭЛЕКТРИЧЕСКОЙ СЕТИ</span></b></a><br><font color=#00008f><i>Бирюлин В.И., Куделина Д.В.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2856057&nbsp;C1, 10.02.2026.
+ Заявка&nbsp;№&nbsp;2025122457&nbsp;от&nbsp;13.08.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a89120564">
+<td align=center valign=top><font color=#00008f><b>98</b></font><br><input type=checkbox name="tid89120564" id="tid89120564"  onClick='if (this.checked) {RowSelect(a89120564,1)} else {RowSelect(a89120564,0)}'><div id="pdf_89120564" name="pdf_89120564"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=89120564"><b><span style="line-height:1.0;">«БАЗА ДАННЫХ ДЛЯ ОБУЧЕНИЯ НЕЙРОСЕТЕВОГО СИМУЛЯТОРА РАБОТЫ ГИДРОМЕТРИЧЕСКИХ ЛОТКОВ И ВОДОСЛИВОВ»</span></b></a><br><font color=#00008f><i>Щербаков А.О., Барамыков М.Р., Матвеев А.В.</i></font><br>
+<font color=#00008f>
+
+Свидетельство о регистрации базы данных RU&nbsp;2026620526, 05.02.2026.
+ Заявка&nbsp;№&nbsp;2026620220&nbsp;от&nbsp;28.01.2026.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88922600">
+<td align=center valign=top><font color=#00008f><b>99</b></font><br><input type=checkbox name="tid88922600" id="tid88922600"  onClick='if (this.checked) {RowSelect(a88922600,1)} else {RowSelect(a88922600,0)}'><div id="pdf_88922600" name="pdf_88922600"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88922600"><b><span style="line-height:1.0;">СИММЕТРИРУЮЩЕЕ УСТРОЙСТВО ТЯГОВОЙ ПОДСТАНЦИИ ПЕРЕМЕННОГО ТОКА</span></b></a><br><font color=#00008f><i>Тряпкин Е.Ю., Константинов А.М.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2855038&nbsp;C1, 23.01.2026.
+ Заявка&nbsp;№&nbsp;2025123447&nbsp;от&nbsp;25.08.2025.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+<tr valign=middle bgcolor=#f5f5f5 id="a88926318">
+<td align=center valign=top><font color=#00008f><b>100</b></font><br><input type=checkbox name="tid88926318" id="tid88926318"  onClick='if (this.checked) {RowSelect(a88926318,1)} else {RowSelect(a88926318,0)}'><div id="pdf_88926318" name="pdf_88926318"></div></td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88926318"><b><span style="line-height:1.0;">СПОСОБ ВОССТАНОВЛЕНИЯ ИЗОБРАЖЕНИЯ АСТРОФИЗИЧЕСКИХ ОБЪЕКТОВ С ПОМОЩЬЮ НЕЙРОННОЙ СЕТИ</span></b></a><br><font color=#00008f><i>Щекотихин Е.А., Позаненко А.С., Панков Н.С., Вольнова А.А.</i></font><br>
+<font color=#00008f>
+
+Патент на изобретение RU&nbsp;2855968&nbsp;C1, 06.02.2026.
+ Заявка&nbsp;№&nbsp;2024135664&nbsp;от&nbsp;28.11.2024.
+</span>
+
+</td><td align=center valign=middle>0</td></tr>
+
+
+</table>
+
+
+<table width=580 cellspacing=1 cellpadding=3 border=0 bgcolor=#ffffff>
+<tr align=center valign=middle class="menus">
+<td width=15% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=1">В&nbsp;начало</a></td>
+<td width=10% bgcolor=#555555 nowrap><font color=#aaaaaa><<</font></td>
+
+<td width=5% bgcolor=#5c6aa6 nowrap><font color=#ffffff>1</font></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=2">2</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=3">3</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=4">4</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=5">5</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=6">6</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=7">7</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=8">8</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=9">9</a></td>
+
+<td width=5% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=10">10</a></td>
+
+<td width=10% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=2">>></a></td>
+<td width=15% bgcolor=#555555 nowrap><a href="query_results.asp?pagenum=280">В&nbsp;конец</a></td>
+</tr></table>
+
+</td></tr></table>
+
+
+</td>
+<td width=10>&nbsp;</td>
+<td width=200 align=right valign=top>
+
+<img src="/pic/1pix.gif" vspace=14><br>
+<table width=200 cellspacing=0 cellpadding=3 border=0 bgcolor=#eeeeee>
+<tr><td colspan=2 bgcolor=#555555 valign=middle align=center>
+<font color=#ffffff>Возможные действия</font>
+</td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<a href="query_results.asp?pagenum=2"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="query_results.asp?pagenum=2">Следующая страница</a>
+</td></tr>
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:select_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:select_all()">Выделить все публикации на этой странице</a>
+</td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:deselect_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:deselect_all()">Снять выделение</a>
+</td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:itembox_add()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:itembox_add()">Добавить выделенные статьи в подборку:</a></td></tr>
+
+<tr><td colspan=2 align=center><select name="itemboxid" style="width:190px" class="input">
+
+<option value="0" selected>Новая подборка
+</select>&nbsp;</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:itembox_add_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:itembox_add_all()">Добавить все страницы с результатами поиска в указанную выше подборку</a></td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="querybox.asp?scope=current"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="querybox.asp?scope=current">Вернуться к поисковой форме и изменить условия запроса</a></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="querybox.asp?scope=newquery"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="querybox.asp?scope=newquery">Создать новый поисковый запрос</a></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="querybox.asp?scope=infound"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="querybox.asp?scope=infound">Продолжить поиск среди найденных результатов</a></td></tr>
+
+
+
+
+<tr><td colspan=2><img src="/pic/1pix.gif" vspace=8><br></td></tr>
+</table><br><br>
+
+</FORM>
+
+<img src="/pic/1pix.gif" vspace=9><br>
+
+
+</td></tr></table>
+</td></tr></table>
+
+<br><br>
+</div>
+</html>

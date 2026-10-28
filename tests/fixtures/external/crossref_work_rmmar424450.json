@@ -1,0 +1,260 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "reference-count": 43,
+  "publisher": "ECO-Vector LLC",
+  "issue": "3",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2023,
+       10,
+       17
+      ]
+     ],
+     "date-time": "2023-10-17T00:00:00Z",
+     "timestamp": 1697500800000
+    },
+    "content-version": "unspecified",
+    "delay-in-days": 0,
+    "URL": "https://creativecommons.org/licenses/by-nc-nd/4.0"
+   }
+  ],
+  "short-container-title": [
+   "Russian Military Medical Academy Reports"
+  ],
+  "DOI": "10.17816/rmmar424450",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2023,
+     10,
+     17
+    ]
+   ],
+   "date-time": "2023-10-17T20:56:07Z",
+   "timestamp": 1697576167000
+  },
+  "page": "319-331",
+  "source": "Crossref",
+  "is-referenced-by-count": 0,
+  "title": [
+   "Idiopathic omentum hemorrhage as a cause of hemoperitoneum"
+  ],
+  "prefix": "10.17816",
+  "volume": "42",
+  "author": [
+   {
+    "ORCID": "https://orcid.org/0000-0002-0037-2854",
+    "authenticated-orcid": false,
+    "given": "Vladimir V.",
+    "family": "Ryazanov",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-6791-518X",
+    "authenticated-orcid": false,
+    "given": "Gulnaz K.",
+    "family": "Sadykova",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0001-7383-512X",
+    "authenticated-orcid": false,
+    "given": "Igor S.",
+    "family": "Zheleznyak",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-9799-4616",
+    "authenticated-orcid": false,
+    "given": "Victor V.",
+    "family": "Ipatov",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-0359-5831",
+    "authenticated-orcid": false,
+    "given": "Ilya S.",
+    "family": "Khodkevich",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-0523-9411",
+    "authenticated-orcid": false,
+    "given": "Roman A.",
+    "family": "Postanogov",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0001-5987-8158",
+    "authenticated-orcid": false,
+    "given": "Gennadiy G.",
+    "family": "Romanov",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-3677-8765",
+    "authenticated-orcid": false,
+    "given": "Anastasiya Ya.",
+    "family": "Latysheva",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   }
+  ],
+  "member": "7284",
+  "published-online": {
+   "date-parts": [
+    [
+     2023,
+     10,
+     17
+    ]
+   ]
+  },
+  "container-title": [
+   "Russian Military Medical Academy Reports"
+  ],
+  "original-title": [],
+  "link": [
+   {
+    "URL": "https://journals.eco-vector.com/RMMArep/article/viewFile/424450/pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://journals.eco-vector.com/RMMArep/article/viewFile/424450/pdf",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2023,
+     10,
+     17
+    ]
+   ],
+   "date-time": "2023-10-17T20:56:21Z",
+   "timestamp": 1697576181000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://journals.eco-vector.com/RMMArep/article/view/424450"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2023,
+     10,
+     17
+    ]
+   ]
+  },
+  "references-count": 43,
+  "journal-issue": {
+   "issue": "3",
+   "published-online": {
+    "date-parts": [
+     [
+      2023,
+      10,
+      17
+     ]
+    ]
+   }
+  },
+  "URL": "https://doi.org/10.17816/rmmar424450",
+  "ISSN": [
+   "2713-2323",
+   "2713-2315"
+  ],
+  "issn-type": [
+   {
+    "type": "electronic",
+    "value": "2713-2323"
+   },
+   {
+    "type": "print",
+    "value": "2713-2315"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2023,
+     10,
+     17
+    ]
+   ]
+  }
+ }
+}

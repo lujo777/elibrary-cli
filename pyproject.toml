@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "elibrary-cli"
+version = "0.1.0"
+description = "CLI and MCP server for eLIBRARY.RU: search articles, journals, authors, patents, organizations and books; fetch metadata and full text"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "lujo777" }]
+keywords = ["elibrary", "elibrary.ru", "rinc", "rsci", "mcp", "cli", "scientometrics", "zotero"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: Russian",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = [
+    "mcp>=2.3,<3",           # official MCP SDK (MCPServer, formerly FastMCP)
+    "httpx2>=2.10",          # HTTP client (already required by mcp)
+    "truststore>=0.9",       # OS certificate store for TLS
+    "typer>=0.26,<1",
+    "rich>=13.9",
+    "pydantic>=2.12",
+    "selectolax>=1.0,<2",    # Lexbor HTML5 parser
+    "platformdirs>=4.3",
+]
+
+[project.optional-dependencies]
+pdf = ["pypdf>=6.0", "pdfminer.six>=20250506"]
+zotero = ["pyzotero>=1.14"]
+browser = ["playwright>=1.50"]
+all = ["elibrary-cli[pdf,zotero,browser]"]
+
+[project.urls]
+Homepage = "https://github.com/lujo777/elibrary-cli"
+Issues = "https://github.com/lujo777/elibrary-cli/issues"
+
+[project.scripts]
+elibrary = "elibrary_cli.cli:main"
+elibrary-cli = "elibrary_cli.cli:main"
+elibrary-mcp = "elibrary_cli.mcp_server:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4",
+    "ruff>=0.6",
+    "pypdf>=6.0",
+    "pdfminer.six>=20250506",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/elibrary_cli"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["live: hits the real elibrary.ru (run only with ELIBRARY_LIVE=1)"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+ignore = ["E501"]

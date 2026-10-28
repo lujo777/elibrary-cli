@@ -1,0 +1,197 @@
+{
+ "id": "https://openalex.org/W4402133969",
+ "doi": "https://doi.org/10.18699/ssmj20240404",
+ "title": "Contradictions in traditional ideas about atherosclerosis and the efficacy of lipid-lowering therapy. Promising directions",
+ "display_name": "Contradictions in traditional ideas about atherosclerosis and the efficacy of lipid-lowering therapy. Promising directions",
+ "publication_year": 2024,
+ "publication_date": "2024-08-28",
+ "ids": {
+  "openalex": "https://openalex.org/W4402133969",
+  "doi": "https://doi.org/10.18699/ssmj20240404"
+ },
+ "language": "en",
+ "primary_location": {
+  "id": "doi:10.18699/ssmj20240404",
+  "doi": "https://doi.org/10.18699/ssmj20240404",
+  "is_oa": true,
+  "landing_page_url": "http://dx.doi.org/10.18699/ssmj20240404",
+  "pdf_url": "https://sibmed.elpub.ru/jour/article/download/1610/649",
+  "source": {
+   "id": "https://openalex.org/S4306540197",
+   "display_name": "Сибирский научный медицинский журнал",
+   "issn_l": "2410-2512",
+   "issn": [
+    "2410-2512",
+    "2410-2520"
+   ],
+   "is_oa": true,
+   "is_in_doaj": true,
+   "is_core": false,
+   "listed_in": [
+    "doaj"
+   ],
+   "host_organization": null,
+   "host_organization_name": null,
+   "host_organization_lineage": [],
+   "host_organization_lineage_names": [],
+   "type": "journal"
+  },
+  "license": "cc-by",
+  "license_id": "https://openalex.org/licenses/cc-by",
+  "version": "publishedVersion",
+  "is_accepted": true,
+  "is_published": true,
+  "raw_source_name": "Сибирский научный медицинский журнал",
+  "raw_type": "journal-article"
+ },
+ "type": "article",
+ "open_access": {
+  "is_oa": true,
+  "oa_status": "diamond",
+  "oa_url": "https://sibmed.elpub.ru/jour/article/download/1610/649",
+  "any_repository_has_fulltext": false
+ },
+ "authorships": [
+  {
+   "author_position": "first",
+   "author": {
+    "id": "https://openalex.org/A5113943011",
+    "display_name": "A. P. Vasiliev",
+    "orcid": null,
+    "observed_orcids": []
+   },
+   "is_corresponding": false,
+   "raw_author_name": "A. P. Vasiliev",
+   "raw_orcid": "https://orcid.org/0000-0002-4931-5383"
+  },
+  {
+   "author_position": "last",
+   "author": {
+    "id": "https://openalex.org/A5049948308",
+    "display_name": "N. N. Streltsova",
+    "orcid": "https://orcid.org/0000-0001-8675-9103",
+    "observed_orcids": [
+     "https://orcid.org/0000-0001-8675-9103"
+    ]
+   },
+   "is_corresponding": false,
+   "raw_author_name": "N. N. Streltsova",
+   "raw_orcid": "https://orcid.org/0000-0001-8675-9103"
+  }
+ ],
+ "best_oa_location": {
+  "id": "doi:10.18699/ssmj20240404",
+  "doi": "https://doi.org/10.18699/ssmj20240404",
+  "is_oa": true,
+  "landing_page_url": "http://dx.doi.org/10.18699/ssmj20240404",
+  "pdf_url": "https://sibmed.elpub.ru/jour/article/download/1610/649",
+  "source": {
+   "id": "https://openalex.org/S4306540197",
+   "display_name": "Сибирский научный медицинский журнал",
+   "issn_l": "2410-2512",
+   "issn": [
+    "2410-2512",
+    "2410-2520"
+   ],
+   "is_oa": true,
+   "is_in_doaj": true,
+   "is_core": false,
+   "listed_in": [
+    "doaj"
+   ],
+   "host_organization": null,
+   "host_organization_name": null,
+   "host_organization_lineage": [],
+   "host_organization_lineage_names": [],
+   "type": "journal"
+  },
+  "license": "cc-by",
+  "license_id": "https://openalex.org/licenses/cc-by",
+  "version": "publishedVersion",
+  "is_accepted": true,
+  "is_published": true,
+  "raw_source_name": "Сибирский научный медицинский журнал",
+  "raw_type": "journal-article"
+ },
+ "locations": [
+  {
+   "id": "doi:10.18699/ssmj20240404",
+   "doi": "https://doi.org/10.18699/ssmj20240404",
+   "is_oa": true,
+   "landing_page_url": "http://dx.doi.org/10.18699/ssmj20240404",
+   "pdf_url": "https://sibmed.elpub.ru/jour/article/download/1610/649",
+   "source": {
+    "id": "https://openalex.org/S4306540197",
+    "display_name": "Сибирский научный медицинский журнал",
+    "issn_l": "2410-2512",
+    "issn": [
+     "2410-2512",
+     "2410-2520"
+    ],
+    "is_oa": true,
+    "is_in_doaj": true,
+    "is_core": false,
+    "listed_in": [
+     "doaj"
+    ],
+    "host_organization": null,
+    "host_organization_name": null,
+    "host_organization_lineage": [],
+    "host_organization_lineage_names": [],
+    "type": "journal"
+   },
+   "license": "cc-by",
+   "license_id": "https://openalex.org/licenses/cc-by",
+   "version": "publishedVersion",
+   "is_accepted": true,
+   "is_published": true,
+   "raw_source_name": "Сибирский научный медицинский журнал",
+   "raw_type": "journal-article"
+  },
+  {
+   "id": "pmh:oai:doaj.org/article:62a979471d464679b76ffc081685b5f9",
+   "doi": null,
+   "is_oa": false,
+   "landing_page_url": "https://doaj.org/article/62a979471d464679b76ffc081685b5f9",
+   "pdf_url": null,
+   "source": {
+    "id": "https://openalex.org/S4306401280",
+    "display_name": "DOAJ (DOAJ: Directory of Open Access Journals)",
+    "issn_l": null,
+    "issn": null,
+    "is_oa": false,
+    "is_in_doaj": false,
+    "is_core": false,
+    "listed_in": [],
+    "host_organization": null,
+    "host_organization_name": null,
+    "host_organization_lineage": [],
+    "host_organization_lineage_names": [],
+    "type": "repository"
+   },
+   "license": null,
+   "license_id": null,
+   "version": "submittedVersion",
+   "is_accepted": false,
+   "is_published": false,
+   "raw_source_name": "Сибирский научный медицинский журнал, Vol 44, Iss 4, Pp 38-52 (2024)",
+   "raw_type": "article"
+  }
+ ],
+ "locations_count": 2,
+ "has_fulltext": true,
+ "has_content": {
+  "grobid_xml": true,
+  "pdf": true
+ },
+ "content_urls": {
+  "pdf": "https://content.openalex.org/works/W4402133969.pdf",
+  "grobid_xml": "https://content.openalex.org/works/W4402133969.grobid-xml"
+ },
+ "biblio": {
+  "volume": "44",
+  "issue": "4",
+  "first_page": "38",
+  "last_page": "52"
+ }
+}

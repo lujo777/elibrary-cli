@@ -1,0 +1,3491 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="robots" content="noindex,nofollow">
+<title>Петров Владимир Алексеевич - Список публикаций</title>
+
+<script type="text/javascript" src="/jquery.min.js"></script>
+<script type="text/javascript" src="/jquery.tools.min.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.easydrag.js"></script>
+<script type="text/javascript" src="/elibrary1.js"></script>
+<script type="text/javascript" src="/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/style_sm.css" type="text/css" media="screen">
+
+<SCRIPT LANGUAGE="JavaScript">
+
+but_blue_hover=new Image();
+but_blue_hover.src="/images/but_blue_hover.png";
+but_red_hover=new Image();
+but_red_hover.src="/images/but_red_hover.png";
+but_gray_hover=new Image();
+but_gray_hover.src="/images/but_gray_hover.png";
+
+w_down=new Image();
+w_down.src="/pic/w_show.gif";
+w_up=new Image();
+w_up.src="/pic/w_hide.gif";
+ws_down=new Image();
+ws_down.src="/images/or_er2_down.gif";
+ws_up=new Image();
+ws_up.src="/images/or_close2.gif";
+
+var selRow;
+var row_color;
+function onRowClick(row){
+  if(row != selRow){
+     if (selRow != null){
+        selRow.bgColor = row_color;
+     }
+  selRow = row;
+  row_color = row.bgColor;
+  selRow.bgColor="#e8e8e8";
+  }
+}
+function hideShow(elem,parent) {
+  var child =  document.getElementById(elem);
+  child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+  if (parent.className == "win_expandable") parent.src = child.className == "collapsed" ? w_down.src : w_up.src;
+}
+function hideShowSel(elem) {
+  var child =  document.getElementById(elem);
+  child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+  var imgparent =  document.getElementById('img_'+elem);
+  if (imgparent.className == "win_expandable") imgparent.src = child.className == "collapsed" ? ws_down.src : ws_up.src;
+  var txtparent =  document.getElementById('txt_'+elem);
+  if (txtparent.className == "win_expandable") txtparent.innerHTML = child.className == "collapsed" ? "Раскрыть" : "Скрыть";
+}
+function hideShowSel1(elem) {
+  var child =  document.getElementById(elem);
+  $('#'+elem).slideToggle(500, function(){didScroll = true;})
+  child.className = child.className == "collapsed1" ? "expanded1" : "collapsed1";
+  if (child.className == "collapsed1") {
+    $('#'+elem).slideUp(500, function(){didScroll = true;})}
+  else {
+    $('#'+elem).slideDown(500, function(){didScroll = true;})}
+  var txtparent =  document.getElementById('txt_'+elem);
+  if (txtparent.className == "win_expandable") txtparent.innerHTML = child.className == "collapsed1" ? "▼" : "▲";
+}
+function RowSelect(row,sel){
+  var rbgc = sel==1 ? "#e8e8e8" : "#f5f5f5";
+  $('#'+row+' td').attr('bgColor', rbgc);
+}
+function select_all(){
+  $('input:checkbox[name^="tid"]').attr('checked', true);
+  $('input:checkbox[name^="pid"]').attr('checked', true);
+  $('tr[id^="arw"] td').attr('bgColor', "#e8e8e8");
+  $('tr[id^="brw"] td').attr('bgColor', "#e8e8e8");
+}
+function deselect_all(){
+  $('input:checkbox[name^="tid"]').attr('checked', false);
+  $('input:checkbox[name^="pid"]').attr('checked', false);
+  $('tr[id^="arw"] td').attr('bgColor', "#f5f5f5");
+  $('tr[id^="brw"] td').attr('bgColor', "#f5f5f5");
+}
+function select_options(sname){
+  $('input:checkbox[name^="'+sname+'s_"]').attr('checked', true);
+  $('tr[name^="'+sname+'_"]').attr('bgColor', "#dddddd");
+  checked_count(sname);
+  isnew=1;
+  }
+function deselect_options(sname){
+  $('input:checkbox[name^="'+sname+'s_"]').attr('checked', false);
+  $('tr[name^="'+sname+'_"]').attr('bgColor', "#f5f5f5");
+  checked_count(sname);
+  isnew=1;
+}
+function wait_load_options(sname){
+  $('span[name="'+sname+'sheader"]').text('загружается...');
+}
+function checked_count(sname){
+  var nb=$('input:checkbox[name^="'+sname+'s_"]:checked').length;
+  if (nb>0){$('span[name="'+sname+'sheader"]').html('(выделено: ' + nb + ')')}
+  else{$('span[name="'+sname+'sheader"]').text('')}
+}
+var ir=0;
+function resizelist(sname, offset) {
+ if (ir <= offset+10) {
+  ir=ir+1;
+  $('div[id="'+sname+'_options"]').height(ir+50);
+  window.setTimeout('resizelist("'+sname+'", '+offset+')', 1);
+ }
+}
+var rubricloaded=0;
+var titleloaded=0;
+var orgloaded=0;
+var authorloaded=0;
+var yearloaded=0;
+var typeloaded=0;
+var catloaded=0;
+var roleloaded=0;
+var keywordloaded=0;
+var isnew=0;
+
+$(document).ready(function() { 
+	didScroll=true;
+
+
+
+$('#rubric_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="rubrics_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(8) + "|"});
+$('#rubrics_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#rubrics_options').load("author_items_rubrics.asp?id=3771&order=" + $('#rubric_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+rubricloaded=1;
+})
+$('*[id$="_rubrics"]').click(function() { 
+hideShowSel1('rubrics');
+if (rubricloaded==0){
+$('#rubrics_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_rubrics.asp?id=3771&order=" + $('#rubric_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#rubrics_options').html(data);
+  if ($('#rubrics_table').height()<=200){$('#rubrics_options').height($('#rubrics_table').height()+10)}
+  else {$('#rubrics_options').height(200)};
+  rubricloaded=1;
+  })
+}
+else {
+  if ($('#rubrics_table').height()<=200){$('#rubrics_options').height($('#rubrics_table').height()+10)}
+  else {$('#rubrics_options').height(200)};
+}
+})
+
+
+$('#title_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="titles_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(7) + "|"});
+$('#titles_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#titles_options').load("author_items_titles.asp?id=3771&order=" + $('#title_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+titleloaded=1;
+})
+$('*[id$="_titles"]').click(function() { 
+hideShowSel1('titles');
+if (titleloaded==0){
+$('#titles_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_titles.asp?id=3771&order=" + $('#title_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#titles_options').html(data);
+  if ($('#titles_table').height()<=200){$('#titles_options').height($('#titles_table').height()+10)}
+  else {$('#titles_options').height(200)};
+  titleloaded=1;
+  })
+}
+else {
+  if ($('#titles_table').height()<=200){$('#titles_options').height($('#titles_table').height()+10)}
+  else {$('#titles_options').height(200)};
+}
+})
+
+
+$('#org_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="orgs_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(5) + "|"});
+$('#orgs_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#orgs_options').load("author_items_orgs.asp?id=3771&order=" + $('#org_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+orgloaded=1;
+})
+$('*[id$="_orgs"]').click(function() { 
+hideShowSel1('orgs');
+if (orgloaded==0){
+$('#orgs_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_orgs.asp?id=3771&order=" + $('#org_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#orgs_options').html(data);
+  if ($('#orgs_table').height()<=200){$('#orgs_options').height($('#orgs_table').height()+10)}
+  else {$('#orgs_options').height(200)};
+  orgloaded=1;
+  })
+}
+else {
+  if ($('#orgs_table').height()<=200){$('#orgs_options').height($('#orgs_table').height()+10)}
+  else {$('#orgs_options').height(200)};
+}
+})
+
+
+$('#author_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="authors_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(8) + "|"});
+selids = encodeURIComponent(selids);
+$('#authors_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#authors_options').load("author_items_authors.asp?id=3771&order=" + $('#author_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+authorloaded=1;
+})
+$('*[id$="_authors"]').click(function() { 
+hideShowSel1('authors');
+if (authorloaded==0){
+$('#authors_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_authors.asp?id=3771&order=" + $('#author_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#authors_options').html(data);
+  if ($('#authors_table').height()<=200){$('#authors_options').height($('#authors_table').height()+10)}
+  else {$('#authors_options').height(200)};
+  authorloaded=1;
+  })
+}
+else {
+  if ($('#authors_table').height()<=200){$('#authors_options').height($('#authors_table').height()+10)}
+  else {$('#authors_options').height(200)};
+}
+})
+
+
+$('#year_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="years_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(6) + "|"});
+$('#years_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#years_options').load("author_items_years.asp?id=3771&order=" + $('#year_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+yearloaded=1;
+})
+$('*[id$="_years"]').click(function() { 
+hideShowSel1('years');
+if (yearloaded==0){
+$('#years_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_years.asp?id=3771&order=" + $('#year_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#years_options').html(data);
+  if ($('#years_table').height()<=200){$('#years_options').height($('#years_table').height()+10)}
+  else {$('#years_options').height(200)};
+  yearloaded=1;
+  })
+}
+else {
+  if ($('#years_table').height()<=200){$('#years_options').height($('#years_table').height()+10)}
+  else {$('#years_options').height(200)};
+}
+})
+
+
+$('#type_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="types_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(6) + "|"});
+$('#types_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#types_options').load("author_items_types.asp?id=3771&order=" + $('#type_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+typeloaded=1;
+})
+$('*[id$="_types"]').click(function() { 
+hideShowSel1('types');
+if (typeloaded==0){
+$('#types_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_types.asp?id=3771&order=" + $('#type_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#types_options').html(data);
+  if ($('#types_table').height()<=200){$('#types_options').height($('#types_table').height()+10)}
+  else {$('#types_options').height(200)};
+  typeloaded=1;
+  })
+}
+else {
+  if ($('#types_table').height()<=200){$('#types_options').height($('#types_table').height()+10)}
+  else {$('#types_options').height(200)};
+}
+})
+
+
+$('#cat_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="cats_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(6) + "|"});
+$('#cats_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#cats_options').load("author_items_cats.asp?id=3771&order=" + $('#cat_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+catloaded=1;
+})
+$('*[id$="_cats"]').click(function() { 
+hideShowSel1('cats');
+if (catloaded==0){
+$('#cats_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_cats.asp?id=3771&order=" + $('#cat_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#cats_options').html(data);
+  if ($('#cats_table').height()<=200){$('#cats_options').height($('#cats_table').height()+10)}
+  else {$('#cats_options').height(200)};
+  catloaded=1;
+  })
+}
+else {
+  if ($('#cats_table').height()<=200){$('#cats_options').height($('#cats_table').height()+10)}
+  else {$('#cats_options').height(200)};
+}
+})
+
+
+$('#role_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="roles_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(6) + "|"});
+$('#roles_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#roles_options').load("author_items_roles.asp?id=3771&order=" + $('#role_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+roleloaded=1;
+})
+$('*[id$="_roles"]').click(function() { 
+hideShowSel1('roles');
+if (roleloaded==0){
+$('#roles_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_roles.asp?id=3771&order=" + $('#role_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#roles_options').html(data);
+  if ($('#roles_table').height()<=200){$('#roles_options').height($('#roles_table').height()+10)}
+  else {$('#roles_options').height(200)};
+  roleloaded=1;
+  })
+}
+else {
+  if ($('#roles_table').height()<=200){$('#roles_options').height($('#roles_table').height()+10)}
+  else {$('#roles_options').height(200)};
+}
+})
+
+
+$('#keyword_order').change(function() { 
+var selids="";
+$('input:checkbox[id^="keywords_"]:checked').each(function(){
+  selids += $(this).attr('name').substring(9) + "|"});
+$('#keywords_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$('#keywords_options').load("author_items_keywords.asp?id=3771&order=" + $('#keyword_order').val() + "&selids=" + selids + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random());
+keywordloaded=1;
+})
+$('*[id$="_keywords"]').click(function() { 
+hideShowSel1('keywords');
+if (keywordloaded==0){
+$('#keywords_options').html("<br>&nbsp;&nbsp;&nbsp;Загружается...");
+$.get("author_items_keywords.asp?id=3771&order=" + $('#keyword_order').val() + "&selids=" + "&show_hash=0&show_refs=1&hide_doubles=1&rand=" + Math.random(), function(data) {
+  $('#keywords_options').html(data);
+  if ($('#keywords_table').height()<=200){$('#keywords_options').height($('#keywords_table').height()+10)}
+  else {$('#keywords_options').height(200)};
+  keywordloaded=1;
+  })
+}
+else {
+  if ($('#keywords_table').height()<=200){$('#keywords_options').height($('#keywords_table').height()+10)}
+  else {$('#keywords_options').height(200)};
+}
+})
+
+
+})
+
+function reset_form(){
+  var frm = document.forms["results"];
+  deselect_options("rubric"); 
+  deselect_options("title"); 
+  deselect_options("org"); 
+  deselect_options("author"); 
+  deselect_options("year"); 
+  deselect_options("type"); 
+  deselect_options("cat"); 
+  deselect_options("role"); 
+  deselect_options("keyword"); 
+}
+function pub_search(){
+  var frm = document.forms["results"];
+    frm.pagenum.value=1;
+    frm.action="author_items.asp";
+    frm.target="";
+    frm.submit()
+}
+
+
+function itembox_add(){
+  var frm = document.forms["results"];
+  var issel=0;
+  frm.items_all.value="";
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       if (frm.elements[i].checked) {
+	     issel=issel+1;
+	     frm.items_all.value = frm.items_all.value + frm.elements[i].name.substring(3, frm.elements[i].name.length) + "|";
+	   }
+    }
+	}
+	if (issel==0) {
+    alerts ("Не выделено ни одной публикации")}
+	else {
+    $.fancybox({
+      href : 'itembox_select.asp?items_all='+frm.items_all.value ,
+      title : '',
+			padding : 20,     
+			width : 480,
+			height : 400,
+			overlayOpacity : 0.3,	
+			overlayColor : '#000',
+			speedIn : 500,
+			hideOnOverlayClick : false,
+			enableEscapeButton : true,
+			type : 'iframe'
+    });
+  }
+}
+
+function itembox_add_all(){
+  var frm = document.forms["results"];
+	$.fancybox({
+		href : 'itembox_select.asp?listid='+frm.listid.value ,
+		title : '',
+		padding : 20,     
+		width : 480,
+		height : 400,
+		overlayOpacity : 0.3,	
+		overlayColor : '#000',
+		speedIn : 500,
+		hideOnOverlayClick : false,
+		enableEscapeButton : true,
+		type : 'iframe'
+	});
+}
+
+function items_rubric_add(){
+  var frm = document.forms["results"];
+  var issel=0;
+  frm.items_all.value="";
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       if (frm.elements[i].checked) {
+	     issel=issel+1;
+	     frm.items_all.value = frm.items_all.value + frm.elements[i].name.substring(3, frm.elements[i].name.length) + "|";
+	   }
+    }
+ }
+ if (issel==0) {
+    alerts ("Не выделено ни одной публикации")}
+ else {
+  $.fancybox({
+    href : 'items_rubric_add.asp?items_all='+frm.items_all.value ,
+    title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 150,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+  });
+ }
+}
+function newquery(){
+  document.forms["results"].action="querybox.asp";
+  document.forms["results"].target="";
+  document.forms["results"].submit()
+}
+function show_help(topic){
+  anewwin=window.open("", "addwin", "resizable=yes,scrollbars=yes,height=300,width=500,top=0,left=0");
+  document.forms["results"].action=topic;
+  document.forms["results"].target="addwin";
+  document.forms["results"].submit()
+}
+function load_article(id){
+
+  alerts("Для доступа к полному тексту необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function url_article(idid, urlnum){
+
+  alerts("Для просмотра документа необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function order_item(id, pr){
+
+  alerts("Для заказа полного текста публикации необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function goto_page(pnum){
+  var frm = document.forms["results"];
+  frm.pagenum.value=pnum;
+  frm.action="author_items.asp";
+  frm.target="";
+  frm.submit()
+}
+
+function author_items_print(){
+  var frm = document.forms["results"];
+  anewwin=window.open("", "author_items_print3771", "resizable=yes,scrollbars=yes,menubar=yes,height=600,width=700,top=50,left=50");
+  frm.action="author_items_print.asp";
+  frm.target="author_items_print3771";
+  frm.submit()
+}
+
+
+
+function show_author_refs(iid){
+
+  alerts("Для доступа к этой странице необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.forms["login"].login.focus();
+
+}
+
+
+function isVisible(tag) {
+    var t = $(tag);
+    var w = $(window);
+    var wt = w.scrollTop();
+    var tt = t.offset().top;
+    var tb = tt + t.height();
+    return ((tb <= wt + w.height()) && (tt >= wt));
+}
+function pdf_icon(b) {
+  if (!b.prop("shown") && isVisible(b)) {
+    b.prop("shown", true);
+    b.load("ispdf.asp?itemid=" + b.attr('name').substring(4) + "&rand=" + Math.random());
+  }
+}
+function get_pdfs(){
+  $('div[id^="pdf_"]:not(prop("shown"))').each(function(){
+    pdf_icon($(this))
+  });
+}
+setInterval(function() {
+  if ( didScroll2 ) {
+	didScroll2=false;
+	get_pdfs();
+    }
+ }, 200);
+
+</SCRIPT>
+</head>
+
+<body onLoad='document.all.loading.style.display="none"; document.all.thepage.style.display=""'>
+
+<div id="loading" style="position:absolute; width:100%; text-align:center; top:300px;">
+Пожалуйста, подождите, <br>пока Ваш запрос будет обработан
+<br><img src="/pic/query_wait.gif" border=0 width=31 height=31 vspace=5></div>
+
+<div id="thepage" style="display: none">
+<table width=100% cellpadding=0 cellspacing=0 border=0>
+<tr><td width=100% align=center valign=top>
+
+
+<table  cellpadding=0 cellspacing=0 border=0>
+<tr><td width=170 align=left valign=top id="leftcol">
+
+<table border=0 cellspacing=0 cellpadding=0 width=150>
+
+<tr><td><a href="/defaultx.asp"><img src="/images/welcome1.jpg" width=150 title="НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА eLIBRARY.RU" border=0 vspace=15></a></td></tr>
+
+
+<tr><td><a href="/defaultx.asp"><img id="elibrary_logo" src="/images/elibrary_logo2.svg" width=150 height=39 border=0 vspace=10 title="eLIBRARY.RU - НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА"></a></td></tr>
+<script language="JavaScript">
+if (supportsSVG) {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo2.svg";}
+else {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo.gif";}
+</script>
+<tr><td><img src="/pic/1pix.gif" vspace=7></td></tr>
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_basket').slideToggle(500, function(){didScroll = true;})" title="Состояние корзины в электронном магазине eLIBRARY.ru">КОРЗИНА</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_basket" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+<tr><td width=100% align=center valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Всего в корзине:&nbsp;</font><font color=#00008f><b><span id="basket_num">0</span></b>&nbsp;публ.</font></td></tr>
+<tr><td width=100% align=center valign=top>
+&nbsp;<font color=#000000>на сумму:&nbsp;</font><font color=#00008f><b><span id="basket_sum">0</span></b>&nbsp;руб.</font></td></tr>
+</td></tr>
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=center width=30 valign=bottom><a href="/basket.asp"><img src="/images/basket.png" width=15 height=15 border=0></a></td><td align=left width=110 valign=top><a href="/basket.asp">Содержание корзины</a></td></tr>
+</table>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_search(){
+if (document.forms["search"].ftext.value.length > 1) {
+  var frm = document.forms["search"];
+  frm.action="/query_results.asp";
+  frm.target="";
+  frm.submit();
+  }
+else {
+  alert("Введите не менее двух символов");
+  }
+}
+function search_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_search();
+	return false;
+  }
+} 
+</SCRIPT>
+<FORM method=post name="search" onSubmit="return false">
+<input type="hidden" name="where_fulltext" value="on">
+<input type="hidden" name="where_name" value="on">
+<input type="hidden" name="where_abstract" value="on">
+<input type="hidden" name="where_keywords" value="on">
+<input type="hidden" name="where_affiliation" value="">
+<input type="hidden" name="where_references" value="">
+<input type="hidden" name="type_article" value="on">
+<input type="hidden" name="type_disser" value="on">
+<input type="hidden" name="type_book" value="on">
+<input type="hidden" name="type_report" value="on">
+<input type="hidden" name="type_conf" value="on">
+<input type="hidden" name="type_patent" value="on">
+<input type="hidden" name="type_preprint" value="on">
+<input type="hidden" name="type_grant" value="on">
+<input type="hidden" name="type_dataset" value="on">
+<input type="hidden" name="search_freetext" value="">
+<input type="hidden" name="search_morph" value="on">
+<input type="hidden" name="search_fulltext" value="">
+<input type="hidden" name="search_open" value="">
+<input type="hidden" name="search_results" value="">
+<input type="hidden" name="titles_all" value="">
+<input type="hidden" name="authors_all" value="">
+<input type="hidden" name="rubrics_all" value="">
+<input type="hidden" name="queryboxid" value="">
+<input type="hidden" name="itemboxid" value="">
+<input type="hidden" name="begin_year" value="">
+<input type="hidden" name="end_year" value="">
+<input type="hidden" name="issues" value="all">
+<input type="hidden" name="orderby" value="rank">
+<input type="hidden" name="order" value="rev">
+<input type="hidden" name="changed" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_search').slideToggle(500, function(){didScroll = true;})" title="Поиск в Научной электронной библиотеке">ПОИСК</span></b></font>
+</td></tr>
+</table>
+<div ID="win_search" class="collapsed">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=140 align=center valign=top>
+<div style="height: 10px;"></div>
+<div class="formfr" style="width:126px;"><input type=text id="ftext" name="ftext" value="" style="width:118px;" class="inputt" onKeyPress="search_enter(event);"></div>
+<div style="height: 11px;"></div>
+
+<div class="butblue" style="width: 52px;" onClick="check_search()">Найти</div>
+
+</td></tr>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+</table>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/querybox.asp?scope=newquery">Расширенный поиск</a></td></tr>
+
+
+<tr><td colspan=2><div style="height:3px;"></div></td></tr>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/neural_search.asp">Нейропоиск</a></td></tr>
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+
+</FORM>
+
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_all(){
+  if (document.forms["login"].login.value==""){
+    alert("Не указано имя пользователя!");
+	return false;
+	}
+  else if (document.forms["login"].password.value==""){
+    alert("Не указан пароль!");
+	return false;
+	}
+  else{
+    var frm = document.forms["login"];
+    frm.action="/start_session.asp";
+    frm.target="";
+    frm.submit();
+   }
+}
+function login_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_all();
+	return false;
+  }
+} 
+function sso_orgs(){
+  var frm = document.forms["results"];
+  $.fancybox({
+    href : 'sso_orgs.asp' ,
+    title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 200,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+  });
+}
+function show_hide_password(target){
+	var input = document.getElementById('password');
+	if (input.getAttribute('type') == 'password') {
+		target.classList.add('view');
+		input.setAttribute('type', 'text');
+	} 
+	else {
+		target.classList.remove('view');
+		input.setAttribute('type', 'password');
+	}
+	return false;
+}
+</SCRIPT>
+
+<FORM method=post name="login" onSubmit="return false">
+<input type=hidden name="rpage" value=https://elibrary.ru/author_items.asp?authorid=3771&show_refs=1>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_login').slideToggle(500, function(){didScroll = true;})" title="Вход в библиотеку для зарегистрированных пользователей">ВХОД</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_login" class="expanded">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Имя пользователя<br>&nbsp;или адрес эл. почты:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<div class="formfr" style="width:126px;"><input type=text id="login" name="login" value="" style="width:118px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"></div>
+</td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Пароль:</font></td></tr>
+<tr><td align=center width=100%>
+<div class="formfr" style="width:126px;"><input type=password id="password" name="password" value="" style="width:102px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"><a href="#" class="password-control" onclick="return show_hide_password(this);"></a></div>
+</td></tr>
+
+<tr><td align=center width=100%>
+
+<div style="height: 9px;"></div>
+<div class="butred" style="width: 52px;" onClick="check_all()">Вход</div>
+<div style="height: 9px;"></div>
+
+</td></tr></table>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr valign=middle class="menub"><td align=center width=30><input type=checkbox name="knowme"></td><td align=left width=101>Запомнить меня</td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/access_terms.asp">Правила доступа</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/author_info.asp?isnew=1&rpage=https%3A%2F%2Felibrary%2Eru%2Fauthor%5Fitems%2Easp%3Fauthorid%3D3771%26show%5Frefs%3D1">Регистрация</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/pass_request.asp">Забыли пароль?</a></td></tr>
+
+
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:sso_orgs()">Вход через Вашу организацию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+</td></tr>
+</FORM>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_goto').slideToggle(500, function(){didScroll = true;})" title="Быстрый переход на популярные страницы сайта">НАВИГАТОР</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_goto" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=4 cellpadding=0 width=140>
+
+<tr valign=top><td width=25 align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left width=115><a href="/titles.asp">ЖУРНАЛЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/books.asp">КНИГИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/patents.asp">ПАТЕНТЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/querybox.asp">ПОИСК</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/authors.asp">АВТОРЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/orgs.asp">ОРГАНИЗАЦИИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/keywords.asp">КЛЮЧЕВЫЕ СЛОВА</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/rubrics.asp">РУБРИКАТОР</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/region_compare.asp">РЕГИОНЫ</a></td></tr>
+
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=25 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=115 valign=top><a href="/defaultx.asp">Начальная страница</a></td></tr></table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_legend').slideToggle(500, function(){didScroll = true;})" title="Назначение используе">ЛЕГЕНДА</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_legend" class="expanded">
+
+<div style="height: 10px;"></div>
+<table width=100% cellspacing=0 cellpadding=3 border=0 bgcolor=#eeeeee>
+<tr><td width=15% align=right valign=top><img src="/images/download_green.png" width=16 hspace=3 border=0></td><td width=85% align=left valign=middle><font color=#00008f>Доступ к полному тексту документа открыт</font></td></tr>
+<tr><td align=right valign=top><img src="/images/download_blue.png" width=16 hspace=3 border=0></td><td align=left valign=middle><font color=#00008f>Полный текст доступен на сайте издателя</font></td></tr>
+<tr><td align=right valign=top><img src="/images/download_yellow.png" width=16 hspace=3 border=0></td><td align=left valign=middle><font color=#00008f>Полный текст может быть получен через систему заказа</font></td></tr>
+<tr><td align=right valign=top><img src="/images/download_orange.png" width=16 hspace=3 border=0></td><td align=left valign=middle><font color=#00008f>Доступ к полному тексту закрыт</font></td></tr>
+<tr><td valign=top align=center><font color=#00008f>-</font></td><td align=left><font color=#00008f>Если иконки нет - полный текст документа отсутствует в НЭБ</font></td></tr>
+
+<tr><td valign=top align=right><img src="/images/ref.png" width=16 hspace=3 border=0></td>
+<td align=left><font color=#00008f>Публикация из списков цитируемой литературы</font></td></tr>
+
+</table>
+
+</div></div>
+</td></tr>
+
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function end_session(){
+
+  document.forms["session"].saveuser.value="1";
+
+  document.forms["session"].action="/end_session.asp";
+  document.forms["session"].target="";
+  document.forms["session"].submit()
+}
+</SCRIPT>
+<FORM action="/end_session.asp" method=POST name="session">
+<input type="hidden" name="saveuser" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_session').slideToggle(500, function(){didScroll = true;})" title="Информация о текущей сессии пользователя">СЕССИЯ</span></b></font>
+</td></tr>
+</table>
+
+
+<div ID="win_session" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>Имя пользователя:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>Незарегистрированный пользователь</font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Начало работы:</font></td></tr>
+
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>13.10.2026 14:43</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Время работы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>00:17</font></td></tr>
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="/project_user_office.asp">Личный кабинет</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:end_session()">Закрыть сессию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+</FORM>
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_contact').slideToggle(500, function(){didScroll = true;})" title="Контактная информация Научной электронной библиотеки">КОНТАКТЫ</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_contact" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Служба поддержки:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 1<br></font>
+<font color=#00008f><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font></td></tr>
+</td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям журналов:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 2<br></font>
+<font color=#00008f><a href="mailto:publish@elibrary.ru">publish@elibrary.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям книг:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 3<br></font>
+<font color=#00008f><a href="mailto:book@elibrary.ru">book@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Space для издательств:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:info@sciencespace.ru">info@sciencespace.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Index для организаций:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:org@scienceindex.ru">org@scienceindex.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Доступ к API:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:api@elibrary.ru">api@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Подписчикам:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 6<br></font>
+<font color=#00008f><a href="mailto:sales.team@elibrary.ru">sales.team@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Конференции, семинары:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 7<br></font>
+<font color=#00008f><a href="mailto:conf@elibrary.ru">conf@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Почтовый адрес:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="/contact_new.asp">117246, г. Москва,
+Научный проезд, д. 14А, стр. 3, таунхаус 1</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Веб-сайт:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://elibrary.ru">https://elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Telegram-канал:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://t.me/elibrary_ru_official" target=_blank>t.me/elibrary_ru_official</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Размещение рекламы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:reklama@elibrary.ru">reklama@elibrary.ru</a></font></td></tr>
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/contact_new.asp">Схема проезда</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="https://support.elibrary.ru">Задать вопрос</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/vacancy.asp">Вакансии</a></td></tr>
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<div style="width: 140px;" class="help-panel">
+<table width=140 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=15% align=right valign=top>
+<img src="/images/but_orange_i.gif" width=15 height=15 hspace=0 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>По всем вопросам, связанным с работой в системе Science Index, обращайтесь, пожалуйста, в службу поддержки:<br><br>
++7 (495) 544-2494<br><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font>
+</td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+
+
+</table>
+
+</td><td align=left valign=top>
+
+<FORM method=post name="results" onSubmit="return false">
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr><td width=600 align=left valign=top>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+<tr><td width=100% align=left valign=top>
+
+<div class="header-panel">
+<div style="margin: 0; border: 0; padding: 0 0 5px 0; text-align: center; font-size: 9pt;"><font color=#5674b9><b>СПИСОК ПУБЛИКАЦИЙ АВТОРА</b></font></div>
+</div>
+
+</td></tr></table>
+
+</td><td width=200 align=right valign=middle id="rightcol">
+
+
+<table width=200 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=12% align=right valign=top>
+<a href="https://t.me/elibrary_ru_official/106" target=_blank><img src="/images/telegram.svg" width=24 height=24 border=0></a></td>
+<td width=88% align=left valign=middle><font color=#00008f><a href="https://t.me/elibrary_ru_official/106" target=_blank>Система быстрого поиска по идентификаторам на eLIBRARY.RU</a></font>
+</td></tr>
+</table>
+</td></tr>
+
+
+<tr><td align=left valign=top>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+
+<input type="hidden" name="itembox_name" value="">
+<input type="hidden" name="auth" value="">
+<input type="hidden" name="authorid" value="3771">
+<input type="hidden" name="authorhash" value="Петров В А">
+<input type="hidden" name="pagenum" value="1">
+<input type="hidden" name="add_all" value="">
+<input type="hidden" name="paysum" value="">
+<input type="hidden" name="slight" value="">
+<input type="hidden" name="show_refs" value="1">
+<input type="hidden" name="hide_doubles" value="1">
+<input type="hidden" name="items_all" value="">
+<input type="hidden" name="publs_all" value="">
+<input type="hidden" name="did" value="1">
+<input type="hidden" name="urlnum" value="1">
+<input type="hidden" name="listid" value="">
+
+<tr><td width=100% align=left valign=top>
+
+<div style="width:540px; margin:0 20px 20px 20px; border:0; padding:0; text-align: center; font-size: 9pt;">
+<font color=#F26C4F><b>ПЕТРОВ ВЛАДИМИР АЛЕКСЕЕВИЧ</b></font>  <span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br><a href="org_about.asp?orgsid=169">Институт физики высоких энергий им. А.А. Логунова НИЦ "Курчатовский институт"</a> (Протвино)
+
+</div>
+
+<div class="form-panel">
+
+<div style="margin:0; border:0; padding:0;">
+<font color=#F26C4F><b><span class="expandable" onClick="$('#show_param').slideToggle(500, function(){didScroll = true;})" title="Показать/скрыть параметры поиска">ПАРАМЕТРЫ</span></b></font>
+</div>
+
+<div id="show_param" class="expanded">
+
+<div style="height:5px;"></div>
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_rubrics" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_rubrics">ТЕМАТИКА</span></font><span id="rubricsheader" name="rubricsheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="rubrics" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="rubric_order" style="width:168px;" class="input" id="rubric_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по названию рубрики
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("rubric")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("rubric")'>Снять выделение</a></td></tr>
+</table>
+<div id="rubrics_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_titles" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_titles">ЖУРНАЛЫ</span></font><span id="titlesheader" name="titlesheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="titles" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="title_order" style="width:168px" class="input" id="title_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по названию журнала
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("title")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("title")'>Снять выделение</a></td></tr>
+</table>
+<div id="titles_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_orgs" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_orgs">ОРГАНИЗАЦИИ</span></font><span id="orgsheader" name="orgsheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="orgs" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="org_order" style="width:168px" class="input" id="org_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по названию организации
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("org")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("org")'>Снять выделение</a></td></tr>
+</table>
+<div id="orgs_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_authors" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_authors">АВТОРЫ</span></font><span id="authorsheader" name="authorsheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="authors" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="author_order" style="width:168px" class="input" id="author_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по фамилии
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("author")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("author")'>Снять выделение</a></td></tr>
+</table>
+<div id="authors_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_years" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_years">ГОДЫ</span></font><span id="yearsheader" name="yearsheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="years" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="year_order" style="width:168px" class="input" id="year_order">
+<option value="0" >по числу публикаций
+<option value="1" selected>по году
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("year")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("year")'>Снять выделение</a></td></tr>
+</table>
+<div id="years_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_types" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_types">ТИП ПУБЛИКАЦИИ</span></font><span id="typesheader" name="typesheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="types" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="type_order" style="width:168px" class="input" id="type_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по типу публикации
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("type")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("type")'>Снять выделение</a></td></tr>
+</table>
+<div id="types_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_cats" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_cats">КАТЕГОРИЯ ПУБЛИКАЦИИ</span></font><span id="catsheader" name="catsheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="cats" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="cat_order" style="width:168px" class="input" id="cat_order">
+<option value="0" >по числу цитирований
+<option value="1" selected>по категории публикации
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("cat")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("cat")'>Снять выделение</a></td></tr>
+</table>
+<div id="cats_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_roles" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_roles">УЧАСТИЕ В ПУБЛИКАЦИИ</span></font><span id="rolesheader" name="rolesheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="roles" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="role_order" style="width:168px" class="input" id="role_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по способу участия
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("role")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("role")'>Снять выделение</a></td></tr>
+</table>
+<div id="roles_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=middle class="menus"><td width=30 align=right valign=middle><div id="txt_keywords" class="win_expandable" style="color:#F26C4F;">▼</div></td><td width=481 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;<span class="expandable" id="hdr_keywords">КЛЮЧЕВЫЕ СЛОВА</span></font><span id="keywordsheader" name="keywordsheader" style="color: #777777; padding: 10px;"></span></td></tr></table>
+
+<div id="keywords" class="collapsed1" style="display: none; border:0; padding:0; margin:5px 0 0 0;">
+<table width=517 cellspacing=0 cellpadding=0 border=0 bgcolor=#5674b9>
+<tr><td width=107 align=right valign=middle><font color=#ffffff>Сортировка:</font>&nbsp;&nbsp;</td><td width=170 align=left valign=middle><select name="keyword_order" style="width:168px" class="input" id="keyword_order">
+<option value="0" selected>по числу публикаций
+<option value="1" >по ключевому слову
+<option value="2" >выделенные в начале
+</select></td><td width=110 align=right valign=middle class="menus"><a href='javascript:select_options("keyword")'>Выделить все</a></td><td width=130 align=center valign=middle class="menus"><a href='javascript:deselect_options("keyword")'>Снять выделение</a></td></tr>
+</table>
+<div id="keywords_options" style="height:50px; padding:0px; overflow:auto; width:517px; background:#f5f5f5; margin:10px 0 10px 0;">
+</div></div>
+
+<div style="height:5px;">&nbsp;</div>
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td width=514 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Показывать:</font></td></tr>
+<tr><td align=left valign=top>
+<div class="formfr"><select id="show_hash" name="show_hash" style="width:510px" class="input" onKeyPress="submit_enter(event)">
+<option value="0" selected>включенные в список работ автора (привязанные) публикации
+<option value="1" >непривязанные публикации, которые могут принадлежать данному автору
+
+</select></div></td></tr>
+</table>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr><td align=right width=24><input type=checkbox name="check_show_refs" id="check_show_refs" checked onClick='if (this.checked) {document.forms["results"].show_refs.value="1";} else {document.forms["results"].show_refs.value="0";}'></td><td align=left width=484>- учитывать публикации, извлеченные из списков цитируемой литературы&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Показываются не только публикации, имеющие полное библиографическое описание в РИНЦ, но и публикации автора, извлеченные из списков цитируемой литературы. Это позволяет учесть публикации, отсутствующие в РИНЦ, но при этом хорошо цитируемые в современной научной литературе</p>'></td></tr>
+<tr><td align=right width=24><input type=checkbox name="check_hide_doubles" id="check_hide_doubles" checked onClick='if (this.checked) {document.forms["results"].hide_doubles.value="1";} else {document.forms["results"].hide_doubles.value="0";}'></td><td align=left width=484>- объединять оригинальные и переводные версии статей и переиздания книг&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>В этом режиме разные версии одной и той же публикации (например, ее оригинальная и переводная версии, или повторные издания одной и той же монографии) объединяются в группу и при расчетах всех показателей автора учитываются как одна публикация. В том числе ссылки, сделанные из таких публикаций, засчитываются как одна ссылка</p>'></td></tr>
+</table>
+
+<div style="height:5px;"></div>
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td width=170 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Сортировка:</font></td><td width=15></td><td width=139 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Порядок:</font></td><td width=15></td><td width=80></td><td width=80></td></tr>
+<tr align=left valign=top>
+<td><div class="formfr"><select id="sortorder" name="sortorder" style="width:166px" class="input" onChange='var ord = document.forms["results"].order; switch(this.value) {case "0" : ord.value="1"; break; case "1" : ord.value="0"; break; case "6" : ord.value="1"; break; case "2" : ord.value="1"; break; case "3" : ord.value="1"; break; case "4" : ord.value="1"; break; case "5" : ord.value="0"; break; case "7" : ord.value="1"; break; }' onKeyPress="submit_enter(event)">
+<option value="0" selected>по дате выпуска
+<option value="1" >по названию публикации
+<option value="2" >по году и первому автору
+<option value="6" >по году и названию
+<option value="5" >по первому автору
+<option value="3" >по числу цитирований
+<option value="4" >по дате размещения
+<option value="7" >по тематической близости
+</select></div></td>
+<td></td>
+<td><div class="formfr"><select id="order" name="order" style="width:135px" class="input" onKeyPress="submit_enter(event)">
+<option value="0" >по возрастанию
+<option value="1" selected>по убыванию
+</select></div></td>
+<td></td>
+<td align=left valign=middle>
+<div class="butblue" style="width: 67px;" onClick="reset_form()">Очистить</div>
+</td>
+<td align=right valign=middle>
+<div class="butred" style="width: 67px;" onClick="pub_search()">Поиск</div>
+</td>
+</tr>
+</table>
+
+<div style="height:8px;"></div>
+</div>
+</div>
+
+
+<a name="list"></a>
+<div style="width: 480px; margin: 10px 0 10px 30px; border: 0; padding: 10px 20px 7px 20px; text-align: center;" >
+<table width=480 cellspacing=3 cellpadding=0 border=0>
+<tr><td width=40 align=right valign=top><img src="images/but_orange_i.gif" width=15 height=15 hspace=10 border=0></td><td width=431 align=left valign=top class="redref"><font color=#00008f>Всего найдено</font> <b><font color=#ff0000>1094</font></b> <font color=#00008f>публикации с общим количеством цитирований: </font><b><font color=#ff0000><span id="totalcited"></span></font></b><font color=#00008f>.<br>Показано на данной странице: с <b>1</b> по <b>100</b>.</font></td></tr></table>
+</div>
+
+<table width=580 cellspacing=0 cellpadding=3 id="restab" style="border-spacing: 0px 4px; table-layout: fixed;">
+<tr align=center valign=middle height=15>
+<td width=28><font color=#555555>&nbsp;<b>№</b></font></td>
+<td width=510><font color=#555555><b>Публикация</b></font></td>
+<td width=24><span title="Число цитирований публикации в РИНЦ"><font color=#555555><b>Цит.</b></font></span></td></tr>
+<tr><td colspan=3>
+<div style="width: 574px;" class="table-line"></div>
+</td></tr>
+
+<tr><td colspan=3 height=0></td></tr>
+
+
+<tr valign=middle id="arw91809593">
+<td align=center valign=top class="select-tr-left"><a name="x91809593"></a>
+<font color=#00008f><b>1.</b></font><br><input type=checkbox name="tid91809593" id="tid91809593"  onClick='if (this.checked) {RowSelect("arw91809593",1)} else {RowSelect("arw91809593",0)}'><div id="pdf_91809593" name="pdf_91809593"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91809593"><b><span style="line-height:1.0;">МОДЕЛИРОВАНИЕ СТРУКТУРНО-ПРОНИЦАЕМЫХ ЗОН В КОНТЕКСТЕ ПРОГНОЗА МЕСТОРОЖДЕНИЙ РУДНЫХ ПОЛЕЗНЫХ ИСКОПАЕМЫХ НА ОСНОВЕ АНАЛИЗА ЦИФРОВОЙ МОДЕЛИ РЕЛЬЕФА (НА ПРИМЕРЕ ЦЕНТРАЛЬНОЙ ЧУКОТКИ)</span></b></a><br><font color=#00008f><i>Шухов В.В., Устинов С.А., Петров В.А., Минаев В.А., Свечеревский А.Д.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Рудная школа ЦНИГРИ 2026.&nbsp;Сборник тезисов докладов молодежной научно-образовательной конференции. Москва, 2026.  С. 126-129.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw91800455">
+<td align=center valign=top class="select-tr-left"><a name="x91800455"></a>
+<font color=#00008f><b>2.</b></font><br><input type=checkbox name="tid91800455" id="tid91800455"  onClick='if (this.checked) {RowSelect("arw91800455",1)} else {RowSelect("arw91800455",0)}'><div id="pdf_91800455" name="pdf_91800455"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91800455"><b><span style="line-height:1.0;">ПРИМЕНЕНИЕ КОМПЛЕКСНОГО ПОДХОДА К ИЗУЧЕНИЮ МИКРОСТРУКТУР ВМЕЩАЮЩИХ ПОРОД ТУЮКАНСКОГО УРАНОВОРУДНОГО УЗЛА (ИРКУТСКАЯ ОБЛАСТЬ) ДЛЯ РЕКОНСТРУКЦИИ ЭТАПОВ ЭВОЛЮЦИИ НАПРЯЖЕННО-ДЕФОРМИРОВАННОГО СОСТОЯНИЯ</span></b></a><br><font color=#00008f><i>Кочкин И.А., Устинов С.А., Чепчугов А.М., Свечеревский А.Д., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Геология, прогноз, поиски и оценка месторождений алмазов, благородных и цветных металлов.&nbsp;Сборник тезисов докладов XV Международной научно-практической конференции. Москва, 2026.  С. 177-179.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw91800519">
+<td align=center valign=top class="select-tr-left"><a name="x91800519"></a>
+<font color=#00008f><b>3.</b></font><br><input type=checkbox name="tid91800519" id="tid91800519"  onClick='if (this.checked) {RowSelect("arw91800519",1)} else {RowSelect("arw91800519",0)}'><div id="pdf_91800519" name="pdf_91800519"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91800519"><b><span style="line-height:1.0;">ДИСТАНЦИОННЫЕ СТРУКТУРНО-ТЕКТОНОФИЗИЧЕСКИЕ РЕКОНСТРУКЦИИ КАК ОСНОВА ДЛЯ РЕШЕНИЯ ПРОГНОЗНО-МЕТАЛЛОГЕНИЧЕСКИХ ЗАДАЧ (НА ПРИМЕРЕ ТЕРРИТОРИИ ЮГО-ВОСТОЧНОГО ЗАБАЙКАЛЬЯ)</span></b></a><br><font color=#00008f><i>Устинов С.А., Петров В.А., Минаев В.А., Шухов В.В.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Геология, прогноз, поиски и оценка месторождений алмазов, благородных и цветных металлов.&nbsp;Сборник тезисов докладов XV Международной научно-практической конференции. Москва, 2026.  С. 341-343.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw91809559">
+<td align=center valign=top class="select-tr-left"><a name="x91809559"></a>
+<font color=#00008f><b>4.</b></font><br><input type=checkbox name="tid91809559" id="tid91809559"  onClick='if (this.checked) {RowSelect("arw91809559",1)} else {RowSelect("arw91809559",0)}'><div id="pdf_91809559" name="pdf_91809559"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91809559"><b><span style="line-height:1.0;">РЕЗУЛЬТАТЫ КОМПЛЕКСНОГО АНАЛИЗА МИКРОСТРУКТУР ВМЕЩАЮЩИХ ПОРОД ТУЮКАНСКОГО ЗОЛОТО-УРАНОВОГО РУДНОГО УЗЛА</span></b></a><br><font color=#00008f><i>Кочкин И.А., Устинов С.А., Чепчугов А.М., Свечеревский А.Д., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Рудная школа ЦНИГРИ 2026.&nbsp;Сборник тезисов докладов молодежной научно-образовательной конференции. Москва, 2026.  С. 34-37.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw92348100">
+<td align=center valign=top class="select-tr-left"><a name="x92348100"></a>
+<font color=#00008f><b>5.</b></font><br><input type=checkbox name="tid92348100" id="tid92348100"  onClick='if (this.checked) {RowSelect("arw92348100",1)} else {RowSelect("arw92348100",0)}'><div id="pdf_92348100" name="pdf_92348100"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=92348100"><b><span style="line-height:1.0;">ON THE “FLAT ODDERON” MODEL</span></b></a><br><font color=#00008f><i>Petrov V.A., Tkachenko N.P.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=92346965">Nuclear Physics A</a>. 
+2026. Т. 1073.  С. 123436.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw90660792">
+<td align=center valign=top class="select-tr-left"><a name="x90660792"></a>
+<font color=#00008f><b>6.</b></font><br><input type=checkbox name="tid90660792" id="tid90660792"  onClick='if (this.checked) {RowSelect("arw90660792",1)} else {RowSelect("arw90660792",0)}'><div id="pdf_90660792" name="pdf_90660792"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=90660792"><b><span style="line-height:1.0;">IR FIXED POINT AND LOW-MOMENTUM GLUON PROPAGATOR</span></b></a><br><font color=#00008f><i>Petrov V.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=90539345">Nuclear Physics B</a>. 
+2026. Т. 1025.  С. 117372.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw92354744">
+<td align=center valign=top class="select-tr-left"><a name="x92354744"></a>
+<font color=#00008f><b>7.</b></font><br><input type=checkbox name="tid92354744" id="tid92354744"  onClick='if (this.checked) {RowSelect("arw92354744",1)} else {RowSelect("arw92354744",0)}'><div id="pdf_92354744" name="pdf_92354744"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=92354744"><b><span style="line-height:1.0;">C-PARITY AND REGGE INTERCEPTS</span></b></a><br><font color=#00008f><i>Petrov V.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=49627092">International Journal of Modern Physics A</a>. 
+2026.  С. 2650150.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw90773175">
+<td align=center valign=top class="select-tr-left"><a name="x90773175"></a>
+<font color=#00008f><b>8.</b></font><br><input type=checkbox name="tid90773175" id="tid90773175"  onClick='if (this.checked) {RowSelect("arw90773175",1)} else {RowSelect("arw90773175",0)}'><div id="pdf_90773175" name="pdf_90773175"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=90773175"><b><span style="line-height:1.0;">ПАЛЕОРЕКОНСТРУКЦИЯ СДВИГОВОЙ КИНЕМАТИКИ КРУПНЫХ ТЕКТОНИЧЕСКИХ БЛОКОВ ЧУКОТКИ НА ОСНОВЕ СТРУКТУРНО-ГЕОМОРФОЛОГИЧЕСКОГО ПОДХОДА</span></b></a><br><font color=#00008f><i>Шухов В.В., Устинов С.А., Петров В.А., Минаев В.А., Свечеревский А.Д.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=90773168">Исследование Земли из космоса</a>. 
+2026. <a href="/contents.asp?id=90773168&selid=90773175">№&nbsp;2</a>.  С. 62-82.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw91901285">
+<td align=center valign=top class="select-tr-left"><a name="x91901285"></a>
+<font color=#00008f><b>9.</b></font><br><input type=checkbox name="tid91901285" id="tid91901285"  onClick='if (this.checked) {RowSelect("arw91901285",1)} else {RowSelect("arw91901285",0)}'><div id="pdf_91901285" name="pdf_91901285"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91901285"><b><span style="line-height:1.0;">ВЫДЕЛЕНИЕ ПЕРСПЕКТИВНЫХ УЧАСТКОВ ДЛЯ ПОСТАНОВКИ ПРОГНОЗНО-ПОИСКОВЫХ РАБОТ НА ОСНОВЕ ГИС-АНАЛИЗА, ОБРАБОТКИ ДАННЫХ ДЗЗ И ПРИМЕНЕНИЯ НЕЙРОСЕТЕВЫХ ТЕХНОЛОГИЙ (НА ПРИМЕРЕ ПОЛИМЕТАЛЛИЧЕСКИХ ОБЪЕКТОВ ЮГО-ВОСТОЧНОГО ЗАБАЙКАЛЬЯ)</span></b></a><br><font color=#00008f><i>Минаев В.А., Нафигин И.О., Устинов С.А., Лапаев Д.С., Петров В.А., Гришков Г.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91901283">Исследование Земли из космоса</a>. 
+2026. <a href="/contents.asp?id=91901283&selid=91901285">№&nbsp;5</a>.  С. 17-31.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw91901290">
+<td align=center valign=top class="select-tr-left"><a name="x91901290"></a>
+<font color=#00008f><b>10.</b></font><br><input type=checkbox name="tid91901290" id="tid91901290"  onClick='if (this.checked) {RowSelect("arw91901290",1)} else {RowSelect("arw91901290",0)}'><div id="pdf_91901290" name="pdf_91901290"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91901290"><b><span style="line-height:1.0;">ИСПОЛЬЗОВАНИЕ ДАННЫХ FАВДЕМ ДЛЯ РЕКОНСТРУКЦИИ ТЕКТОНИЧЕСКИ НАРУШЕННЫХ ЗОН И ОЦЕНКИ ИХ ПАЛЕОПРОНИЦАЕМОСТИ (НА ПРИМЕРЕ СЕВЕРНОЙ ЧАСТИ ЦЕНТРАЛЬНОЙ ЧУКОТКИ)</span></b></a><br><font color=#00008f><i>Шухов В.В., Устинов С.А., Петров В.А., Минаев В.А., Свечеревский А.Д.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91901283">Исследование Земли из космоса</a>. 
+2026. <a href="/contents.asp?id=91901283&selid=91901290">№&nbsp;5</a>.  С. 83-100.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw91538089">
+<td align=center valign=top class="select-tr-left"><a name="x91538089"></a>
+<font color=#00008f><b>11.</b></font><br><input type=checkbox name="tid91538089" id="tid91538089"  onClick='if (this.checked) {RowSelect("arw91538089",1)} else {RowSelect("arw91538089",0)}'><div id="pdf_91538089" name="pdf_91538089"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91538089"><b><span style="line-height:1.0;"><B>FORMS OF STRATEGIC METALS OCCURRENCE IN THE BRIKETNO-ZHELTUKHINSKOE U</B>–<B>MO</B>–<B>RE DEPOSIT AND AN EFFECTIVE METHOD FOR THEIR EXTRACTION</B></span></b></a><br><font color=#00008f><i>Kailachakov P.E., Belousov P.E., Vikentyev I.V., Doynikova O.A., Pokidko B.V., Petrov V.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=90808863">Doklady Earth Sciences</a>. 
+2026. Т. 528. <a href="/contents.asp?id=90808863&selid=91538089">№&nbsp;1</a>.  С. 1-7.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw91602999">
+<td align=center valign=top class="select-tr-left"><a name="x91602999"></a>
+<font color=#00008f><b>12.</b></font><br><input type=checkbox name="tid91602999" id="tid91602999"  onClick='if (this.checked) {RowSelect("arw91602999",1)} else {RowSelect("arw91602999",0)}'><div id="pdf_91602999" name="pdf_91602999"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91602999"><b><span style="line-height:1.0;">CALCULATION OF PALEOFILTRATION CHARACTERISTICS FOR THE HOST ROCKS OF THE TUYUKAN ORE CLUSTER (IRKUTSK OBLAST) BASED ON A SPECIAL TECHNIQUE OF MICROSTRUCTURAL ANALYSIS</span></b></a><br><font color=#00008f><i>Kochkin I.A., Ustinov S.A., Petrov V.A., Chepchugov A.M.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91602992">Doklady Earth Sciences</a>. 
+2026. Т. 528. <a href="/contents.asp?id=91602992&selid=91602999">№&nbsp;2</a>.  С. 1-8.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw91863869">
+<td align=center valign=top class="select-tr-left"><a name="x91863869"></a>
+<font color=#00008f><b>13.</b></font><br><input type=checkbox name="tid91863869" id="tid91863869"  onClick='if (this.checked) {RowSelect("arw91863869",1)} else {RowSelect("arw91863869",0)}'><div id="pdf_91863869" name="pdf_91863869"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91863869"><b><span style="line-height:1.0;">MATHEMATICAL MODELS OF PROCESSES OF LAYER-HOSTED URANIUM DEPOSITS</span></b></a><br><font color=#00008f><i>Malkovsky V.I., Petrov V.A., Pek A.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91863867">Doklady Earth Sciences</a>. 
+2026. Т. 529. <a href="/contents.asp?id=91863867&selid=91863869">№&nbsp;2</a>.  С. 1-8.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw92015006">
+<td align=center valign=top class="select-tr-left"><a name="x92015006"></a>
+<font color=#00008f><b>14.</b></font><br><input type=checkbox name="tid92015006" id="tid92015006"  onClick='if (this.checked) {RowSelect("arw92015006",1)} else {RowSelect("arw92015006",0)}'><div id="pdf_92015006" name="pdf_92015006"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=92015006"><b><span style="line-height:1.0;">URANIUM MINERAL SYSTEMS OF SOUTHEASTERN EURASIA</span></b></a><br><font color=#00008f><i>Petrov V.A., Kochkin B.T.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=92015004">Geology of Ore Deposits</a>. 
+2026. Т. 68. <a href="/contents.asp?id=92015004&selid=92015006">№&nbsp;4</a>.  С. 564-578.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw90833761">
+<td align=center valign=top class="select-tr-left"><a name="x90833761"></a>
+<font color=#00008f><b>15.</b></font><br><input type=checkbox name="tid90833761" id="tid90833761"  onClick='if (this.checked) {RowSelect("arw90833761",1)} else {RowSelect("arw90833761",0)}'><div id="pdf_90833761" name="pdf_90833761"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=90833761"><b><span style="line-height:1.0;">PREDICTIVE MODELING OF GOLD–SULFIDE MINERALIZATION ZONES USING SATELLITE MULTISPECTRAL DATA (NORTHERN AND CENTRAL CHUKOTKA)</span></b></a><br><font color=#00008f><i>Nafigin I.O., Lapaev D.S., Minaev V.A., Ustinov S.A., Petrov V.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=89579182">Seismic Instruments</a>. 
+2026. Т. 62. <a href="/contents.asp?id=89579182&selid=90833761">№&nbsp;1</a>.  С. 75-89.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw91851163">
+<td align=center valign=top class="select-tr-left"><a name="x91851163"></a>
+<font color=#00008f><b>16.</b></font><br><input type=checkbox name="tid91851163" id="tid91851163"  onClick='if (this.checked) {RowSelect("arw91851163",1)} else {RowSelect("arw91851163",0)}'><div id="pdf_91851163" name="pdf_91851163"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91851163"><b><span style="line-height:1.0;">РАСЧЕТ ПАЛЕОФИЛЬТРАЦИОННЫХ ХАРАКТЕРИСТИК ВМЕЩАЮЩИХ ГОРНЫХ ПОРОД ТУЮКАНСКОГО РУДНОГО УЗЛА (ИРКУТСКАЯ ОБЛАСТЬ) НА ОСНОВЕ СПЕЦИАЛЬНОЙ МЕТОДИКИ МИКРОСТРУКТУРНОГО АНАЛИЗА</span></b></a><br><font color=#00008f><i>Кочкин И.А., Устинов С.А., Петров В.А., Чепчугов А.М.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=91851158">Доклады Российской академии наук. Науки о Земле</a>. 
+2026. Т. 528. <a href="/contents.asp?id=91851158&selid=91851163">№&nbsp;2</a>.  С. 296-306.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw92023677">
+<td align=center valign=top class="select-tr-left"><a name="x92023677"></a>
+<font color=#00008f><b>17.</b></font><br><input type=checkbox name="tid92023677" id="tid92023677"  onClick='if (this.checked) {RowSelect("arw92023677",1)} else {RowSelect("arw92023677",0)}'><div id="pdf_92023677" name="pdf_92023677"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=92023677"><b><span style="line-height:1.0;">МАТЕМАТИЧЕСКИЕ МОДЕЛИ ПРОЦЕССОВ ФОРМИРОВАНИЯ ПЛАСТОВО-ИНФИЛЬТРАЦИОННЫХ УРАНОВЫХ МЕСТОРОЖДЕНИЙ</span></b></a><br><font color=#00008f><i>Мальковский В.И., Петров В.А., Пэк А.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=92023674">Доклады Российской академии наук. Науки о Земле</a>. 
+2026. Т. 529. <a href="/contents.asp?id=92023674&selid=92023677">№&nbsp;2</a>.  С. 214-224.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw89157157">
+<td align=center valign=top class="select-tr-left"><a name="x89157157"></a>
+<font color=#00008f><b>18.</b></font><br><input type=checkbox name="tid89157157" id="tid89157157"  onClick='if (this.checked) {RowSelect("arw89157157",1)} else {RowSelect("arw89157157",0)}'><div id="pdf_89157157" name="pdf_89157157"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=89157157"><b><span style="line-height:1.0;">«ЭЛЕКТРОNET» КАК ПАРАДИГМА ПОВЕДЕНЧЕСКОЙ МОДЕЛИ РЕСУРСОСБЕРЕЖЕНИЯ</span></b></a><br><font color=#00008f><i>Петров В.А., Ромашин А.С., Гапотченко Л.В., Карякин Ю.Д.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=89157152">Дипломатический вестник. Право, экономика, политика</a>. 
+2026. <a href="/contents.asp?id=89157152&selid=89157157">№&nbsp;1&nbsp;(32)</a>.  С. 71-83.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83148412">
+<td align=center valign=top class="select-tr-left"><a name="x83148412"></a>
+<font color=#00008f><b>19.</b></font><br><input type=checkbox name="tid83148412" id="tid83148412"  onClick='if (this.checked) {RowSelect("arw83148412",1)} else {RowSelect("arw83148412",0)}'><div id="pdf_83148412" name="pdf_83148412"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83148412"><b><span style="line-height:1.0;">ТЕКТОНИЧЕСКАЯ ПОЗИЦИЯ УРАНОВЫХ МЕСТОРОЖДЕНИЙ ХИАГДИНСКОГО РУДНОГО ПОЛЯ</span></b></a><br><font color=#00008f><i>Кочкин Б.Т., Петров В.А., Голубев В.Н.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Металлогения без границ 2025.&nbsp;Тезисы докладов Российско-Китайской конференции. Москва, 2025.  С. 108-114.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw82985623">
+<td align=center valign=top class="select-tr-left"><a name="x82985623"></a>
+<font color=#00008f><b>20.</b></font><br><input type=checkbox name="tid82985623" id="tid82985623"  onClick='if (this.checked) {RowSelect("arw82985623",1)} else {RowSelect("arw82985623",0)}'><div id="pdf_82985623" name="pdf_82985623"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82985623"><b><span style="line-height:1.0;">ВОЗМОЖНОСТИ И ПРИМЕРЫ ИСПОЛЬЗОВАНИЯ АВТОРСКОГО ПРОГРАММНОГО КОМПЛЕКСА LINEAMENT STRESS CALCULATOR ДЛЯ РЕКОНСТРУКЦИИ СДВИГОВЫХ ТЕКТОНИЧЕСКИХ НАПРЯЖЕНИЙ НА ОСНОВЕ ПРОСТРАНСТВЕННОГО АНАЛИЗА ЛИНЕАМЕНТОВ</span></b></a><br><font color=#00008f><i>Свечеревский А.Д., Устинов С.А., Минаев В.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Строение литосферы и геодинамика.&nbsp;Материалы ХХХI Всероссийской молодежной конференции. Иркутск, 2025.  С. 110-113.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw88760822">
+<td align=center valign=top class="select-tr-left"><a name="x88760822"></a>
+<font color=#00008f><b>21.</b></font><br><input type=checkbox name="tid88760822" id="tid88760822"  onClick='if (this.checked) {RowSelect("arw88760822",1)} else {RowSelect("arw88760822",0)}'><div id="pdf_88760822" name="pdf_88760822"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88760822"><b><span style="line-height:1.0;">ВЗАИМОСВЯЗЬ ТИПОВ ДЕФОРМАЦИЙ И ФИЛЬТРАЦИОННЫХ ХАРАКТЕРИСТИК ВМЕЩАЮЩИХ ПОРОД ТУЮКАНСКОГО РУДНОГО УЗЛА (ИРКУТСКАЯ ОБЛАСТЬ, МАМСКО-ЧУЙСКИЙ РАЙОН)</span></b></a><br><font color=#00008f><i>Кочкин И.А., Устинов С.А., Петров В.А., Чепчугов А.М.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Новое в познании процессов рудообразования.&nbsp;Материалы Четырнадцатой Российской молодежной научно-практической Школы. Москва, 2025.  С. 114-117.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83148414">
+<td align=center valign=top class="select-tr-left"><a name="x83148414"></a>
+<font color=#00008f><b>22.</b></font><br><input type=checkbox name="tid83148414" id="tid83148414"  onClick='if (this.checked) {RowSelect("arw83148414",1)} else {RowSelect("arw83148414",0)}'><div id="pdf_83148414" name="pdf_83148414"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83148414"><b><span style="line-height:1.0;">ДИСТАНЦИОННЫЙ ТЕКТОНОФИЗИЧЕСКИЙ ПОДХОД К ПРОГНОЗУ РАЗМЕЩЕНИЯ ПОЛЕЗНЫХ ИСКОПАЕМЫХ (НА ПРИМЕРЕ СЕВЕРНОЙ ЯКУТИИ)</span></b></a><br><font color=#00008f><i>Минаев В.А., Устинов С.А., Петров В.А., Свечеревский А.Д., Нафигин И.О.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Металлогения без границ 2025.&nbsp;Тезисы докладов Российско-Китайской конференции. Москва, 2025.  С. 129-135.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw88760909">
+<td align=center valign=top class="select-tr-left"><a name="x88760909"></a>
+<font color=#00008f><b>23.</b></font><br><input type=checkbox name="tid88760909" id="tid88760909"  onClick='if (this.checked) {RowSelect("arw88760909",1)} else {RowSelect("arw88760909",0)}'><div id="pdf_88760909" name="pdf_88760909"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88760909"><b><span style="line-height:1.0;">ФОРМИРОВАНИЕ ГЕОХИМИЧЕСКИХ БАРЬЕРОВ РУДОНОСНЫМИ ФЛЮИДАМИ НА УРАНОВЫХ МЕСТОРОЖДЕНИЯХ ПЕСЧАНИКОВОГО ТИПА ПРИ НАЛИЧИИ РАЗЛОМОВ В ПОРОДАХ ФУНДАМЕНТА</span></b></a><br><font color=#00008f><i>Мальковский В.И., Пэк А.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Физико-химические и петрофизические исследования в науках о Земле.&nbsp;Двадцать шестая международная конференция. Москва, 2025.  С. 132-135.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83148415">
+<td align=center valign=top class="select-tr-left"><a name="x83148415"></a>
+<font color=#00008f><b>24.</b></font><br><input type=checkbox name="tid83148415" id="tid83148415"  onClick='if (this.checked) {RowSelect("arw83148415",1)} else {RowSelect("arw83148415",0)}'><div id="pdf_83148415" name="pdf_83148415"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83148415"><b><span style="line-height:1.0;">АНАЛИЗ СПУТНИКОВЫХ ДАННЫХ ДЗЗ ДЛЯ ПРОГНОЗА ПОЛИМЕТАЛЛИЧЕСКОЙ МИНЕРАЛИЗАЦИИ В ПРЕДЕЛАХ САВВА-БОРЗИНСКОГО РУДНОГО УЗЛА (ЮГО-ВОСТОЧНОЕ ЗАБАЙКАЛЬЕ)</span></b></a><br><font color=#00008f><i>Нафигин И.О., Лапаев Д.С., Минаев В.А., Устинов С.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Металлогения без границ 2025.&nbsp;Тезисы докладов Российско-Китайской конференции. Москва, 2025.  С. 143-148.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw88760912">
+<td align=center valign=top class="select-tr-left"><a name="x88760912"></a>
+<font color=#00008f><b>25.</b></font><br><input type=checkbox name="tid88760912" id="tid88760912"  onClick='if (this.checked) {RowSelect("arw88760912",1)} else {RowSelect("arw88760912",0)}'><div id="pdf_88760912" name="pdf_88760912"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88760912"><b><span style="line-height:1.0;">РАЗЛОМНАЯ ТЕКТОНИКА И РУДООБРАЗОВАНИЕ НА СЕВЕРО- ЗАПАДЕ ВЕРХОЯНО-КОЛЫМСКОЙ ОБЛАСТИ: АНАЛИЗ ПО ДАННЫМ ДИСТАНЦИОННОГО ЗОНДИРОВАНИЯ</span></b></a><br><font color=#00008f><i>Минаев В.А., Устинов С.А., Петров В.А., Свечеревский А.Д., Нафигин И.О.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Физико-химические и петрофизические исследования в науках о Земле.&nbsp;Двадцать шестая международная конференция. Москва, 2025.  С. 144-147.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw82985640">
+<td align=center valign=top class="select-tr-left"><a name="x82985640"></a>
+<font color=#00008f><b>26.</b></font><br><input type=checkbox name="tid82985640" id="tid82985640"  onClick='if (this.checked) {RowSelect("arw82985640",1)} else {RowSelect("arw82985640",0)}'><div id="pdf_82985640" name="pdf_82985640"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82985640"><b><span style="line-height:1.0;">СТРУКТУРНО-ГЕОМОРФОЛОГИЧЕСКИЙ АНАЛИЗ ЧУКОТКИ В КОНТЕКСТЕ РЕКОНСТРУКЦИИ СДВИГОВЫХ ПЕРЕМЕЩЕНИЙ КРУПНЫХ БЛОКОВ</span></b></a><br><font color=#00008f><i>Шухов В.В., Устинов С.А., Свечеревский А.Д., Минаев В.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Строение литосферы и геодинамика.&nbsp;Материалы ХХХI Всероссийской молодежной конференции. Иркутск, 2025.  С. 164-167.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83148423">
+<td align=center valign=top class="select-tr-left"><a name="x83148423"></a>
+<font color=#00008f><b>27.</b></font><br><input type=checkbox name="tid83148423" id="tid83148423"  onClick='if (this.checked) {RowSelect("arw83148423",1)} else {RowSelect("arw83148423",0)}'><div id="pdf_83148423" name="pdf_83148423"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83148423"><b><span style="line-height:1.0;">ФАНЕРОЗОЙСКИЕ МАГМАТИЧЕСКИЕ КОМПЛЕКСЫ И МЕТАЛЛОГЕНИЯ АРГУНСКОГО БЛОКА (ЮВ ЗАБАЙКАЛЬЕ, КИТАЙ, МОНГОЛИЯ)</span></b></a><br><font color=#00008f><i>Петров В.А., Андреева О.В., Кайгородова Е.Н., Козловский А.М.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Металлогения без границ 2025.&nbsp;Тезисы докладов Российско-Китайской конференции. Москва, 2025.  С. 167-175.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83148418">
+<td align=center valign=top class="select-tr-left"><a name="x83148418"></a>
+<font color=#00008f><b>28.</b></font><br><input type=checkbox name="tid83148418" id="tid83148418"  onClick='if (this.checked) {RowSelect("arw83148418",1)} else {RowSelect("arw83148418",0)}'><div id="pdf_83148418" name="pdf_83148418"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83148418"><b><span style="line-height:1.0;">ОПЫТ ВИЗУАЛИЗАЦИИ ВРЕМЕННЫХ МЕТАЛЛОГЕНИЧЕСКИХ РЯДОВ (НА ПРИМЕРЕ ЮВ ЗАБАЙКАЛЬЯ)</span></b></a><br><font color=#00008f><i>Петров В.А., Устинов С.А., Минаев В.А., Нафигин И.О., Гришков Г.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Металлогения без границ 2025.&nbsp;Тезисы докладов Российско-Китайской конференции. Москва, 2025.  С. 176-183.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83148464">
+<td align=center valign=top class="select-tr-left"><a name="x83148464"></a>
+<font color=#00008f><b>29.</b></font><br><input type=checkbox name="tid83148464" id="tid83148464"  onClick='if (this.checked) {RowSelect("arw83148464",1)} else {RowSelect("arw83148464",0)}'><div id="pdf_83148464" name="pdf_83148464"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83148464"><b><span style="line-height:1.0;">К ВОПРОСУ О ВЕРТИКАЛЬНОМ И ВРЕМЕННОМ ДИАПАЗОНЕ ЭНДОГЕННОГО РУДООБРАЗОВАНИЯ (НА ПРИМЕРЕ МИНЕРАЛООБРАЗУЮЩИХ СИСТЕМ УРАНОВЫХ МЕСТОРОЖДЕНИЙ)</span></b></a><br><font color=#00008f><i>Петров В.А., Пэк А.А., Андреева О.В., Полуэктов В.В., Мальковский В.И., Устинов С.А., Минаев В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Металлогения без границ 2025.&nbsp;Тезисы докладов Российско-Китайской конференции. Москва, 2025.  С. 184-189.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83148425">
+<td align=center valign=top class="select-tr-left"><a name="x83148425"></a>
+<font color=#00008f><b>30.</b></font><br><input type=checkbox name="tid83148425" id="tid83148425"  onClick='if (this.checked) {RowSelect("arw83148425",1)} else {RowSelect("arw83148425",0)}'><div id="pdf_83148425" name="pdf_83148425"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83148425"><b><span style="line-height:1.0;">МИНЕРАЛЬНО-ДЕФОРМАЦИОННЫЕ ПРЕОБРАЗОВАНИЯ ПОРОД И МЕХАНИЗМЫ МИГРАЦИИ УРАНА НА МЕСТОРОЖДЕНИЯХ В ФУНДАМЕНТЕ И ЧЕХЛЕ СТРЕЛЬЦОВСКОЙ КАЛЬДЕРЫ (ЮВ ЗАБАЙКАЛЬЕ)</span></b></a><br><font color=#00008f><i>Полуэктов В.В., Петров В.А., Андреева О.В., Минаев В.А., Устинов С.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Металлогения без границ 2025.&nbsp;Тезисы докладов Российско-Китайской конференции. Москва, 2025.  С. 190-197.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83148426">
+<td align=center valign=top class="select-tr-left"><a name="x83148426"></a>
+<font color=#00008f><b>31.</b></font><br><input type=checkbox name="tid83148426" id="tid83148426"  onClick='if (this.checked) {RowSelect("arw83148426",1)} else {RowSelect("arw83148426",0)}'><div id="pdf_83148426" name="pdf_83148426"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83148426"><b><span style="line-height:1.0;">РЕКОНСТРУКЦИЯ КИНЕМАТИКИ РАЗРЫВНЫХ СТРУКТУР С ИСПОЛЬЗОВАНИЕМ АВТОРСКОГО ПРОГРАММНОГО КОМПЛЕКСА LINEAMENT STRESS CALCULATOR В КОНТЕКСТЕ ПРОГНОЗА РУДООБРАЗУЮЩИХ СИСТЕМ</span></b></a><br><font color=#00008f><i>Свечеревский А.Д., Устинов С.А., Минаев В.А., Лапаев Д.С., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Металлогения без границ 2025.&nbsp;Тезисы докладов Российско-Китайской конференции. Москва, 2025.  С. 206-211.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw91589398">
+<td align=center valign=top class="select-tr-left"><a name="x91589398"></a>
+<font color=#00008f><b>32.</b></font><br><input type=checkbox name="tid91589398" id="tid91589398"  onClick='if (this.checked) {RowSelect("arw91589398",1)} else {RowSelect("arw91589398",0)}'><div id="pdf_91589398" name="pdf_91589398"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=91589398"><b><span style="line-height:1.0;">ВКЛАД МЕХАНИЗМОВ ТЕКТОНИЧЕСКИХ ДЕФОРМАЦИЙ В РАЗВИТИЕ ГЕОЛОГО-СТРУКТУРНЫХ ОБСТАНОВОК ЭНДОГЕННОГО РУДООБРАЗОВАНИЯ</span></b></a><br><font color=#00008f><i>Васильев Н.Ю., Мострюков А.О., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Технологии нефтегазового дела и недропользования.&nbsp;материалы Всероссийской научно-практической конференции с международным участием. Москва, 2025.  С. 22-23.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83148429">
+<td align=center valign=top class="select-tr-left"><a name="x83148429"></a>
+<font color=#00008f><b>33.</b></font><br><input type=checkbox name="tid83148429" id="tid83148429"  onClick='if (this.checked) {RowSelect("arw83148429",1)} else {RowSelect("arw83148429",0)}'><div id="pdf_83148429" name="pdf_83148429"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83148429"><b><span style="line-height:1.0;">ПРОГНОЗНО-ПОИСКОВАЯ МОДЕЛЬ СТРЕЛЬЦОВСКОГО УРАНОВОРУДНОГО ПОЛЯ НА ОСНОВЕ РЕКОНСТРУКЦИИ ЭТАПОВ ФОРМИРОВАНИЯ И ФЛЮИДОПРОНИЦАЕМОСТИ КАРКАСА РАЗРЫВНЫХ НАРУШЕНИЙ</span></b></a><br><font color=#00008f><i>Тубольцев И.С., Устинов С.А., Петров В.А., Минаев В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Металлогения без границ 2025.&nbsp;Тезисы докладов Российско-Китайской конференции. Москва, 2025.  С. 226-232.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83044404">
+<td align=center valign=top class="select-tr-left"><a name="x83044404"></a>
+<font color=#00008f><b>34.</b></font><br><input type=checkbox name="tid83044404" id="tid83044404"  onClick='if (this.checked) {RowSelect("arw83044404",1)} else {RowSelect("arw83044404",0)}'><div id="pdf_83044404" name="pdf_83044404"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83044404"><b><span style="line-height:1.0;">СИСТЕМА ОБРАБОТКИ И УПРАВЛЕНИЯ ЗАЯВКАМИ ЦЕНТРА ИНФОРМАЦИОННЫХ ТЕХНОЛОГИЙ</span></b></a><br><font color=#00008f><i>Старков И.Д., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Цифровой мир: математика, технологии, связь.&nbsp;Материалы и доклады IV Всероссийской научно-практической конференции. Княгинино, 2025.  С. 229-231.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83148421">
+<td align=center valign=top class="select-tr-left"><a name="x83148421"></a>
+<font color=#00008f><b>35.</b></font><br><input type=checkbox name="tid83148421" id="tid83148421"  onClick='if (this.checked) {RowSelect("arw83148421",1)} else {RowSelect("arw83148421",0)}'><div id="pdf_83148421" name="pdf_83148421"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83148421"><b><span style="line-height:1.0;">РЕКОНСТРУКЦИЯ ПАРАМЕТРОВ СДВИГОВЫХ ТЕКТОНИЧЕСКИХ НАПРЯЖЕНИЙ ЗАПАДНОЙ ЧАСТИ БАЙКАЛО-ПАТОМСКОГО ПОЯСА НА ОСНОВЕ СТРУКТУРНО-ГЕОМОРФОЛОГИЧЕСКОГО ПОДХОДА В КОНТЕКСТЕ ПРОГНОЗА РУДООБРАЗУЮЩИХ СИСТЕМ</span></b></a><br><font color=#00008f><i>Устинов С.А., Петров В.А., Андреев А.А., Свечеревский А.Д., Кочкин И.А., Чепчугов А.М.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Металлогения без границ 2025.&nbsp;Тезисы докладов Российско-Китайской конференции. Москва, 2025.  С. 233-239.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw88760858">
+<td align=center valign=top class="select-tr-left"><a name="x88760858"></a>
+<font color=#00008f><b>36.</b></font><br><input type=checkbox name="tid88760858" id="tid88760858"  onClick='if (this.checked) {RowSelect("arw88760858",1)} else {RowSelect("arw88760858",0)}'><div id="pdf_88760858" name="pdf_88760858"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88760858"><b><span style="line-height:1.0;">СТРУКТУРНО-ГЕОМОРФОЛОГИЧЕСКИЙ ПОДХОД К ПРОГНОЗНО-ПОИСКОВОМУ МОДЕЛИРОВАНИЮ НА ПРИМЕРЕ ИЧУВЕЕМ-ПАЛЯВААМСКОГО ЗОЛОТОРУДНОГО РАЙОНА ЦЕНТРАЛЬНОЙ ЧУКОТКИ</span></b></a><br><font color=#00008f><i>Шухов В.В., Устинов С.А., Свечеревский А.Д., Минаев В.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Новое в познании процессов рудообразования.&nbsp;Материалы Четырнадцатой Российской молодежной научно-практической Школы. Москва, 2025.  С. 237-241.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83148422">
+<td align=center valign=top class="select-tr-left"><a name="x83148422"></a>
+<font color=#00008f><b>37.</b></font><br><input type=checkbox name="tid83148422" id="tid83148422"  onClick='if (this.checked) {RowSelect("arw83148422",1)} else {RowSelect("arw83148422",0)}'><div id="pdf_83148422" name="pdf_83148422"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83148422"><b><span style="line-height:1.0;">ИНТЕРПРЕТАЦИЯ ЛИНЕАМЕНТОВ В ПРЕДЕЛАХ ЮГО-ВОСТОЧНОГО ЗАБАЙКАЛЬЯ С ПРИМЕНЕНИЕМ МУЛЬТИМАСШТАБНОГО ТЕКТОНОФИЗИЧЕСКОГО ПОДХОДА ДЛЯ ПРОГНОЗА УРАНОВЫХ РУДООБРАЗУЮЩИХ СИСТЕМ</span></b></a><br><font color=#00008f><i>Устинов С.А., Петров В.А., Минаев В.А., Андреев А.А., Нафигин И.О., Свечеревский А.Д., Лапаев Д.С.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Металлогения без границ 2025.&nbsp;Тезисы докладов Российско-Китайской конференции. Москва, 2025.  С. 240-246.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83148440">
+<td align=center valign=top class="select-tr-left"><a name="x83148440"></a>
+<font color=#00008f><b>38.</b></font><br><input type=checkbox name="tid83148440" id="tid83148440"  onClick='if (this.checked) {RowSelect("arw83148440",1)} else {RowSelect("arw83148440",0)}'><div id="pdf_83148440" name="pdf_83148440"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83148440"><b><span style="line-height:1.0;">ДЕШИФРИРОВАНИЕ И ИНТЕРПРЕТАЦИЯ СТРУКТУР ЦЕНТРАЛЬНОГО ТИПА С ИСПОЛЬЗОВАНИЕМ ДАННЫХ ДИСТАНЦИОННОГО ЗОНДИРОВАНИЯ ЗЕМЛИ ДЛЯ ПРОГНОЗНОГО КАРТИРОВАНИЯ РУДООБРАЗУЮЩИХ СИСТЕМ НА ПРИМЕРЕ ЮГО-ВОСТОЧНОГО ЗАБАЙКАЛЬЯ</span></b></a><br><font color=#00008f><i>Устинов С.А., Петров В.А., Минаев В.А., Нафигин И.О., Яровая Е.В.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Металлогения без границ 2025.&nbsp;Тезисы докладов Российско-Китайской конференции. Москва, 2025.  С. 247-253.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw87518899">
+<td align=center valign=top class="select-tr-left"><a name="x87518899"></a>
+<font color=#00008f><b>39.</b></font><br><input type=checkbox name="tid87518899" id="tid87518899"  onClick='if (this.checked) {RowSelect("arw87518899",1)} else {RowSelect("arw87518899",0)}'><div id="pdf_87518899" name="pdf_87518899"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=87518899"><b><span style="line-height:1.0;">ПРОГНОЗНО-ПОИСКОВАЯ МОДЕЛЬ УРАНОВОРУДНОГО УЧАСТКА ТУЮКАН НА ОСНОВЕ КОМПЛЕКСНОЙ ИНТЕРПРЕТАЦИИ ДАННЫХ ДИСТАНЦИОННОГО ЗОНДИРОВАНИЯ ЗЕМЛИ</span></b></a><br><font color=#00008f><i>Устинов С.А., Гребенкин Н.А., Петров В.А., Кочкин И.А., Чепчугов А.М., Шухов В.В.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Материалы 23-й Международной конференции "Современные проблемы дистанционного зондирования Земли из космоса".&nbsp;Москва, 2025.  С. 332.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw87518910">
+<td align=center valign=top class="select-tr-left"><a name="x87518910"></a>
+<font color=#00008f><b>40.</b></font><br><input type=checkbox name="tid87518910" id="tid87518910"  onClick='if (this.checked) {RowSelect("arw87518910",1)} else {RowSelect("arw87518910",0)}'><div id="pdf_87518910" name="pdf_87518910"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=87518910"><b><span style="line-height:1.0;">СТРУКТУРНО-ТЕКТОНИЧЕСКАЯ ПРОГНОЗНО-ПОИСКОВАЯ МОДЕЛЬ ИЧУВЕЕМ-ПАЛЯВААМСКОГО ЗОЛОТОРУДНОГО РАЙОНА ЦЕНТРАЛЬНОЙ ЧУКОТКИ НА ОСНОВЕ АНАЛИЗА ДАННЫХ ДИСТАНЦИОННОГО ЗОНДИРОВАНИЯ ЗЕМЛИ</span></b></a><br><font color=#00008f><i>Шухов В.В., Устинов С.А., Свечеревский А.Д., Минаев В.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Материалы 23-й Международной конференции "Современные проблемы дистанционного зондирования Земли из космоса".&nbsp;Москва, 2025.  С. 336.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw82596471">
+<td align=center valign=top class="select-tr-left"><a name="x82596471"></a>
+<font color=#00008f><b>41.</b></font><br><input type=checkbox name="tid82596471" id="tid82596471"  onClick='if (this.checked) {RowSelect("arw82596471",1)} else {RowSelect("arw82596471",0)}'><div id="pdf_82596471" name="pdf_82596471"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82596471"><b><span style="line-height:1.0;">СОЗДАНИЕ ПРОГНОЗНО-ПОИСКОВЫХ МОДЕЛЕЙ ПОЛЕЗНЫХ ИСКОПАЕМЫХ ЗАПАДНОЙ ЧАСТИ БАЙКАЛО-ПАТОМСКОГО ПОЯСА НА ОСНОВЕ МУЛЬТИМАСШТАБНОЙ ТЕКТОНОФИЗИЧЕСКОЙ ИНТЕРПРЕТАЦИИ ЛИНЕАМЕНТОВ</span></b></a><br><font color=#00008f><i>Устинов С.А., Петров В.А., Свечеревский А.Д., Кочкин И.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Геология, прогноз, поиски и оценка месторождений алмазов, благородных и цветных металлов.&nbsp;Сборник тезисов докладов XIV Международной научно-практической конференции. Москва, 2025.  С. 433-435.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw88760808">
+<td align=center valign=top class="select-tr-left"><a name="x88760808"></a>
+<font color=#00008f><b>42.</b></font><br><input type=checkbox name="tid88760808" id="tid88760808"  onClick='if (this.checked) {RowSelect("arw88760808",1)} else {RowSelect("arw88760808",0)}'><div id="pdf_88760808" name="pdf_88760808"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88760808"><b><span style="line-height:1.0;">ИСПОЛЬЗОВАНИЕ АРХИТЕКТУРЫ НЕЙРОННОЙ СЕТИ ALEXNET ДЛЯ СОЗДАНИЯ ПРОГНОЗНО-ПОИСКОВЫХ МОДЕЛЕЙ ПОЛЕЗНЫХ ИСКОПАЕМЫХ НА ПРИМЕРЕ МЕСТОРОЖДЕНИЙ ПОЛИМЕТАЛЛОВ В ЮГО-ВОСТОЧНОМ ЗАБАЙКАЛЬЕ</span></b></a><br><font color=#00008f><i>Гришков Г.А., Устинов С.А., Нафигин И.О., Петров В.А., Минаев В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Новое в познании процессов рудообразования.&nbsp;Материалы Четырнадцатой Российской молодежной научно-практической Школы. Москва, 2025.  С. 58-61.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw82985608">
+<td align=center valign=top class="select-tr-left"><a name="x82985608"></a>
+<font color=#00008f><b>43.</b></font><br><input type=checkbox name="tid82985608" id="tid82985608"  onClick='if (this.checked) {RowSelect("arw82985608",1)} else {RowSelect("arw82985608",0)}'><div id="pdf_82985608" name="pdf_82985608"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82985608"><b><span style="line-height:1.0;">РЕЗУЛЬТАТЫ РЕКОНСТРУКЦИИ ПАРАМЕТРОВ ПОЛЯ НАПРЯЖЕНИЙ НА ОСНОВЕ АНАЛИЗА МИКРОСТРУКТУРНЫХ ИНДИКАТОРОВ ВО ВМЕЩАЮЩИХ ПОРОДАХ ТУЮКАНСКОГО РУДНОГО УЗЛА</span></b></a><br><font color=#00008f><i>Кочкин И.А., Устинов С.А., Свечеревский А.Д., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Строение литосферы и геодинамика.&nbsp;Материалы ХХХI Всероссийской молодежной конференции. Иркутск, 2025.  С. 60-63.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw85987495">
+<td align=center valign=top class="select-tr-left"><a name="x85987495"></a>
+<font color=#00008f><b>44.</b></font><br><input type=checkbox name="tid85987495" id="tid85987495"  onClick='if (this.checked) {RowSelect("arw85987495",1)} else {RowSelect("arw85987495",0)}'><div id="pdf_85987495" name="pdf_85987495"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=85987495"><b><span style="line-height:1.0;">ПРИМЕНЕНИЕ СТРУКТУРНО-ГЕОМОРФОЛОГИЧЕСКИХ ИССЛЕДОВАНИЙ ДЛЯ РЕШЕНИЯ ГЕОЛОГИЧЕСКИХ ЗАДАЧ И ПРОГНОЗА МЕСТОРОЖДЕНИЙ ПОЛЕЗНЫХ ИСКОПАЕМЫХ НА ПРИМЕРЕ ЗАПАДНОЙ ЧАСТИ БАЙКАЛО-ПАТОМСКОГО ПОЯСА</span></b></a><br><font color=#00008f><i>Устинов С.А., Петров В.А., Минаев В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: IX Щукинские чтения: к 80-летию кафедры геоморфологии и палеогеографии и 270-летию Московского университета и XXXVIII Пленум геоморфологической комиссии РАН.&nbsp;Материалы Всероссийской научно-практической конференции с международным участием. Москва, 2025.  С. 612-616.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw85987504">
+<td align=center valign=top class="select-tr-left"><a name="x85987504"></a>
+<font color=#00008f><b>45.</b></font><br><input type=checkbox name="tid85987504" id="tid85987504"  onClick='if (this.checked) {RowSelect("arw85987504",1)} else {RowSelect("arw85987504",0)}'><div id="pdf_85987504" name="pdf_85987504"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=85987504"><b><span style="line-height:1.0;">СТРУКТУРНО-ГЕОМОРФОЛОГИЧЕСКИЙ ПОДХОД К РЕКОНСТРУКЦИИ СДВИГОВЫХ ТЕКТОНИЧЕСКИХ ПЕРЕМЕЩЕНИЙ КРУПНЫХ БЛОКОВ НА ПРИМЕРЕ МАТЕРИКОВОЙ ЧАСТИ ЧУКОТСКОГО АВТОНОМНОГО ОКРУГА</span></b></a><br><font color=#00008f><i>Шухов В.В., Устинов С.А., Свечеревский А.Д., Минаев В.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: IX Щукинские чтения: к 80-летию кафедры геоморфологии и палеогеографии и 270-летию Московского университета и XXXVIII Пленум геоморфологической комиссии РАН.&nbsp;Материалы Всероссийской научно-практической конференции с международным участием. Москва, 2025.  С. 661-666.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw82596329">
+<td align=center valign=top class="select-tr-left"><a name="x82596329"></a>
+<font color=#00008f><b>46.</b></font><br><input type=checkbox name="tid82596329" id="tid82596329"  onClick='if (this.checked) {RowSelect("arw82596329",1)} else {RowSelect("arw82596329",0)}'><div id="pdf_82596329" name="pdf_82596329"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82596329"><b><span style="line-height:1.0;">МЕХАНИЗМЫ ТЕКТОНИЧЕСКИХ ДЕФОРМАЦИЙ И ИХ ЗНАЧЕНИЕ В ГЕОЛОГО-СТРУКТУРНОЙ ЛОКАЛИЗАЦИИ ЭНДОГЕННЫХ РУД (НА ПРИМЕРЕ МЕСТОРОЖДЕНИЙ AU В. САЯНА, CU-NI ПЕЧЕНГИ, АЛМАЗОВ ЯКУТИИ, АСБЕСТА В. УРАЛА)</span></b></a><br><font color=#00008f><i>Васильев Н.Ю., Мострюков А.О., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Геология, прогноз, поиски и оценка месторождений алмазов, благородных и цветных металлов.&nbsp;Сборник тезисов докладов XIV Международной научно-практической конференции. Москва, 2025.  С. 70-73.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw82985612">
+<td align=center valign=top class="select-tr-left"><a name="x82985612"></a>
+<font color=#00008f><b>47.</b></font><br><input type=checkbox name="tid82985612" id="tid82985612"  onClick='if (this.checked) {RowSelect("arw82985612",1)} else {RowSelect("arw82985612",0)}'><div id="pdf_82985612" name="pdf_82985612"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82985612"><b><span style="line-height:1.0;">АНАЛИЗ РАЗЛОМНОЙ ТЕКТОНИКИ СЕВЕРО-ЗАПАДНОЙ ЧАСТИ ВЕРХОЯНО-КОЛЫМСКОЙ ОРОГЕННОЙ ОБЛАСТИ И ОЦЕНКА ЕЕ РОЛИ В РУДООБРАЗОВАНИИ НА ОСНОВЕ РЕЗУЛЬТАТОВ ДИСТАНЦИОННЫХ РЕГИОНАЛЬНЫХ ИССЛЕДОВАНИЙ</span></b></a><br><font color=#00008f><i>Минаев В.А., Устинов С.А., Петров В.А., Свечеревский А.Д., Нафигин И.О.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Строение литосферы и геодинамика.&nbsp;Материалы ХХХI Всероссийской молодежной конференции. Иркутск, 2025.  С. 74-76.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83148411">
+<td align=center valign=top class="select-tr-left"><a name="x83148411"></a>
+<font color=#00008f><b>48.</b></font><br><input type=checkbox name="tid83148411" id="tid83148411"  onClick='if (this.checked) {RowSelect("arw83148411",1)} else {RowSelect("arw83148411",0)}'><div id="pdf_83148411" name="pdf_83148411"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83148411"><b><span style="line-height:1.0;">ГЕОДИНАМИЧЕСКИЕ ОБСТАНОВКИ ФОРМИРОВАНИЯ ФАНЕРОЗОЙСКИХ МАГМАТИЧЕСКИХ КОМПЛЕКСОВ АРГУНСКОГО БЛОКА (ЮВ ЗАБАЙКАЛЬЕ, КИТАЙ, МОНГОЛИЯ)</span></b></a><br><font color=#00008f><i>Кайгородова Е.Н., Андреева О.В., Козловский А.М., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Металлогения без границ 2025.&nbsp;Тезисы докладов Российско-Китайской конференции. Москва, 2025.  С. 90-97.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83851570">
+<td align=center valign=top class="select-tr-left"><a name="x83851570"></a>
+<font color=#00008f><b>49.</b></font><br><input type=checkbox name="tid83851570" id="tid83851570"  onClick='if (this.checked) {RowSelect("arw83851570",1)} else {RowSelect("arw83851570",0)}'><div id="pdf_83851570" name="pdf_83851570"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83851570"><b><span style="line-height:1.0;">INFLUENCE OF LOW PERMEABLE ROCKS ABOVE DEEP HORIZONTAL BOREHOLES REPOSITORY ON THE SAFETY OF SOLIDIFIED HIGH LEVEL NUCLEAR WASTE ISOLATION</span></b></a><br><font color=#00008f><i>Malkovsky V.I., Petrov V.A., Ojovan M.I., Yudintsev S.V.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=83822213">Progress in Nuclear Energy</a>. 
+2025. Т. 186.  С. 105829.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw88890667">
+<td align=center valign=top class="select-tr-left"><a name="x88890667"></a>
+<font color=#00008f><b>50.</b></font><br><input type=checkbox name="tid88890667" id="tid88890667"  onClick='if (this.checked) {RowSelect("arw88890667",1)} else {RowSelect("arw88890667",0)}'><div id="pdf_88890667" name="pdf_88890667"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88890667"><b><span style="line-height:1.0;">ИНТЕРПРЕТАЦИЯ ЛИНЕАМЕНТОВ В ПРЕДЕЛАХ ЗАПАДНОЙ ЧАСТИ БАЙКАЛО-ПАТОМСКОГО ПОЯСА С ПРИМЕНЕНИЕМ МУЛЬТИМАСШТАБНОГО ТЕКТОНОФИЗИЧЕСКОГО ПОДХОДА В КОНТЕКСТЕ ПРОГНОЗА РУДООБРАЗУЮЩИХ СИСТЕМ</span></b></a><br><font color=#00008f><i>Устинов С.А., Петров В.А., Андреев А.А., Свечеревский А.Д., Кочкин И.А., Шухов В.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=88779097">Георесурсы</a>. 
+2025. Т. 27. <a href="/contents.asp?id=88779097&selid=88890667">№&nbsp;4</a>.  С. 83-106.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+5</td></tr>
+
+
+
+<tr valign=middle id="arw83127498">
+<td align=center valign=top class="select-tr-left"><a name="x83127498"></a>
+<font color=#00008f><b>51.</b></font><br><input type=checkbox name="tid83127498" id="tid83127498"  onClick='if (this.checked) {RowSelect("arw83127498",1)} else {RowSelect("arw83127498",0)}'><div id="pdf_83127498" name="pdf_83127498"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83127498"><b><span style="line-height:1.0;">ФАНЕРОЗОЙСКИЕ МАГМАТИЧЕСКИЕ КОМПЛЕКСЫ АРГУНСКОГО БЛОКА (ЮГО-ВОСТОЧНОЕ ЗАБАЙКАЛЬЕ, КИТАЙ, МОНГОЛИЯ) И ИХ МЕТАЛЛОГЕНИЧЕСКАЯ СПЕЦИАЛИЗАЦИЯ</span></b></a><br><font color=#00008f><i>Петров В.А., Андреева О.В., Кайгородова Е.Н., Козловский А.М.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=83127490">Геология рудных месторождений</a>. 
+2025. Т. 67. <a href="/contents.asp?id=83127490&selid=83127498">№&nbsp;5</a>.  С. 614-640.
+</span>
+<div style="height: 5px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<td width=10% align=left valign=top bgcolor=#f5f5f5><font color=#000000>Версии:</font></td>
+<td width=90% align=left valign=top bgcolor=#f5f5f5>
+
+<span class="menug">
+<a href="item.asp?id=83114068">
+<span style="line-height:1.0;">PHANEROZOIC MAGMATIC COMPLEXES OF THE ARGUN BLOCK (SE TRANSBAIKALIA, CHINA, MONGOLIA) AND THEIR METALLOGENIC SPECIALIZATION</span><br><i>Petrov V.A., Andreeva O.V., Kaigorodova E.N., Kozlovsky A.M.</i><br>Geology of Ore Deposits. 2025. Т. 67. №&nbsp;5.  С. 616-637.
+</a></span>
+<br><div style="height: 5px;">&nbsp;</div>
+
+</td></tr></table>
+
+</td><td align=center valign=middle class="select-tr-right">
+3</td></tr>
+
+
+
+<tr valign=middle id="arw84228459">
+<td align=center valign=top class="select-tr-left"><a name="x84228459"></a>
+<font color=#00008f><b>52.</b></font><br><input type=checkbox name="tid84228459" id="tid84228459"  onClick='if (this.checked) {RowSelect("arw84228459",1)} else {RowSelect("arw84228459",0)}'><div id="pdf_84228459" name="pdf_84228459"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=84228459"><b><span style="line-height:1.0;">ОТ СТРУКТУР РУДНЫХ ПОЛЕЙ К МЕТАЛЛОГЕНИИ ЗОЛОТА: К 90-ЛЕТИЮ СО ДНЯ РОЖДЕНИЯ ЮРИЯ ГРИГОРЬЕВИЧА САФОНОВА</span></b></a><br><font color=#00008f><i>Викентьев И.В., Злобина Т.М., Галямов А.Л., Волков А.В., Коваленкер В.А., Петров В.А., Прокофьев В.Ю., Пэк А.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=84228458">Геология рудных месторождений</a>. 
+2025. Т. 67. <a href="/contents.asp?id=84228458&selid=84228459">№&nbsp;6</a>.  С. 743-753.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw88759412">
+<td align=center valign=top class="select-tr-left"><a name="x88759412"></a>
+<font color=#00008f><b>53.</b></font><br><input type=checkbox name="tid88759412" id="tid88759412"  onClick='if (this.checked) {RowSelect("arw88759412",1)} else {RowSelect("arw88759412",0)}'><div id="pdf_88759412" name="pdf_88759412"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88759412"><b><span style="line-height:1.0;">ГЕОИНФОРМАЦИОННАЯ ПРОГНОЗНО-ПОИСКОВАЯ МОДЕЛЬ ПЕРСПЕКТИВНОГО УРАНОВОРУДНОГО УЧАСТКА ТУЮКАН</span></b></a><br><font color=#00008f><i>Устинов С.А., Петров В.А., Гребенкин Н.А., Кочкин И.А., Чепчугов А.М.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=88759385">Горная промышленность</a>. 
+2025. <a href="/contents.asp?id=88759385&selid=88759412">№&nbsp;6</a>.  С. 138-145.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw82377884">
+<td align=center valign=top class="select-tr-left"><a name="x82377884"></a>
+<font color=#00008f><b>54.</b></font><br><input type=checkbox name="tid82377884" id="tid82377884"  onClick='if (this.checked) {RowSelect("arw82377884",1)} else {RowSelect("arw82377884",0)}'><div id="pdf_82377884" name="pdf_82377884"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82377884"><b><span style="line-height:1.0;">РЕКОНСТРУКЦИЯ ПАРАМЕТРОВ СДВИГОВЫХ НАПРЯЖЕНИЙ ПРИ ФОРМИРОВАНИИ РАЗНОРАНГОВЫХ РАЗЛОМОВ ЗАПАДНОГО ПРИБАЙКАЛЬЯ НА ОСНОВЕ ТЕКТОНОФИЗИЧЕСКОЙ ИНТЕРПРЕТАЦИИ ЛИНЕАМЕНТОВ</span></b></a><br><font color=#00008f><i>Свечеревский А.Д., Устинов С.А., Лапаев Д.С., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82377876">Физика Земли</a>. 
+2025. <a href="/contents.asp?id=82377876&selid=82377884">№&nbsp;2</a>.  С. 95-113.
+</span>
+<div style="height: 5px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<td width=10% align=left valign=top bgcolor=#f5f5f5><font color=#000000>Версии:</font></td>
+<td width=90% align=left valign=top bgcolor=#f5f5f5>
+
+<span class="menug">
+<a href="item.asp?id=82650534">
+<span style="line-height:1.0;">RECONSTRUCTION OF THE PARAMETERS OF SHEAR STRESSES DURING THE FORMATION OF MULTIRANK FAULTS IN THE WESTERN BAIKAL REGION BASED ON TECTONOPHYSICAL INTERPRETATION OF LINEAMENTS</span><br><i>Svecherevskiy A.D., Ustinov S.A., Lapaev D.S., Petrov V.A.</i><br>Izvestiya, Physics of the Solid Earth. 2025. Т. 61. №&nbsp;2.  С. 236-250.
+</a></span>
+<br><div style="height: 5px;">&nbsp;</div>
+
+</td></tr></table>
+
+</td><td align=center valign=middle class="select-tr-right">
+4</td></tr>
+
+
+
+<tr valign=middle id="arw88771912">
+<td align=center valign=top class="select-tr-left"><a name="x88771912"></a>
+<font color=#00008f><b>55.</b></font><br><input type=checkbox name="tid88771912" id="tid88771912"  onClick='if (this.checked) {RowSelect("arw88771912",1)} else {RowSelect("arw88771912",0)}'><div id="pdf_88771912" name="pdf_88771912"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88771912"><b><span style="line-height:1.0;">A PREDICTIVE AND PROSPECTING MODEL OF THE TUYUKAN URANIUM CLUSTER AREA BASED ON EARTH REMOTE-SENSING DATA AND A STRUCTURAL–TECTONOPHYSICAL APPROACH</span></b></a><br><font color=#00008f><i>Ustinov S.A., Petrov V.A., Minaev V.A., Svecherevsky A.D., Shukhov V.V., Kochkin I.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=88771901">Geology of Ore Deposits</a>. 
+2025. Т. 67. <a href="/contents.asp?id=88771901&selid=88771912">№&nbsp;6</a>.  С. 895-909.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw82319973">
+<td align=center valign=top class="select-tr-left"><a name="x82319973"></a>
+<font color=#00008f><b>56.</b></font><br><input type=checkbox name="tid82319973" id="tid82319973"  onClick='if (this.checked) {RowSelect("arw82319973",1)} else {RowSelect("arw82319973",0)}'><div id="pdf_82319973" name="pdf_82319973"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82319973"><b><span style="line-height:1.0;">STRONG INTERACTIONS AT HIGH ENERGIES: EXPLORING OUTWARD HORIZONS</span></b></a><br><font color=#00008f><i>Petrov V.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82319923">Physics of Particles and Nuclei</a>. 
+2025. Т. 56. <a href="/contents.asp?id=82319923&selid=82319973">№&nbsp;2</a>.  С. 412-422.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83051339">
+<td align=center valign=top class="select-tr-left"><a name="x83051339"></a>
+<font color=#00008f><b>57.</b></font><br><input type=checkbox name="tid83051339" id="tid83051339"  onClick='if (this.checked) {RowSelect("arw83051339",1)} else {RowSelect("arw83051339",0)}'><div id="pdf_83051339" name="pdf_83051339"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83051339"><b><span style="line-height:1.0;">EVOLUTION OF IDEAS AND METHODS IN STRONG INTERACTION THEORY</span></b></a><br><font color=#00008f><i>Petrov V.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=83051328">Physics of Particles and Nuclei</a>. 
+2025. Т. 56. <a href="/contents.asp?id=83051328&selid=83051339">№&nbsp;5</a>.  С. 1186-1193.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw85996470">
+<td align=center valign=top class="select-tr-left"><a name="x85996470"></a>
+<font color=#00008f><b>58.</b></font><br><input type=checkbox name="tid85996470" id="tid85996470"  onClick='if (this.checked) {RowSelect("arw85996470",1)} else {RowSelect("arw85996470",0)}'><div id="pdf_85996470" name="pdf_85996470"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=85996470"><b><span style="line-height:1.0;">НОВЫЕ ДАННЫЕ ПО УСЛОВИЯМ ФОРМИРОВАНИЯ УРАНОВОРУДНЫХ ОБЪЕКТОВ И НАУЧНО-МЕТОДИЧЕСКИЕ АСПЕКТЫ ИХ ВЫЯВЛЕНИЯ</span></b></a><br><font color=#00008f><i>Петров В.А., Андреева О.В., Пэк А.А., Мальковский В.И., Полуэктов В.В., Устинов С.А., Минаев В.А., Дойникова О.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=85996467">Разведка и охрана недр</a>. 
+2025. <a href="/contents.asp?id=85996467&selid=85996470">№&nbsp;6</a>.  С. 20-26.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw82876045">
+<td align=center valign=top class="select-tr-left"><a name="x82876045"></a>
+<font color=#00008f><b>59.</b></font><br><input type=checkbox name="tid82876045" id="tid82876045"  onClick='if (this.checked) {RowSelect("arw82876045",1)} else {RowSelect("arw82876045",0)}'><div id="pdf_82876045" name="pdf_82876045"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82876045"><b><span style="line-height:1.0;">AN APPROACH TO CREATING SPATIAL PREDICTIVE PROSPECTING MODELS OF DEPOSITS BASED ON CONVOLUTIONAL NEURAL NETWORKS (A CASE STUDY OF THE TERRITORY OF SOUTHEASTERN TRANSBAIKALIA)</span></b></a><br><font color=#00008f><i>Grishkov G.A., Nafigin I.O., Ustinov S.A., Minaev V.A., Petrov V.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82876043">Seismic Instruments</a>. 
+2025. Т. 61. <a href="/contents.asp?id=82876043&selid=82876045">№&nbsp;2</a>.  С. 122-131.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw88905329">
+<td align=center valign=top class="select-tr-left"><a name="x88905329"></a>
+<font color=#00008f><b>60.</b></font><br><input type=checkbox name="tid88905329" id="tid88905329"  onClick='if (this.checked) {RowSelect("arw88905329",1)} else {RowSelect("arw88905329",0)}'><div id="pdf_88905329" name="pdf_88905329"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=88905329"><b><span style="line-height:1.0;">ПРОГНОЗНОЕ МОДЕЛИРОВАНИЕ ЗОН ЗОЛОТО-СУЛЬФИДНОЙ МИНЕРАЛИЗАЦИИ ПО ДАННЫМ СПУТНИКОВОЙ МУЛЬТИСПЕКТРАЛЬНОЙ СЪЁМКИ (СЕВЕРНАЯ И ЦЕНТРАЛЬНАЯ ЧУКОТКА)</span></b></a><br><font color=#00008f><i>Нафигин И.О., Лапаев Д.С., Минаев В.А., Устинов С.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=88905328">Наука и технологические разработки</a>. 
+2025. Т. 104. <a href="/contents.asp?id=88905328&selid=88905329">№&nbsp;3</a>.  С. 3-24.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw85291017">
+<td align=center valign=top class="select-tr-left"><a name="x85291017"></a>
+<font color=#00008f><b>61.</b></font><br><input type=checkbox name="tid85291017" id="tid85291017"  onClick='if (this.checked) {RowSelect("arw85291017",1)} else {RowSelect("arw85291017",0)}'><div id="pdf_85291017" name="pdf_85291017"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=85291017"><b><span style="line-height:1.0;">ТЕКТОНОФИЗИЧЕСКАЯ ИНТЕРПРЕТАЦИЯ МИКРОСТРУКТУР ВМЕЩАЮЩИХ ПОРОД ТУЮКАНСКОГО УРАНОВОРУДНОГО УЗЛА ДЛЯ РЕКОНСТРУКЦИИ ПУТЕЙ МИГРАЦИИ ФЛЮИДОВ</span></b></a><br><font color=#00008f><i>Кочкин И.А., Устинов С.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Новое в познании процессов рудообразования.&nbsp;Сборник материалов Тринадцатой Российской молодежной научно-практической Школы. Москва, 2024.  С. 119-122.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw73538359">
+<td align=center valign=top class="select-tr-left"><a name="x73538359"></a>
+<font color=#00008f><b>62.</b></font><br><input type=checkbox name="tid73538359" id="tid73538359"  onClick='if (this.checked) {RowSelect("arw73538359",1)} else {RowSelect("arw73538359",0)}'><div id="pdf_73538359" name="pdf_73538359"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=73538359"><b><span style="line-height:1.0;">ТЕКТОНОФИЗИЧЕСКИЙ ПОДХОД К ИНТЕРПРЕТАЦИИ ЛИНЕАМЕНТОВ ДЛЯ ПРОГНОЗА РУДООБРАЗУЮЩИХ СИСТЕМ НА ПРИМЕРЕ ТУЮКАНСКОГО УРАНОВОРУДНОГО УЗЛА (МАМСКО-ЧУЙСКИЙ РАЙОН, ИРКУТСКАЯ ОБЛАСТЬ)</span></b></a><br><font color=#00008f><i>Устинов С.А., Свечеревский А.Д., Чепчугов А.М., Кочкин И.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Разломообразование в литосфере и сопутствующие процессы: тектонофизический аспект.&nbsp;Тезисы докладов Всероссийской конференции, посвященной 75-летию ИЗК СО РАН, 45-летию лаборатории тектонофизики, 90-летию со дня рождения профессора С. И. Шермана. Иркутск, 2024.  С. 121-122.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw68501899">
+<td align=center valign=top class="select-tr-left"><a name="x68501899"></a>
+<font color=#00008f><b>63.</b></font><br><input type=checkbox name="tid68501899" id="tid68501899"  onClick='if (this.checked) {RowSelect("arw68501899",1)} else {RowSelect("arw68501899",0)}'><div id="pdf_68501899" name="pdf_68501899"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=68501899"><b><span style="line-height:1.0;">ТЕКТОНОФИЗИЧЕСКАЯ РЕКОНСТРУКЦИЯ ЭТАПОВ ФОРМИРОВАНИЯ И КИНЕМАТИКИ КАРКАСА РАЗРЫВНЫХ НАРУШЕНИЙ ТУЮКАНСКОГО РУДНОГО УЗЛА (ИРКУТСКАЯ ОБЛАСТЬ) НА ОСНОВЕ ДАННЫХ ДИСТАНЦИОННОГО ЗОНДИРОВАНИЯ ЗЕМЛИ</span></b></a><br><font color=#00008f><i>Устинов С.А., Свечеревский А.Д., Чепчугов А.М., Петров В.А., Яровая Е.В.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Триггерные эффекты в геосистемах.&nbsp;тезисы докладов VII Международной конференции. Москва, 2024.  С. 132.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83206860">
+<td align=center valign=top class="select-tr-left"><a name="x83206860"></a>
+<font color=#00008f><b>64.</b></font><br><input type=checkbox name="tid83206860" id="tid83206860"  onClick='if (this.checked) {RowSelect("arw83206860",1)} else {RowSelect("arw83206860",0)}'><div id="pdf_83206860" name="pdf_83206860"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83206860"><b><span style="line-height:1.0;">РЕГИОНАЛЬНЫЕ ДИСТАНЦИОННЫЕ ИССЛЕДОВАНИЯ РАЗЛОМНОЙ ТЕКТОНИКИ ТАЙМЫРА В ЦЕЛЯХ ПРОГНОЗА РАЗМЕЩЕНИЯ ПОЛЕЗНЫХ ИСКОПАЕМЫХ</span></b></a><br><font color=#00008f><i>Минаев В.А., Устинов С.А., Петров В.А., Свечеревский А.Д., Нафигин И.О.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Физико-химические и петрофизические исследования в науках о Земле.&nbsp;Материалы Двадцать пятой международной конференции, посвященной 300-летию Российской академии наук. Москва, 2024.  С. 179-180.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw67907922">
+<td align=center valign=top class="select-tr-left"><a name="x67907922"></a>
+<font color=#00008f><b>65.</b></font><br><input type=checkbox name="tid67907922" id="tid67907922"  onClick='if (this.checked) {RowSelect("arw67907922",1)} else {RowSelect("arw67907922",0)}'><div id="pdf_67907922" name="pdf_67907922"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67907922"><b><span style="line-height:1.0;">РОЛЬ СТРУКТУР ЦЕНТРАЛЬНОГО ТИПА В ЛОКАЛИЗАЦИИ РУДООБРАЗУЮЩИХ МИНЕРАЛЬНЫХ СИСТЕМ НА ТЕРРИТОРИИ ЮГО-ВОСТОЧНОГО ЗАБАЙКАЛЬЯ</span></b></a><br><font color=#00008f><i>Устинов С.А., Петров В.А., Минаев В.А., Нафигин И.О., Яровая Е.В.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Научно-методические основы прогноза, поисков, оценки месторождений алмазов, благородных и цветных металлов.&nbsp;Сборник тезисов докладов XIII Международной научно-практической конференции. Москва, 2024.  С. 379-381.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw83206830">
+<td align=center valign=top class="select-tr-left"><a name="x83206830"></a>
+<font color=#00008f><b>66.</b></font><br><input type=checkbox name="tid83206830" id="tid83206830"  onClick='if (this.checked) {RowSelect("arw83206830",1)} else {RowSelect("arw83206830",0)}'><div id="pdf_83206830" name="pdf_83206830"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=83206830"><b><span style="line-height:1.0;">РАЗРАБОТКА МЕТОДИЧЕСКОГО ПОДХОДА К ПРОГНОЗИРОВАНИЮ ОРУДЕНЕНИЯ НА ОСНОВЕ НЕЙРОСЕТЕВЫХ ТЕХНОЛОГИЙ (НА ПРИМЕРЕ ЮГО- ВОСТОЧНОГО ЗАБАЙКАЛЬЯ)</span></b></a><br><font color=#00008f><i>Гришков Г.А., Устинов С.А., Нафигин И.О., Петров В.А., Минаев В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Физико-химические и петрофизические исследования в науках о Земле.&nbsp;Материалы Двадцать пятой международной конференции, посвященной 300-летию Российской академии наук. Москва, 2024.  С. 54-55.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw85290834">
+<td align=center valign=top class="select-tr-left"><a name="x85290834"></a>
+<font color=#00008f><b>67.</b></font><br><input type=checkbox name="tid85290834" id="tid85290834"  onClick='if (this.checked) {RowSelect("arw85290834",1)} else {RowSelect("arw85290834",0)}'><div id="pdf_85290834" name="pdf_85290834"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=85290834"><b><span style="line-height:1.0;">ПРИМЕНЕНИЕ СВЕРТОЧНЫХ НЕЙРОННЫХ СЕТЕЙ ДЛЯ СОЗДАНИЯ ПРОСТРАНСТВЕННЫХ ПРОГНОЗНО-ПОИСКОВЫХ МОДЕЛЕЙ ПОЛЕЗНЫХ ИСКОПАЕМЫХ НА ПРИМЕРЕ ПОЛИМЕТАЛЛИЧЕСКИХ ОБЪЕКТОВ ЮГО-ВОСТОЧНОГО ЗАБАЙКАЛЬЯ</span></b></a><br><font color=#00008f><i>Гришков Г.А., Устинов С.А., Нафигин И.О., Петров В.А., Минаев В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Новое в познании процессов рудообразования.&nbsp;Сборник материалов Тринадцатой Российской молодежной научно-практической Школы. Москва, 2024.  С. 61-65.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw86119140">
+<td align=center valign=top class="select-tr-left"><a name="x86119140"></a>
+<font color=#00008f><b>68.</b></font><br><input type=checkbox name="tid86119140" id="tid86119140"  onClick='if (this.checked) {RowSelect("arw86119140",1)} else {RowSelect("arw86119140",0)}'><div id="pdf_86119140" name="pdf_86119140"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=86119140"><b><span style="line-height:1.0;">МЕТОДЫ ПРЕПОДАВАНИЯ ДИСЦИПЛИН ЦИКЛА ИНФОРМАЦИОННОЙ БЕЗОПАСНОСТИ</span></b></a><br><font color=#00008f><i>Плотников М.В., Моисеев А.И., Цивилев С.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Современные педагогические технологии как средство повышения качества образования: теория и опыт.&nbsp;Материалы и доклады XV Региональной педагогической конференции. Княгинино, 2024.  С. 69-71.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw65777082">
+<td align=center valign=top class="select-tr-left"><a name="x65777082"></a>
+<font color=#00008f><b>69.</b></font><br><input type=checkbox name="tid65777082" id="tid65777082"  onClick='if (this.checked) {RowSelect("arw65777082",1)} else {RowSelect("arw65777082",0)}'><div id="pdf_65777082" name="pdf_65777082"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65777082"><b><span style="line-height:1.0;">TOTEM-ATLAS AMBIGUITY: SHOULDN'T ONE WORRY?</span></b></a><br><font color=#00008f><i>Petrov V.A., Tkachenko N.P.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=65692881">Nuclear Physics A</a>. 
+2024. Т. 1042.  С. 122807.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+7</td></tr>
+
+
+
+<tr valign=middle id="arw67657513">
+<td align=center valign=top class="select-tr-left"><a name="x67657513"></a>
+<font color=#00008f><b>70.</b></font><br><input type=checkbox name="tid67657513" id="tid67657513"  onClick='if (this.checked) {RowSelect("arw67657513",1)} else {RowSelect("arw67657513",0)}'><div id="pdf_67657513" name="pdf_67657513"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67657513"><b><span style="line-height:1.0;">WHY THE BETHE-WEST-YENNIE FORMULA FOR COULOMB-NUCLEAR INTERFERENCE IS INCONSISTENT</span></b></a><br><font color=#00008f><i>Petrov V.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=67590545">Physics Letters. Section B: Nuclear, Elementary Particle and High-Energy Physics</a>. 
+2024. Т. 854.  С. 138709.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw65860189">
+<td align=center valign=top class="select-tr-left"><a name="x65860189"></a>
+<font color=#00008f><b>71.</b></font><br><input type=checkbox name="tid65860189" id="tid65860189"  onClick='if (this.checked) {RowSelect("arw65860189",1)} else {RowSelect("arw65860189",0)}'><div id="pdf_65860189" name="pdf_65860189"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=65860189"><b><span style="line-height:1.0;">PORTABLE, SINGLE NUCLEOTIDE POLYMORPHISM-SPECIFIC DUPLEX ASSAY FOR VIRUS SURVEILLANCE IN WASTEWATER</span></b></a><br><font color=#00008f><i>Oh Ch., Xun G., Lane S.T., Petrov V.A., Zhao H., Nguyen T.H.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=64890901">Science of the Total Environment</a>. 
+2024. Т. 912.  С. 168701.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+13</td></tr>
+
+
+
+<tr valign=middle id="arw67912355">
+<td align=center valign=top class="select-tr-left"><a name="x67912355"></a>
+<font color=#00008f><b>72.</b></font><br><input type=checkbox name="tid67912355" id="tid67912355"  onClick='if (this.checked) {RowSelect("arw67912355",1)} else {RowSelect("arw67912355",0)}'><div id="pdf_67912355" name="pdf_67912355"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67912355"><b><span style="line-height:1.0;">О РЕЖИМАХ МИГРАЦИИ ФЛЮИДОВ ПРИ ФОРМИРОВАНИИ УРАНОВЫХ МЕСТОРОЖДЕНИЙ НЕСОГЛАСИЯ В РАЙОНЕ АЛЛИГЕЙТОР-РИВЕРС (АВСТРАЛИЯ)</span></b></a><br><font color=#00008f><i>Пэк А.А., Мальковский В.И., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=67912353">Геология рудных месторождений</a>. 
+2024. Т. 66. <a href="/contents.asp?id=67912353&selid=67912355">№&nbsp;2</a>.  С. 146-170.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw72751733">
+<td align=center valign=top class="select-tr-left"><a name="x72751733"></a>
+<font color=#00008f><b>73.</b></font><br><input type=checkbox name="tid72751733" id="tid72751733"  onClick='if (this.checked) {RowSelect("arw72751733",1)} else {RowSelect("arw72751733",0)}'><div id="pdf_72751733" name="pdf_72751733"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=72751733"><b><span style="line-height:1.0;">ДЕШИФРИРОВАНИЕ И ИНТЕРПРЕТАЦИЯ СТРУКТУР ЦЕНТРАЛЬНОГО ТИПА НА ТЕРРИТОРИИ ЮГО ВОСТОЧНОГО ЗАБАЙКАЛЬЯ ДЛЯ ПРОГНОЗА РУДООБРАЗУЮЩИХ СИСТЕМ</span></b></a><br><font color=#00008f><i>Устинов С.А., Петров В.А., Минаев В.А., Нафигин И.О., Яроваяа Е.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=72751732">Геология рудных месторождений</a>. 
+2024. Т. 66. <a href="/contents.asp?id=72751732&selid=72751733">№&nbsp;4</a>.  С. 329-362.
+</span>
+<div style="height: 5px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<td width=10% align=left valign=top bgcolor=#f5f5f5><font color=#000000>Версии:</font></td>
+<td width=90% align=left valign=top bgcolor=#f5f5f5>
+
+<span class="menug">
+<a href="item.asp?id=68640387">
+<span style="line-height:1.0;">DETECTION AND INTERPRETATION OF CENTRAL TYPE STRUCTURES WITHIN THE TERRITORY OF SOUTHEASTERN TRANSBAIKALIA FOR PREDICTION OF ORE-FORMING SYSTEMS</span><br><i>Ustinov S.A., Petrov V.A., Minaev V.A., Nafigin I.O., Yarovaya E.V.</i><br>Geology of Ore Deposits. 2024. Т. 66. №&nbsp;4.  С. 345-375.
+</a></span>
+<br><div style="height: 5px;">&nbsp;</div>
+
+</td></tr></table>
+
+</td><td align=center valign=middle class="select-tr-right">
+12</td></tr>
+
+
+
+<tr valign=middle id="arw75083447">
+<td align=center valign=top class="select-tr-left"><a name="x75083447"></a>
+<font color=#00008f><b>74.</b></font><br><input type=checkbox name="tid75083447" id="tid75083447"  onClick='if (this.checked) {RowSelect("arw75083447",1)} else {RowSelect("arw75083447",0)}'><div id="pdf_75083447" name="pdf_75083447"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=75083447"><b><span style="line-height:1.0;">КРИТЕРИИ ПРОСТРАНСТВЕННОГО РАСПРЕДЕЛЕНИЯ ПОЛИМЕТАЛЛИЧЕСКИХ РУДНЫХ ОБЪЕКТОВ КАК ОСНОВА ДЛЯ СОЗДАНИЯ ПРОГНОЗНО-ПОИСКОВОЙ МОДЕЛИ С ИСПОЛЬЗОВАНИЕМ НЕЙРОСЕТЕВОГО ПОДХОДА (НА ПРИМЕРЕ ТЕРРИТОРИИ ЮГО-ВОСТОЧНОГО ЗАБАЙКАЛЬЯ)</span></b></a><br><font color=#00008f><i>Гришков Г.А., Нафигин И.О., Устинов С.А., Петров В.А., Минаев В.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=75083445">Исследование Земли из космоса</a>. 
+2024. <a href="/contents.asp?id=75083445&selid=75083447">№&nbsp;4</a>.  С. 22-37.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw80311960">
+<td align=center valign=top class="select-tr-left"><a name="x80311960"></a>
+<font color=#00008f><b>75.</b></font><br><input type=checkbox name="tid80311960" id="tid80311960"  onClick='if (this.checked) {RowSelect("arw80311960",1)} else {RowSelect("arw80311960",0)}'><div id="pdf_80311960" name="pdf_80311960"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80311960"><b><span style="line-height:1.0;">СТРУКТУРНО-ТЕКТОНОФИЗИЧЕСКИЙ ПОДХОД К ИНТЕРПРЕТАЦИИ РЕЗУЛЬТАТОВ ЛИНЕАМЕНТНОГО АНАЛИЗА ДЛЯ ПРОГНОЗА РУДООБРАЗУЮЩИХ МИНЕРАЛЬНЫХ СИСТЕМ НА ПРИМЕРЕ РАЙОНА ТУЮКАНСКОГО РУДНОГО УЗЛА</span></b></a><br><font color=#00008f><i>Устинов С.А., Чепчугов А.М., Томаровская М.А., Петров В.А., Свечеревский А.Д., Яровая Е.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=79691955">Исследование Земли из космоса</a>. 
+2024. <a href="/contents.asp?id=79691955&selid=80311960">№&nbsp;5</a>.  С. 35-57.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+11</td></tr>
+
+
+
+<tr valign=middle id="arw80311961">
+<td align=center valign=top class="select-tr-left"><a name="x80311961"></a>
+<font color=#00008f><b>76.</b></font><br><input type=checkbox name="tid80311961" id="tid80311961"  onClick='if (this.checked) {RowSelect("arw80311961",1)} else {RowSelect("arw80311961",0)}'><div id="pdf_80311961" name="pdf_80311961"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80311961"><b><span style="line-height:1.0;">РЕГИОНАЛЬНЫЙ ДИСТАНЦИОННЫЙ АНАЛИЗ РАЗЛОМНОЙ ТЕКТОНИКИ ТАЙМЫРО-СЕВЕРОЗЕМЕЛЬСКОГО ОРОГЕНА И ЕЕ РОЛИ В РУДООБРАЗОВАНИИ</span></b></a><br><font color=#00008f><i>Минаев В.А., Устинов С.А., Петров В.А., Свечеревский А.Д., Нафигин И.О.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=79691955">Исследование Земли из космоса</a>. 
+2024. <a href="/contents.asp?id=79691955&selid=80311961">№&nbsp;5</a>.  С. 58-73.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+6</td></tr>
+
+
+
+<tr valign=middle id="arw67307338">
+<td align=center valign=top class="select-tr-left"><a name="x67307338"></a>
+<font color=#00008f><b>77.</b></font><br><input type=checkbox name="tid67307338" id="tid67307338"  onClick='if (this.checked) {RowSelect("arw67307338",1)} else {RowSelect("arw67307338",0)}'><div id="pdf_67307338" name="pdf_67307338"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67307338"><b><span style="line-height:1.0;">FLUID MIGRATION REGIMES DURING THE FORMATION OF THE UNCONFORMITY-RELATED URANIUM DEPOSITS OF THE ALLIGATOR RIVERS URANIUM FIELD, AUSTRALIA</span></b></a><br><font color=#00008f><i>Pek A.A., Malkovsky V.I., Petrov V.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=67307337">Geology of Ore Deposits</a>. 
+2024. Т. 66. <a href="/contents.asp?id=67307337&selid=67307338">№&nbsp;2</a>.  С. 159-177.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw82549878">
+<td align=center valign=top class="select-tr-left"><a name="x82549878"></a>
+<font color=#00008f><b>78.</b></font><br><input type=checkbox name="tid82549878" id="tid82549878"  onClick='if (this.checked) {RowSelect("arw82549878",1)} else {RowSelect("arw82549878",0)}'><div id="pdf_82549878" name="pdf_82549878"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82549878"><b><span style="line-height:1.0;">CRITERIA FOR THE SPATIAL DISTRIBUTION OF POLYMETALLIC ORE OBJECTS AS A BASIS FOR CREATING A PREDICTIVE SEARCH MODEL USING A NEURAL NETWORK APPROACH</span></b></a><br><font color=#00008f><i>Grishkov G.A., Nafigin I.O., Ustinov S.A., Petrov V.A., Minaev V.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82549876">Izvestiya, Atmospheric and Oceanic Physics</a>. 
+2024. Т. 60. <a href="/contents.asp?id=82549876&selid=82549878">№&nbsp;12</a>.  С. 1458-1470.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw82549891">
+<td align=center valign=top class="select-tr-left"><a name="x82549891"></a>
+<font color=#00008f><b>79.</b></font><br><input type=checkbox name="tid82549891" id="tid82549891"  onClick='if (this.checked) {RowSelect("arw82549891",1)} else {RowSelect("arw82549891",0)}'><div id="pdf_82549891" name="pdf_82549891"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82549891"><b><span style="line-height:1.0;">STRUCTURAL–TECTONOPHYSICAL APPROACH TO INTERPRETING LINEAMENT ANALYSIS RESULTS FOR THE PREDICTION OF ORE-FORMING MINERAL SYSTEMS USING THE EXAMPLE OF THE TUYUKAN ORE CLUSTER AREA</span></b></a><br><font color=#00008f><i>Ustinov S.A., Chepchugov A.M., Tomarovskaya M.A., Petrov V.A., Svecherevskiy A.D., Yarovaya E.V.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82549876">Izvestiya, Atmospheric and Oceanic Physics</a>. 
+2024. Т. 60. <a href="/contents.asp?id=82549876&selid=82549891">№&nbsp;12</a>.  С. 1547-1565.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+5</td></tr>
+
+
+
+<tr valign=middle id="arw82549893">
+<td align=center valign=top class="select-tr-left"><a name="x82549893"></a>
+<font color=#00008f><b>80.</b></font><br><input type=checkbox name="tid82549893" id="tid82549893"  onClick='if (this.checked) {RowSelect("arw82549893",1)} else {RowSelect("arw82549893",0)}'><div id="pdf_82549893" name="pdf_82549893"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=82549893"><b><span style="line-height:1.0;">REGIONAL REMOTE SENSING ANALYSIS OF FAULT TECTONICS OF THE TAIMYR–SEVEROZEMEL OROGEN AND ITS ROLE IN ORE FORMATION</span></b></a><br><font color=#00008f><i>Minaev V.A., Ustinov S.A., Petrov V.A., Svecherevsky A.D., Nafigin I.O.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=82549876">Izvestiya, Atmospheric and Oceanic Physics</a>. 
+2024. Т. 60. <a href="/contents.asp?id=82549876&selid=82549893">№&nbsp;12</a>.  С. 1566-1578.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+2</td></tr>
+
+
+
+<tr valign=middle id="arw66475015">
+<td align=center valign=top class="select-tr-left"><a name="x66475015"></a>
+<font color=#00008f><b>81.</b></font><br><input type=checkbox name="tid66475015" id="tid66475015"  onClick='if (this.checked) {RowSelect("arw66475015",1)} else {RowSelect("arw66475015",0)}'><div id="pdf_66475015" name="pdf_66475015"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=66475015"><b><span style="line-height:1.0;">CRISPR-COPIES: AN <I>IN SILICO</I> PLATFORM FOR DISCOVERY OF NEUTRAL INTEGRATION SITES FOR CRISPR/CAS-FACILITATED GENE INTEGRATION</span></b></a><br><font color=#00008f><i>Boob A.G., Zhu Zh., Intasian P., Jain M., Petrov V.A., Lane S.T., Tan Sh.I., Xun G., Zhao H.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=65710805">Nucleic Acids Research</a>. 
+2024. Т. 52. <a href="/contents.asp?id=65710805&selid=66475015">№&nbsp;6</a>.  С. e30.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+11</td></tr>
+
+
+
+<tr valign=middle id="arw80382120">
+<td align=center valign=top class="select-tr-left"><a name="x80382120"></a>
+<font color=#00008f><b>82.</b></font><br><input type=checkbox name="tid80382120" id="tid80382120"  onClick='if (this.checked) {RowSelect("arw80382120",1)} else {RowSelect("arw80382120",0)}'><div id="pdf_80382120" name="pdf_80382120"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=80382120"><b><span style="line-height:1.0;">STRONG INTERACTIONS IN HISTORICAL PERSPECTIVE: FROM NUCLEAR STRUCTURE TO MULTIQUARKS</span></b></a><br><font color=#00008f><i>Petrov V.A.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=80382003">Moscow University Physics Bulletin</a>. 
+2024. Т. 79. <a href="/contents.asp?id=80382003&selid=80382120">№&nbsp;S1</a>.  С. 447-454.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw75203828">
+<td align=center valign=top class="select-tr-left"><a name="x75203828"></a>
+<font color=#00008f><b>83.</b></font><br><input type=checkbox name="tid75203828" id="tid75203828"  onClick='if (this.checked) {RowSelect("arw75203828",1)} else {RowSelect("arw75203828",0)}'><div id="pdf_75203828" name="pdf_75203828"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=75203828"><b><span style="line-height:1.0;">ПОДХОД К СОЗДАНИЮ ПРОСТРАНСТВЕННЫХ ПРОГНОЗНО-ПОИСКОВЫХ МОДЕЛЕЙ МЕСТОРОЖДЕНИЙ НА ОСНОВЕ СВЕРТОЧНЫХ НЕЙРОННЫХ СЕТЕЙ (НА ПРИМЕРЕ ТЕРРИТОРИИ ЮГО-ВОСТОЧНОГО ЗАБАЙКАЛЬЯ)</span></b></a><br><font color=#00008f><i>Гришков Г.А., Нафигин И.О., Устинов С.А., Минаев В.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=75203823">Наука и технологические разработки</a>. 
+2024. Т. 103. <a href="/contents.asp?id=75203823&selid=75203828">№&nbsp;2</a>.  С. 75-90.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+4</td></tr>
+
+
+
+<tr valign=middle id="arw59950405">
+<td align=center valign=top class="select-tr-left"><a name="x59950405"></a>
+<font color=#00008f><b>84.</b></font><br><input type=checkbox name="tid59950405" id="tid59950405"  onClick='if (this.checked) {RowSelect("arw59950405",1)} else {RowSelect("arw59950405",0)}'><div id="pdf_59950405" name="pdf_59950405"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59950405"><b><span style="line-height:1.0;">НОВОЕ В ПОЗНАНИИ ПРОЦЕССОВ РУДООБРАЗОВАНИЯ</span></b></a><br>
+<font color=#00008f>
+
+Двенадцатая Российская молодёжная научно-практическая школа: сборник материалов /  Москва, 2023. 
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw64210562">
+<td align=center valign=top class="select-tr-left"><a name="x64210562"></a>
+<font color=#00008f><b>85.</b></font><br><input type=checkbox name="tid64210562" id="tid64210562"  onClick='if (this.checked) {RowSelect("arw64210562",1)} else {RowSelect("arw64210562",0)}'><div id="pdf_64210562" name="pdf_64210562"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=64210562"><b><span style="line-height:1.0;">К ВОПРОСУ О ВЕРТИКАЛЬНОМ И ВРЕМЕННОМ ДИАПАЗОНЕ ЭНДОГЕННОГО РУДООБРАЗОВАНИЯ (НА ПРИМЕРЕ МИНЕРАЛООБРАЗУЮЩИХ СИСТЕМ УРАНОВЫХ МЕСТОРОЖДЕНИЙ)</span></b></a><br><font color=#00008f><i>Петров В.А., Пэк А.А., Андреева О.В., Полуэктов В.В., Мальковский В.И., Устинов С.А., Минаев В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Минералообразующие системы месторождений высокотехнологичных металлов: достижения и перспективы исследований.&nbsp;Всероссийская конференция, проводимая в рамках мероприятий, посвященных 300-летию РАН. Материалы конференции. Москва, 2023.  С. 138-141.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw60010868">
+<td align=center valign=top class="select-tr-left"><a name="x60010868"></a>
+<font color=#00008f><b>86.</b></font><br><input type=checkbox name="tid60010868" id="tid60010868"  onClick='if (this.checked) {RowSelect("arw60010868",1)} else {RowSelect("arw60010868",0)}'><div id="pdf_60010868" name="pdf_60010868"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=60010868"><b><span style="line-height:1.0;">ИССЛЕДОВАНИЕ РАСПРЕДЕЛЕНИЯ МОДОВОГО ПОЛЯ МИОС НА ОСНОВЕ КРИСТАЛЛА НИОБАТА ЛИТИЯ LINBO<SUB>3</SUB></span></b></a><br><font color=#00008f><i>Петров В.А., Смирнова А.В.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: XII Конгресс молодых ученых.&nbsp;сборник научных трудов. Санкт-Петербург, 2023.  С. 179-184.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw64210634">
+<td align=center valign=top class="select-tr-left"><a name="x64210634"></a>
+<font color=#00008f><b>87.</b></font><br><input type=checkbox name="tid64210634" id="tid64210634"  onClick='if (this.checked) {RowSelect("arw64210634",1)} else {RowSelect("arw64210634",0)}'><div id="pdf_64210634" name="pdf_64210634"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=64210634"><b><span style="line-height:1.0;">ВЫЯВЛЕНИЕ И КОМПЛЕКСНАЯ ИНТЕРПРЕТАЦИЯ ГЕОЛОГИЧЕСКИХ СТРУКТУР НА ТЕРРИТОРИИ ЮГО-ВОСТОЧНОГО ЗАБАЙКАЛЬЯ С ЦЕЛЬЮ СОЗДАНИЯ РЕГИОНАЛЬНОЙ ПРОГНОЗНО-ПОИСКОВОЙ МОДЕЛИ РУДООБРАЗУЮЩИХ СИСТЕМ РАЗНЫХ ТИПОВ</span></b></a><br><font color=#00008f><i>Устинов С.А., Петров В.А., Минаев В.А., Нафигин И.О., Яровая Е.В., Свечеревский А.Д., Лапаев Д.С.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Минералообразующие системы месторождений высокотехнологичных металлов: достижения и перспективы исследований.&nbsp;Всероссийская конференция, проводимая в рамках мероприятий, посвященных 300-летию РАН. Материалы конференции. Москва, 2023.  С. 182-185.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+
+<tr valign=middle id="brw1062348813">
+<td align=center valign=top class="select-tr-left"><a name="y1062348813"></a><font color=#00008f><b>88.</b></font><br><input type=checkbox name="pid1062348813" id="pid1062348813" onClick='if (this.checked) {RowSelect("brw1062348813",1)} else {RowSelect("brw1062348813",0)}'><br><img src="/images/ref.gif" width=16 height=14 hspace=3 vspace=3 border=0 title="Публикация из списков цитируемой литературы">
+
+</td>
+<td align=left valign=top><b>
+
+<font color=#00008f>ПУТИ СОВЕРШЕНСТВОВАНИЯ НАУЧНО-МЕТОДИЧЕСКИХ ОСНОВ ПОИСКОВЫХ РАБОТ НА ТВЕРДЫЕ ПОЛЕЗНЫЕ ИСКОПАЕМЫЕ</font></b><br><font color=#00008f><i>
+Машковцев Г.А., Петров В.А.</i></font><br>
+
+<font color=#00008f>2023. </font>
+
+</td>
+<td align=center valign=middle class="select-tr-right">5</td></tr>
+
+<tr valign=middle id="arw64210664">
+<td align=center valign=top class="select-tr-left"><a name="x64210664"></a>
+<font color=#00008f><b>89.</b></font><br><input type=checkbox name="tid64210664" id="tid64210664"  onClick='if (this.checked) {RowSelect("arw64210664",1)} else {RowSelect("arw64210664",0)}'><div id="pdf_64210664" name="pdf_64210664"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=64210664"><b><span style="line-height:1.0;">СОЗДАНИЕ ВЕСОВОЙ СТРУКТУРНОЙ ПРОГНОЗНО-ПОИСКОВОЙ МОДЕЛИ РУДООБРАЗУЮЩИХ СИСТЕМ НА ПРИМЕРЕ УРУЛЮНГУЕВСКОГО СТРУКТУРНО-ФОРМАЦИОННОГО БЛОКА (ЮГО- ВОСТОЧНОЕ ЗАБАЙКАЛЬЕ)</span></b></a><br><font color=#00008f><i>Яровая Е.В., Устинов С.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Минералообразующие системы месторождений высокотехнологичных металлов: достижения и перспективы исследований.&nbsp;Всероссийская конференция, проводимая в рамках мероприятий, посвященных 300-летию РАН. Материалы конференции. Москва, 2023.  С. 202-205.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw59665889">
+<td align=center valign=top class="select-tr-left"><a name="x59665889"></a>
+<font color=#00008f><b>90.</b></font><br><input type=checkbox name="tid59665889" id="tid59665889"  onClick='if (this.checked) {RowSelect("arw59665889",1)} else {RowSelect("arw59665889",0)}'><div id="pdf_59665889" name="pdf_59665889"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59665889"><b><span style="line-height:1.0;">ВКЛАД МЕХАНИЗМОВ ТЕКТОНИЧЕСКИХ ДВИЖЕНИЙ/ДЕФОРМАЦИЙ В РАЗВИТИЕ ГЕОЛОГО-СТРУКТУРНОЙ ОБСТАНОВКИ/СРЕДЫ ЭНДОГЕННОГО РУДООБРАЗОВАНИЯ</span></b></a><br><font color=#00008f><i>Васильев Н.Ю., Мострюков А.О., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Новые идеи в науках о Земле.&nbsp;Материалы XVI Международной научно-практической конференции. Тезисы докладов в 7-ми томах. Москва, 2023.  С. 20-23.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw64210377">
+<td align=center valign=top class="select-tr-left"><a name="x64210377"></a>
+<font color=#00008f><b>91.</b></font><br><input type=checkbox name="tid64210377" id="tid64210377"  onClick='if (this.checked) {RowSelect("arw64210377",1)} else {RowSelect("arw64210377",0)}'><div id="pdf_64210377" name="pdf_64210377"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=64210377"><b><span style="line-height:1.0;">ДЕФОРМАЦИОННЫЙ РЕЖИМ ОБЪЕМНОГО РАЗУПЛОТНЕНИЯ ГОРНЫХ ПОРОД - ВЕДУЩИЙ ФАКТОР СТРУКТУРНО-ТЕКТОНИЧЕСКОЙ АКТИВАЦИИ СРЕДЫ НА РУДНЫХ ФАЗАХ ЦИКЛОВ ДЕФОРМАЦИЙ</span></b></a><br><font color=#00008f><i>Васильев Н.Ю., Мострюков А.О., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Минералообразующие системы месторождений высокотехнологичных металлов: достижения и перспективы исследований.&nbsp;Всероссийская конференция, проводимая в рамках мероприятий, посвященных 300-летию РАН. Материалы конференции. Москва, 2023.  С. 24-27.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw59941288">
+<td align=center valign=top class="select-tr-left"><a name="x59941288"></a>
+<font color=#00008f><b>92.</b></font><br><input type=checkbox name="tid59941288" id="tid59941288"  onClick='if (this.checked) {RowSelect("arw59941288",1)} else {RowSelect("arw59941288",0)}'><div id="pdf_59941288" name="pdf_59941288"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59941288"><b><span style="line-height:1.0;">ОБРАБОТКА И АНАЛИЗ КОСМИЧЕСКИХ СПЕКТРАЛЬНЫХ ДАННЫХ WORLDVIEW-2 ПРИ КАРТИРОВАНИИ ЗОН ГИДРОТЕРМАЛЬНО-ИЗМЕНЕННЫХ ПОРОД</span></b></a><br><font color=#00008f><i>Ишмухаметова В.Т., Нафигин И.О., Устинов С.А., Лапаев Д.С., Минаев В.А., Петров В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Материалы 21-й Международной конференции "Современные проблемы дистанционного зондирования Земли из космоса".&nbsp;Москва, 2023.  С. 338.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw59950429">
+<td align=center valign=top class="select-tr-left"><a name="x59950429"></a>
+<font color=#00008f><b>93.</b></font><br><input type=checkbox name="tid59950429" id="tid59950429"  onClick='if (this.checked) {RowSelect("arw59950429",1)} else {RowSelect("arw59950429",0)}'><div id="pdf_59950429" name="pdf_59950429"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=59950429"><b><span style="line-height:1.0;">РАЗРАБОТКА АВТОМАТИЗИРОВАННОЙ ЭКСПЕРТНОЙ СИСТЕМЫ ДЛЯ ПРОГНОЗИРОВАНИЯ ГИДРОТЕРМАЛЬНЫХ (ПОЛИМЕТАЛЛИЧЕСКИХ) МЕСТОРОЖДЕНИЙ НА ОСНОВЕ НЕЙРОСЕТЕВЫХ ТЕХНОЛОГИЙ (НА ПРИМЕРЕ ЮГО- ВОСТОЧНОГО ЗАБАЙКАЛЬЯ)</span></b></a><br><font color=#00008f><i>Гришков Г.А., Нафигин И.О., Устинов С.А., Петров В.А., Минаев В.А.</i></font><br>
+<font color=#00008f>
+
+ В сборнике: Новое в познании процессов рудообразования.&nbsp;Двенадцатая Российская молодёжная научно-практическая школа: сборник материалов. Москва, 2023.  С. 48-52.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+1</td></tr>
+
+
+
+<tr valign=middle id="arw50502872">
+<td align=center valign=top class="select-tr-left"><a name="x50502872"></a>
+<font color=#00008f><b>94.</b></font><br><input type=checkbox name="tid50502872" id="tid50502872"  onClick='if (this.checked) {RowSelect("arw50502872",1)} else {RowSelect("arw50502872",0)}'><div id="pdf_50502872" name="pdf_50502872"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=50502872"><b><span style="line-height:1.0;">ПАМЯТИ СЕМЁНА СОЛОМОНОВИЧА ГЕРШТЕЙНА</span></b></a><br><font color=#00008f><i>Денисов С.П., Зелёный Л.М., Иванов С.В., Кведер В.В., Лиходед А.К., Матвеев В.А., Петров В.А., Румянцев А.Ю., Скринский А.Н., Ткаченко Н.П., Тюрин Н.Е., Шарков Б.Ю.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=50502866">Успехи физических наук</a>. 
+2023. Т. 193. <a href="/contents.asp?id=50502866&selid=50502872">№&nbsp;4</a>.  С. 463-464.
+</span>
+<div style="height: 5px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<td width=10% align=left valign=top bgcolor=#f5f5f5><font color=#000000>Версии:</font></td>
+<td width=90% align=left valign=top bgcolor=#f5f5f5>
+
+<span class="menug">
+<a href="item.asp?id=63104166">
+<span style="line-height:1.0;">IN MEMORY OF SEMEN SOLOMONOVICH GERSHTEIN</span><br><i>Denisov S.P., Zelenyi L.M., Ivanov S.V., Kveder V.V., Likhoded A.K., Matveev V.A., Petrov V.A., Rumyantsev A.Yu., Skrinskii A.N., Tkachenko N.P., Tyurin N.E., Sharkov B.Yu.</i><br>Physics-Uspekhi. 2023. Т. 66. №&nbsp;4.  С. 433-434.
+</a></span>
+<br><div style="height: 5px;">&nbsp;</div>
+
+</td></tr></table>
+
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw54348407">
+<td align=center valign=top class="select-tr-left"><a name="x54348407"></a>
+<font color=#00008f><b>95.</b></font><br><input type=checkbox name="tid54348407" id="tid54348407"  onClick='if (this.checked) {RowSelect("arw54348407",1)} else {RowSelect("arw54348407",0)}'><div id="pdf_54348407" name="pdf_54348407"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54348407"><b><span style="line-height:1.0;">ХАРАКТЕР МАГМАТИЗМА, ГИДРОТЕРМАЛЬНО-МЕТАСОМАТИЧЕСКИХ И ФИЛЬТРАЦИОННО-ТРАНСПОРТНЫХ ПРОЦЕССОВ В УРАНОНОСНЫХ ВУЛКАНОГЕННЫХ СТРУКТУРАХ</span></b></a><br><font color=#00008f><i>Петров В.А., Андреева О.В., Полуэктов В.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54348406">Вулканология и сейсмология</a>. 
+2023. <a href="/contents.asp?id=54348406&selid=54348407">№&nbsp;5</a>.  С. 3-25.
+</span>
+<div style="height: 5px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<td width=10% align=left valign=top bgcolor=#f5f5f5><font color=#000000>Версии:</font></td>
+<td width=90% align=left valign=top bgcolor=#f5f5f5>
+
+<span class="menug">
+<a href="item.asp?id=65195729">
+<span style="line-height:1.0;">THE CHARACTER OF MAGMATISM, HYDROTHERMAL-METASOMATIC, AND FILTRATION-TRANSPORT PROCESSES IN URANIUM-BEARING VOLCANIC-RELATED STRUCTURES</span><br><i>Petrov V.A., Andreeva O.V., Poluektov V.V.</i><br>Journal of Volcanology and Seismology. 2023. Т. 17. №&nbsp;5.  С. 353-373.
+</a></span>
+<br><div style="height: 5px;">&nbsp;</div>
+
+</td></tr></table>
+
+</td><td align=center valign=middle class="select-tr-right">
+6</td></tr>
+
+
+
+<tr valign=middle id="arw54313520">
+<td align=center valign=top class="select-tr-left"><a name="x54313520"></a>
+<font color=#00008f><b>96.</b></font><br><input type=checkbox name="tid54313520" id="tid54313520"  onClick='if (this.checked) {RowSelect("arw54313520",1)} else {RowSelect("arw54313520",0)}'><div id="pdf_54313520" name="pdf_54313520"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54313520"><b><span style="line-height:1.0;">МИНЕРАЛЬНЫЕ РЕСУРСЫ АТОМНОЙ ОТРАСЛИ РОССИИ И ИЗОЛЯЦИЯ РАДИОАКТИВНЫХ ОТХОДОВ</span></b></a><br><font color=#00008f><i>Петров В.А., Юдинцев С.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54313486">Геология рудных месторождений</a>. 
+2023. Т. 65. <a href="/contents.asp?id=54313486&selid=54313520">№&nbsp;5</a>.  С. 450-462.
+</span>
+<div style="height: 5px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<td width=10% align=left valign=top bgcolor=#f5f5f5><font color=#000000>Версии:</font></td>
+<td width=90% align=left valign=top bgcolor=#f5f5f5>
+
+<span class="menug">
+<a href="item.asp?id=63362702">
+<span style="line-height:1.0;">MINERAL RESOURCES OF THE RUSSIAN NUCLEAR INDUSTRY AND ISOLATION OF RADIOACTIVE WASTE</span><br><i>Petrov V.A., Yudintsev S.V.</i><br>Geology of Ore Deposits. 2023. Т. 65. №&nbsp;5.  С. 469-480.
+</a></span>
+<br><div style="height: 5px;">&nbsp;</div>
+
+</td></tr></table>
+
+</td><td align=center valign=middle class="select-tr-right">
+5</td></tr>
+
+
+
+<tr valign=middle id="arw55849480">
+<td align=center valign=top class="select-tr-left"><a name="x55849480"></a>
+<font color=#00008f><b>97.</b></font><br><input type=checkbox name="tid55849480" id="tid55849480"  onClick='if (this.checked) {RowSelect("arw55849480",1)} else {RowSelect("arw55849480",0)}'><div id="pdf_55849480" name="pdf_55849480"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=55849480"><b><span style="line-height:1.0;">СТРОЕНИЕ, МИНЕРАЛОГО-ГЕОХИМИЧЕСКИЕ ОСОБЕННОСТИ И УСЛОВИЯ ОБРАЗОВАНИЯ РУДНЫХ ЖИЛ MO-ПОРФИРОВОГО МЕСТОРОЖДЕНИЯ ШАХТАМИНСКОЕ (ВОСТОЧНОЕ ЗАБАЙКАЛЬЕ)</span></b></a><br><font color=#00008f><i>Юргенсон Г.А., Киселева Г.Д., Доломанова-Тополь А.А., Коваленкер В.А., Петров В.А., Абрамова В.Д., Языкова Ю.И., Левицкая Л.А., Трубкин Н.В., Таскаев В.И., Каримова О.В.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=55849447">Геология рудных месторождений</a>. 
+2023. Т. 65. <a href="/contents.asp?id=55849447&selid=55849480">№&nbsp;7S</a>.  С. 662-699.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+5</td></tr>
+
+
+
+<tr valign=middle id="arw54804017">
+<td align=center valign=top class="select-tr-left"><a name="x54804017"></a>
+<font color=#00008f><b>98.</b></font><br><input type=checkbox name="tid54804017" id="tid54804017"  onClick='if (this.checked) {RowSelect("arw54804017",1)} else {RowSelect("arw54804017",0)}'><div id="pdf_54804017" name="pdf_54804017"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=54804017"><b><span style="line-height:1.0;">РАЗРАБОТКА МЕТОДИКИ АВТОМАТИЧЕСКОГО ВЫДЕЛЕНИЯ ЛИНЕАМЕНТОВ НА ОСНОВЕ НЕЙРОСЕТЕВОГО ПОДХОДА</span></b></a><br><font color=#00008f><i>Гришков Г.А., Нафигин И.О., Устинов С.А., Петров В.А., Минаев В.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=54803999">Исследование Земли из космоса</a>. 
+2023. <a href="/contents.asp?id=54803999&selid=54804017">№&nbsp;6</a>.  С. 86-97.
+</span>
+</td><td align=center valign=middle class="select-tr-right">
+17</td></tr>
+
+
+
+<tr valign=middle id="arw55890486">
+<td align=center valign=top class="select-tr-left"><a name="x55890486"></a>
+<font color=#00008f><b>99.</b></font><br><input type=checkbox name="tid55890486" id="tid55890486"  onClick='if (this.checked) {RowSelect("arw55890486",1)} else {RowSelect("arw55890486",0)}'><div id="pdf_55890486" name="pdf_55890486"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=55890486"><b><span style="line-height:1.0;">ОБ АСИМПТОТИЧЕСКОЙ УНИВЕРСАЛЬНОСТИ СИЛЬНЫХ ВЗАИМОДЕЙСТВИЙ НА БОЛЬШИХ РАССТОЯНИЯХ</span></b></a><br><font color=#00008f><i>Петров В.А.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=55890323">Письма в журнал Физика элементарных частиц и атомного ядра</a>. 
+2023. Т. 20. <a href="/contents.asp?id=55890323&selid=55890486">№&nbsp;3&nbsp;(248)</a>.  С. 399.
+</span>
+<div style="height: 5px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<td width=10% align=left valign=top bgcolor=#f5f5f5><font color=#000000>Версии:</font></td>
+<td width=90% align=left valign=top bgcolor=#f5f5f5>
+
+<span class="menug">
+<a href="item.asp?id=61948318">
+<span style="line-height:1.0;">ON ASYMPTOTIC UNIVERSALITY OF STRONG INTERACTIONS AT LARGE DISTANCES</span><br><i>Petrov V.A.</i><br>Physics of Particles and Nuclei Letters. 2023. Т. 20. №&nbsp;3.  С. 386-388.
+</a></span>
+<br><div style="height: 5px;">&nbsp;</div>
+
+</td></tr></table>
+
+</td><td align=center valign=middle class="select-tr-right">
+0</td></tr>
+
+
+
+<tr valign=middle id="arw67961789">
+<td align=center valign=top class="select-tr-left"><a name="x67961789"></a>
+<font color=#00008f><b>100.</b></font><br><input type=checkbox name="tid67961789" id="tid67961789"  onClick='if (this.checked) {RowSelect("arw67961789",1)} else {RowSelect("arw67961789",0)}'><div id="pdf_67961789" name="pdf_67961789"></div>
+
+</td>
+<td align=left valign=top>
+<span style="overflow-wrap: break-word;">
+
+<a href="/item.asp?id=67961789"><b><span style="line-height:1.0;">ATLAS И TOTEM: ТРЕВОЖНОЕ РАСХОЖДЕНИЕ</span></b></a><br><font color=#00008f><i>Петров В.А., Ткаченко Н.П.</i></font><br>
+<font color=#00008f>
+
+<a href="/contents.asp?id=67961762">Физика элементарных частиц и атомного ядра</a>. 
+2023. Т. 54. <a href="/contents.asp?id=67961762&selid=67961789">№&nbsp;6</a>.  С. 1241-1258.
+</span>
+<div style="height: 5px;">&nbsp;</div>
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+<td width=10% align=left valign=top bgcolor=#f5f5f5><font color=#000000>Версии:</font></td>
+<td width=90% align=left valign=top bgcolor=#f5f5f5>
+
+<span class="menug">
+<a href="item.asp?id=64054831">
+<span style="line-height:1.0;">ATLAS VS. TOTEM: DISTURBING DIVERGENCE</span><br><i>Petrov V.A., Tkachenko N.P.</i><br>Physics of Particles and Nuclei. 2023. Т. 54. №&nbsp;6.  С. 1152-1164.
+</a></span>
+<br><div style="height: 5px;">&nbsp;</div>
+
+</td></tr></table>
+
+</td><td align=center valign=middle class="select-tr-right">
+7</td></tr>
+
+
+
+</table>
+
+
+<SCRIPT LANGUAGE="JavaScript">
+document.getElementById('totalcited').innerHTML=86020;
+</SCRIPT>
+
+
+<div style="width:578px; height:24px; border:#7f9db9 1px solid;padding:0;margin:20px 0 0 0; text-align:left; border-radius: 12px;" id="pages">
+<table width=578 height=24 cellspacing=1 cellpadding=3 border=0>
+<tr align=center valign=middle class="menurb">
+<td width=15% nowrap><a href="javascript:goto_page(1)">В&nbsp;начало</a></td>
+<td width=10% class="mouse-hovergr" nowrap><font color=#aaaaaa><<</font></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#e8e8e8 nowrap><font color=#F26C4F>1</font></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(2)">2</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(3)">3</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(4)">4</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(5)">5</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(6)">6</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(7)">7</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(8)">8</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(9)">9</a></td>
+
+<td width=5% class="mouse-hovergr" bgcolor=#f5f5f5 nowrap><a href="javascript:goto_page(10)">10</a></td>
+
+<td width=10% class="mouse-hovergr" nowrap><a title="Следующая страница" href="javascript:goto_page(2)">&gt;&gt;</a></td>
+<td width=15% nowrap><a href="javascript:goto_page(11)">В&nbsp;конец</a></td>
+</tr>
+</table>
+</div>
+
+<br>
+</td></tr></table>
+
+</td>
+<td align=right valign=top>
+
+<div id="panel_default" style="position: relative; width: 200px; height:0; margin: 0; border: 1px; padding: 0"></div>
+<div id="panel" style="position: relative; width: 200px; margin: 0; border: 0; padding: 0">
+
+<div style="width: 190px;" class="right-panel">
+
+<table width=190 cellspacing=0 cellpadding=3 border=0>
+
+<tr><td colspan=2 align=center valign=top><font color=#F26C4F><b>ИНСТРУМЕНТЫ</b></font><br><img src="/pic/1pix.gif" vspace=1><br></td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:goto_page(2)"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:goto_page(2)">Следующая страница</a>
+</td></tr>
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:select_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:select_all()">Выделить все публикации на этой странице</a>
+</td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:deselect_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:deselect_all()">Снять выделение</a>
+</td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:itembox_add()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:itembox_add()">Добавить выделенные публикации в подборку</a></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:itembox_add_all()"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:itembox_add_all()">Добавить все публикации автора в подборку</a></td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="cit_author_items.asp?id=3771"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="cit_author_items.asp?id=3771">Список публикаций, ссылающихся на работы автора</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:show_author_refs(3771)"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:show_author_refs(3771)">Список ссылок на работы автора</a>
+</td></tr>
+
+
+
+<tr><td width=15% align=right valign=top>
+<a href="author_profile.asp?id=3771"><img src="/pic/stat.gif" width=12 height=13 hspace=4 border=0></a></td>
+<td width=85% align=left valign=middle><a href="author_profile.asp?authorid=3771">Анализ публикационной активности автора</a>
+</td></tr>
+
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="/projects/science_index/author_tutorial.asp"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="/projects/science_index/author_tutorial.asp">Инструкция для авторов по работе в системе SCIENCE INDEX</a>
+</td></tr>
+
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="authors.asp"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="authors.asp">Авторский указатель</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="querybox.asp"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="querybox.asp">Поиск публикаций</a>
+</td></tr>
+
+
+
+
+</table>
+</div>
+
+</div>
+
+</td></tr></table>
+</td></tr></table>
+</FORM>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+$(function() {
+$(".help").tooltip({
+	position: "top right",
+	offset: [-15, -100],
+	effect: "fade", 
+	fadeInSpeed: 400, 
+	fadeOutSpeed: 400, 
+	delay: 400,  
+	predelay: 400,
+	opacity: 1.0
+});
+});
+</script>
+
+
+<br><br>
+<table width=970 height=40 border=0 cellpadding=0 cellspacing=0 id="footer">
+<tr align=center valign=middle class="menug">
+<td width=15% valign="bottom">
+
+</td>
+<td width=70%><font color=#00008f><span style="position: relative; top: 3px; right: 15px; color: #F26C4F;">*</span><a href="/copyright.asp">&copy; 2000-2026 ООО НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА. Все права защищены</a></font><span style="position: relative; top: 3px; left: 15px; color: #F26C4F;">*</span></td>
+<td width=15% valign="bottom">
+
+</td>
+</tr></table>
+
+<!-- Yandex.Metrika -->
+<div style="display:none;"><script type="text/javascript">
+(function(w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter171463 = new Ya.Metrika(171463);
+        } catch(e) {}
+    });
+})(window, 'yandex_metrika_callbacks');
+</script></div>
+<script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script>
+<noscript><div style="position:absolute"><img src="//mc.yandex.ru/watch/171463" alt="" /></div></noscript>
+<!-- /Yandex.Metrika -->
+
+
+
+
+<br><br><br>
+</td></tr></table>
+
+</html>
+

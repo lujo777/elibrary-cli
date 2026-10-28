@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+# local session/cookies never belong in git
+*.sqlite3
+cookies*.json
+storage_state*.json
+.env

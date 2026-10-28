@@ -1,0 +1,1305 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="robots" content="noindex,nofollow">
+<title>Поиск авторов</title>
+
+<script type="text/javascript" src="/jquery.min.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="/autocomplete/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.easydrag.js"></script>
+<script type="text/javascript" src="/jquery.tools.min.js"></script>
+<script type="text/javascript" src="/elibrary.js"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/style_sm.css" type="text/css" media="screen">
+
+<style>
+#wiki_tooltip {
+  z-index: 9999;
+  position: absolute;
+  display: none;
+  top:0px;
+  left:0px;
+	background-color: #ffffff; 
+  padding: 0;
+  color: #000;
+	border: 0;
+	box-shadow: 1px 2px 3px #888; 
+	margin: 0; 
+}
+</style>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+$(function(){
+	$("[data-tooltip]").click(function (eventObject) {
+		$data_tooltip = $(this).attr("data-tooltip");
+		$url=$data_tooltip.replace('/wiki/', '/api/rest_v1/page/summary/');
+		$.get($url, function($wiki) {
+			if(typeof $wiki.thumbnail != 'undefined'){
+				$img_source = $wiki.thumbnail.source;
+				$img_width = $wiki.thumbnail.width;
+				$img_height = $wiki.thumbnail.height;
+				$shift = $img_height/2 + 100;
+				$data_html = '<table width=260 cellpadding=0 border=0 cellspacing=0><tr valigh=top><td width=260><a href="javascript:window.open(\'' + $data_tooltip + '\'); close_tooltip();"><img src="' + $img_source + '" width=260></a></td></tr><tr><td align=left valign=top><div class="menurd" style="padding: 10px 20px 0 20px; font-size: 9pt; width: 220px; text-align: left;"><a href="javascript:window.open(\'' + $data_tooltip + '\'); close_tooltip();">' + $wiki.extract_html + '</a></div></td></tr><tr><td align=right><img src="/images/cross.jpg" width=12 height=12 hspace=4 vspace=1 onClick="close_tooltip()"></td></tr></table>';
+			}
+			else {
+				$shift = 170;
+				$data_html = '<table width=260 cellpadding=0 border=0 cellspacing=0><tr><td  width=260 align=left valign=top><div class="menurd" style="padding: 10px 20px 0 20px; font-size: 9pt; width: 220px; text-align: left;"><a href="javascript:window.open(\'' + $data_tooltip + '\'); close_tooltip();">' + $wiki.extract_html + '</a></div></td></tr><tr><td align=right><img src="/images/cross.jpg" width=12 height=12 hspace=4 vspace=1 onClick="close_tooltip()"></td></tr></table>';
+			}
+			$("#wiki_tooltip").html($data_html)
+			.css({ 
+				"top" : eventObject.pageY - $shift,
+				"left" : eventObject.pageX + 25
+			})
+			.fadeIn();
+		});
+	});
+});
+
+$(document).on('keydown', function(event) {
+  if (event.key === "Escape") {
+    $("#wiki_tooltip").fadeOut();
+  }
+});
+
+function close_tooltip(){
+$("#wiki_tooltip").fadeOut();
+}
+
+but_blue_hover=new Image();
+but_blue_hover.src="/images/but_blue_hover.png";
+but_red_hover=new Image();
+but_red_hover.src="/images/but_red_hover.png";
+but_gray_hover=new Image();
+but_gray_hover.src="/images/but_gray_hover.png";
+
+var allowaddauthor=0;
+
+function RowSelect(row,sel){
+  var rbgc = sel==1 ? "#e8e8e8" : "#f5f5f5";
+  $('#'+row+' td').attr('bgColor', rbgc);
+}
+function select_all(){
+  $('input:checkbox[name^="tid"]').attr('checked', true);
+  $('tr[id^="a"] td').attr('bgColor', "#e8e8e8");
+}
+function deselect_all(){
+  $('input:checkbox[name^="tid"]').attr('checked', false);
+  $('tr[id^="a"] td').attr('bgColor', "#f5f5f5");
+}
+function reset_form(){
+  var frm = document.forms["results"];
+  frm.surname.value="";
+  frm.countryid.value="";
+  frm.regionid.value="";
+  frm.town.value="";
+  frm.townid.value="";
+  frm.orgid.value="";
+  frm.orgname.value="";
+  frm.rubriccode.value="";
+  frm.metrics.value="1";
+  frm.codetype.value="SPIN";
+  frm.codevalue.value="";
+  frm.authorboxid.value="";
+  frm.inaffil.checked=0;
+  frm.rubricinreg.checked=0;
+  frm.show_nopubl.checked=0;
+}
+function author_search(){
+  var frm = document.forms["results"];
+  frm.action="authors.asp";
+  frm.pagenum.value="";
+  frm.target="";
+  frm.submit()
+}
+function submit_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    author_search();
+	return false;
+  }
+} 
+function authors_search(){
+  var frm = document.forms["results"];
+  frm.authors_all.value="";
+  for (var i=0; i<frm.elements.length; i++){
+   if(frm.elements[i].id.substring(0,3)=="tid"){
+    if(frm.elements[i].checked){
+    frm.authors_all.value = frm.authors_all.value + document.getElementById(frm.elements[i].name.replace("tid","hid")).value + "|";}}}
+  if (frm.authors_all.value=="") {
+    alerts ("Не выделено ни одного автора!")}
+  else {
+  frm.action="querybox.asp";
+  frm.target="";
+  frm.submit()}
+}
+function authorbox_add(){
+  var frm = document.forms["results"];
+  var issel=0;
+  frm.authors_all.value="";
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       if (frm.elements[i].checked) {
+	     issel=issel+1;
+	     frm.authors_all.value = frm.authors_all.value + frm.elements[i].name.substring(3, frm.elements[i].name.length) + "|";
+	   }
+    }
+ }
+ if (issel==0) {
+    alerts ("Не выделено ни одного автора")}
+ else {
+    $.fancybox({
+      href : 'authorbox_select.asp?authors_all='+frm.authors_all.value ,
+      title : '',
+			padding : 20,     
+			width : 530,
+			height : 400,
+			overlayOpacity : 0.3,	
+			overlayColor : '#000',
+			speedIn : 500,
+			hideOnOverlayClick : false,
+			enableEscapeButton : true,
+			type : 'iframe'
+    });
+  }
+}
+function goto_page(pnum){
+  var frm = document.forms["results"];
+  frm.pagenum.value=pnum;
+  frm.action="authors.asp";
+  frm.target="";
+  frm.submit()
+}
+function show_help(topic){
+  anewwin=window.open("", "addwin", "resizable=yes,scrollbars=yes,height=300,width=500,top=0,left=0");
+  document.forms["results"].action=topic;
+  document.forms["results"].target="addwin";
+  document.forms["results"].submit()
+}
+function organizat_add(){
+    $.fancybox({
+      href : 'user_org_add3.asp' ,
+      title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 350,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+    });
+}
+
+
+
+function show_author_refs(iid, cat){
+
+  alerts("Для доступа к этой странице необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.forms["login"].login.focus();
+
+}
+
+function show_wiki_page(id, url){
+	url1=url.replace('/wiki/', '/api/rest_v1/page/summary/');
+	$.get(url1, function(wiki) {
+		var wikitag=$('#wikipage');
+		wikitag.removeData('tooltip').unbind();
+		var tagtext='<a href="'+url+'" target="_blank">'+wiki.extract_html+'</a>';
+		wikitag.attr('title', tagtext);
+		wikitag.tooltip({
+			position: "top right",
+			offset: [-15, -200],
+			effect: "fade", 
+			fadeInSpeed: 400, 
+			fadeOutSpeed: 400, 
+			delay: 400,  
+			predelay: 400,
+			opacity: 1.0,
+			cancelDefault: true
+		});
+	})
+}
+
+$(document).ready(function() { 
+
+function liFormat (row, i, num) {
+	var result = row[0];
+	return result;
+}
+function selectTown(li) {
+  document.forms['results'].town.value=li.extra[3];
+  document.forms['results'].townid.value=li.extra[0];
+  document.forms['results'].countryid.value=li.extra[1];
+  document.forms['results'].regionid.value=li.extra[2];
+}
+
+$("#town").autocomplete("town_autocomplete2.asp", { 
+  delay:200, 
+  minChars:2, 
+  matchSubset:false, 
+  matchContains:false, 
+  selectFirst:true, 
+  formatItem:liFormat, 
+  maxItemsToShow:10, 
+  onItemSelect:selectTown,
+	extraParams: {scountry: function(){ return $("#countryid").val(); } }
+  }); 
+
+});
+
+</SCRIPT>
+</head>
+
+
+
+<body> 
+<table width=100% cellpadding=0 cellspacing=0 border=0>
+<tr><td width=100% align=center valign=top>
+
+<table  cellpadding=0 cellspacing=0 border=0>
+<tr><td width=170 align=left valign=top id="leftcol">
+
+<table border=0 cellspacing=0 cellpadding=0 width=150>
+
+<tr><td><a href="/defaultx.asp"><img src="/images/welcome1.jpg" width=150 title="НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА eLIBRARY.RU" border=0 vspace=15></a></td></tr>
+
+
+<tr><td><a href="/defaultx.asp"><img id="elibrary_logo" src="/images/elibrary_logo2.svg" width=150 height=39 border=0 vspace=10 title="eLIBRARY.RU - НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА"></a></td></tr>
+<script language="JavaScript">
+if (supportsSVG) {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo2.svg";}
+else {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo.gif";}
+</script>
+<tr><td><img src="/pic/1pix.gif" vspace=10></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_search(){
+if (document.forms["search"].ftext.value.length > 1) {
+  var frm = document.forms["search"];
+  frm.action="/query_results.asp";
+  frm.target="";
+  frm.submit();
+  }
+else {
+  alert("Введите не менее двух символов");
+  }
+}
+function search_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_search();
+	return false;
+  }
+} 
+</SCRIPT>
+<FORM method=post name="search" onSubmit="return false">
+<input type="hidden" name="where_fulltext" value="on">
+<input type="hidden" name="where_name" value="on">
+<input type="hidden" name="where_abstract" value="on">
+<input type="hidden" name="where_keywords" value="on">
+<input type="hidden" name="where_affiliation" value="">
+<input type="hidden" name="where_references" value="">
+<input type="hidden" name="type_article" value="on">
+<input type="hidden" name="type_disser" value="on">
+<input type="hidden" name="type_book" value="on">
+<input type="hidden" name="type_report" value="on">
+<input type="hidden" name="type_conf" value="on">
+<input type="hidden" name="type_patent" value="on">
+<input type="hidden" name="type_preprint" value="on">
+<input type="hidden" name="type_grant" value="on">
+<input type="hidden" name="type_dataset" value="on">
+<input type="hidden" name="search_freetext" value="">
+<input type="hidden" name="search_morph" value="on">
+<input type="hidden" name="search_fulltext" value="">
+<input type="hidden" name="search_open" value="">
+<input type="hidden" name="search_results" value="">
+<input type="hidden" name="titles_all" value="">
+<input type="hidden" name="authors_all" value="">
+<input type="hidden" name="rubrics_all" value="">
+<input type="hidden" name="queryboxid" value="">
+<input type="hidden" name="itemboxid" value="">
+<input type="hidden" name="begin_year" value="">
+<input type="hidden" name="end_year" value="">
+<input type="hidden" name="issues" value="all">
+<input type="hidden" name="orderby" value="rank">
+<input type="hidden" name="order" value="rev">
+<input type="hidden" name="changed" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_search').slideToggle(500, function(){didScroll = true;})" title="Поиск в Научной электронной библиотеке">ПОИСК</span></b></font>
+</td></tr>
+</table>
+<div ID="win_search" class="collapsed">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=140 align=center valign=top>
+<div style="height: 10px;"></div>
+<div class="formfr" style="width:126px;"><input type=text id="ftext" name="ftext" value="" style="width:118px;" class="inputt" onKeyPress="search_enter(event);"></div>
+<div style="height: 11px;"></div>
+
+<div class="butblue" style="width: 52px;" onClick="check_search()">Найти</div>
+
+</td></tr>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+</table>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/querybox.asp?scope=newquery">Расширенный поиск</a></td></tr>
+
+
+<tr><td colspan=2><div style="height:3px;"></div></td></tr>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/neural_search.asp">Нейропоиск</a></td></tr>
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+
+</FORM>
+
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_all(){
+  if (document.forms["login"].login.value==""){
+    alert("Не указано имя пользователя!");
+	return false;
+	}
+  else if (document.forms["login"].password.value==""){
+    alert("Не указан пароль!");
+	return false;
+	}
+  else{
+    var frm = document.forms["login"];
+    frm.action="/start_session.asp";
+    frm.target="";
+    frm.submit();
+   }
+}
+function login_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_all();
+	return false;
+  }
+} 
+function sso_orgs(){
+  var frm = document.forms["results"];
+  $.fancybox({
+    href : 'sso_orgs.asp' ,
+    title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 200,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+  });
+}
+function show_hide_password(target){
+	var input = document.getElementById('password');
+	if (input.getAttribute('type') == 'password') {
+		target.classList.add('view');
+		input.setAttribute('type', 'text');
+	} 
+	else {
+		target.classList.remove('view');
+		input.setAttribute('type', 'password');
+	}
+	return false;
+}
+</SCRIPT>
+
+<FORM method=post name="login" onSubmit="return false">
+<input type=hidden name="rpage" value=https://elibrary.ru/authors.asp>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_login').slideToggle(500, function(){didScroll = true;})" title="Вход в библиотеку для зарегистрированных пользователей">ВХОД</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_login" class="expanded">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Имя пользователя<br>&nbsp;или адрес эл. почты:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<div class="formfr" style="width:126px;"><input type=text id="login" name="login" value="" style="width:118px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"></div>
+</td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Пароль:</font></td></tr>
+<tr><td align=center width=100%>
+<div class="formfr" style="width:126px;"><input type=password id="password" name="password" value="" style="width:102px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"><a href="#" class="password-control" onclick="return show_hide_password(this);"></a></div>
+</td></tr>
+
+<tr><td align=center width=100%>
+
+<div style="height: 9px;"></div>
+<div class="butred" style="width: 52px;" onClick="check_all()">Вход</div>
+<div style="height: 9px;"></div>
+
+</td></tr></table>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr valign=middle class="menub"><td align=center width=30><input type=checkbox name="knowme"></td><td align=left width=101>Запомнить меня</td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/access_terms.asp">Правила доступа</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/author_info.asp?isnew=1&rpage=https%3A%2F%2Felibrary%2Eru%2Fauthors%2Easp">Регистрация</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/pass_request.asp">Забыли пароль?</a></td></tr>
+
+
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:sso_orgs()">Вход через Вашу организацию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+</td></tr>
+</FORM>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_goto').slideToggle(500, function(){didScroll = true;})" title="Быстрый переход на популярные страницы сайта">НАВИГАТОР</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_goto" class="expanded">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=4 cellpadding=0 width=140>
+
+<tr valign=top><td width=25 align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left width=115><a href="/titles.asp">ЖУРНАЛЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/books.asp">КНИГИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/patents.asp">ПАТЕНТЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/querybox.asp">ПОИСК</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/authors.asp">АВТОРЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/orgs.asp">ОРГАНИЗАЦИИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/keywords.asp">КЛЮЧЕВЫЕ СЛОВА</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/rubrics.asp">РУБРИКАТОР</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/region_compare.asp">РЕГИОНЫ</a></td></tr>
+
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=25 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=115 valign=top><a href="/defaultx.asp">Начальная страница</a></td></tr></table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function end_session(){
+
+  document.forms["session"].saveuser.value="1";
+
+  document.forms["session"].action="/end_session.asp";
+  document.forms["session"].target="";
+  document.forms["session"].submit()
+}
+</SCRIPT>
+<FORM action="/end_session.asp" method=POST name="session">
+<input type="hidden" name="saveuser" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_session').slideToggle(500, function(){didScroll = true;})" title="Информация о текущей сессии пользователя">СЕССИЯ</span></b></font>
+</td></tr>
+</table>
+
+
+<div ID="win_session" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>Имя пользователя:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>Незарегистрированный пользователь</font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Начало работы:</font></td></tr>
+
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>13.10.2026 14:43</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Время работы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>00:10</font></td></tr>
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="/project_user_office.asp">Личный кабинет</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:end_session()">Закрыть сессию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+</FORM>
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_contact').slideToggle(500, function(){didScroll = true;})" title="Контактная информация Научной электронной библиотеки">КОНТАКТЫ</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_contact" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Служба поддержки:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 1<br></font>
+<font color=#00008f><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font></td></tr>
+</td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям журналов:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 2<br></font>
+<font color=#00008f><a href="mailto:publish@elibrary.ru">publish@elibrary.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям книг:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 3<br></font>
+<font color=#00008f><a href="mailto:book@elibrary.ru">book@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Space для издательств:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:info@sciencespace.ru">info@sciencespace.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Index для организаций:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:org@scienceindex.ru">org@scienceindex.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Доступ к API:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:api@elibrary.ru">api@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Подписчикам:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 6<br></font>
+<font color=#00008f><a href="mailto:sales.team@elibrary.ru">sales.team@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Конференции, семинары:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 7<br></font>
+<font color=#00008f><a href="mailto:conf@elibrary.ru">conf@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Почтовый адрес:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="/contact_new.asp">117246, г. Москва,
+Научный проезд, д. 14А, стр. 3, таунхаус 1</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Веб-сайт:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://elibrary.ru">https://elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Telegram-канал:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://t.me/elibrary_ru_official" target=_blank>t.me/elibrary_ru_official</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Размещение рекламы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:reklama@elibrary.ru">reklama@elibrary.ru</a></font></td></tr>
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/contact_new.asp">Схема проезда</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="https://support.elibrary.ru">Задать вопрос</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/vacancy.asp">Вакансии</a></td></tr>
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<div style="width: 140px;" class="help-panel">
+<table width=140 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=15% align=right valign=top>
+<img src="/images/but_orange_i.gif" width=15 height=15 hspace=0 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>По всем вопросам, связанным с работой в системе Science Index, обращайтесь, пожалуйста, в службу поддержки:<br><br>
++7 (495) 544-2494<br><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font>
+</td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+
+
+</table>
+
+</td><td align=left valign=top>
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr><td width=600 align=left valign=top>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+<tr><td width=100% align=left valign=top>
+
+<div class="header-panel">
+<div style="margin: 0; border: 0; padding: 0 0 5px 0; text-align: center; font-size: 9pt;"><font color=#5674b9><b>ПОИСК АВТОРОВ</b></font></div>
+</div>
+
+</td></tr></table>
+
+</td><td width=200 align=right valign=middle id="rightcol">
+<a href="/project_risc.asp"><img id="scienceindex_logo2" src="/images/scienceindex_logo2.svg" width=173 height=49 border=0 hspace=5 title="Информационно-аналитическая система SCIENCE INDEX"></a></td></tr>
+<script language="JavaScript">
+if (supportsSVG) {
+  document.getElementById("scienceindex_logo2").src="/images/scienceindex_logo2.svg";}
+else {
+  document.getElementById("scienceindex_logo2").src="/images/scienceindex_logo2.png";}
+</script>
+<tr><td align=left valign=top>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+
+<FORM method=post name="results" onSubmit="return false">
+<input type="hidden" name="authors_all" value="">
+<input type="hidden" name="pagenum" value="">
+<input type="hidden" name="authorbox_name" value="">
+<input type="hidden" name="selid" value="">
+<input type="hidden" name="orgid" value="">
+<input type="hidden" name="orgadminid" value="">
+<input type="hidden" name="townid" id="townid" value="">
+<input type="hidden" name="regionid" id="regionid" value="">
+
+<tr><td width=100% align=left valign=top>
+
+<div class="form-panel">
+
+<div style="margin:0 0 4px 0; border:0; padding:0;">
+<font color=#F26C4F><b><span class="expandable" onClick="$('#show_param').slideToggle(500, function(){didScroll = true;})" title="Показать/скрыть параметры поиска">ПАРАМЕТРЫ</span></b></font>
+</div>
+
+<div id="show_param" class="expanded">
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td width=210 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Фамилия:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Укажите фамилию автора на русском языке, или фамилию и имя, или фамилию, имя и отчество, или фамилию и инициалы</p>'></td><td width=15></td><td colspan=3 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Персональный идентификатор автора:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Для поиска конкретного автора укажите его персональный идентификатор в одной из распространенных систем идентификации авторов</p>'></td></tr>
+<tr align=left valign=top>
+<td width=210><div class="formfr"><input type="text" id="surname" name="surname" value="" style="width:198px" class="inputt" onKeyPress="submit_enter(event)"></div></td>
+<td width=15></td>
+<td width=122><div class="formfr"><select name="codetype" id="codetype" style="width:118px" class="input" onKeyPress="submit_enter(event)">
+<option value="SPIN" selected>SPIN-код:
+<option value="ORCID" >ORCID:
+<option value="ResearcherID" >ResearcherID:
+<option value="ScopusID" >Scopus Author ID:
+<option value="ArXivID" >ArXiv Author ID:
+<option value="RSCI" >РИНЦ Author ID:
+</select></div></td>
+<td width=5></td>
+<td width=150><div class="formfr"><input type="text" id="codevalue" name="codevalue" value="" style="width:128px" class="inputt" onKeyPress="submit_enter(event)"></div></td>
+</tr>
+</table>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td width=210 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Страна:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>При поиске по стране будут найдены все авторы, у которых выбранная страна указана в регистрационной анкете, или работающие в организации, расположенной в этой стране</p>'></td><td width=15></td><td width=283 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Город:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>При поиске по городу будут найдены все авторы, у которых выбранный город указан в регистрационной анкете, или работающие в организации, расположенной в этом городе</p>'></td></tr>
+<tr align=left valign=top>
+<td><div class="formfr"><select name="countryid" id="countryid" style="width:206px" class="input" onKeyPress="submit_enter(event)" onChange='$("#town").val(""); $("#townid").val(""); $("#regionid").val(""); document.getElementById("town").focus();'>
+<option value="" selected>
+
+<option value="RUS" >Россия&nbsp;&nbsp;(1084120)
+
+<option value="ABH" >Абхазия&nbsp;&nbsp;(81)
+
+<option value="AUS" >Австралия&nbsp;&nbsp;(31)
+
+<option value="AUT" >Австрия&nbsp;&nbsp;(38)
+
+<option value="AZE" >Азербайджан&nbsp;&nbsp;(2471)
+
+<option value="ALB" >Албания&nbsp;&nbsp;(5)
+
+<option value="DZA" >Алжир&nbsp;&nbsp;(9)
+
+<option value="AGO" >Ангола&nbsp;&nbsp;(5)
+
+<option value="ARM" >Армения&nbsp;&nbsp;(1477)
+
+<option value="AFG" >Афганистан&nbsp;&nbsp;(6)
+
+<option value="BLR" >Беларусь&nbsp;&nbsp;(26478)
+
+<option value="BEL" >Бельгия&nbsp;&nbsp;(26)
+
+<option value="BGR" >Болгария&nbsp;&nbsp;(1043)
+
+<option value="BIH" >Босния и Герцеговина&nbsp;&nbsp;(9)
+
+<option value="BRA" >Бразилия&nbsp;&nbsp;(13)
+
+<option value="GBR" >Великобритания&nbsp;&nbsp;(123)
+
+<option value="HUN" >Венгрия&nbsp;&nbsp;(37)
+
+<option value="VNM" >Вьетнам&nbsp;&nbsp;(118)
+
+<option value="GHA" >Гана&nbsp;&nbsp;(6)
+
+<option value="DEU" >Германия&nbsp;&nbsp;(311)
+
+<option value="HKG" >Гонконг&nbsp;&nbsp;(5)
+
+<option value="GRC" >Греция&nbsp;&nbsp;(26)
+
+<option value="GEO" >Грузия&nbsp;&nbsp;(1932)
+
+<option value="DNK" >Дания&nbsp;&nbsp;(11)
+
+<option value="EGY" >Египет&nbsp;&nbsp;(26)
+
+<option value="ISR" >Израиль&nbsp;&nbsp;(131)
+
+<option value="IND" >Индия&nbsp;&nbsp;(20)
+
+<option value="IDN" >Индонезия&nbsp;&nbsp;(9)
+
+<option value="JOR" >Иордания&nbsp;&nbsp;(7)
+
+<option value="IRQ" >Ирак&nbsp;&nbsp;(32)
+
+<option value="IRN" >Иран&nbsp;&nbsp;(42)
+
+<option value="IRL" >Ирландия&nbsp;&nbsp;(7)
+
+<option value="ESP" >Испания&nbsp;&nbsp;(54)
+
+<option value="ITA" >Италия&nbsp;&nbsp;(82)
+
+<option value="YEM" >Йемен&nbsp;&nbsp;(6)
+
+<option value="KAZ" >Казахстан&nbsp;&nbsp;(10766)
+
+<option value="CAN" >Канада&nbsp;&nbsp;(56)
+
+<option value="CYP" >Кипр&nbsp;&nbsp;(9)
+
+<option value="KGZ" >Киргизия&nbsp;&nbsp;(7687)
+
+<option value="CHN" >Китай&nbsp;&nbsp;(630)
+
+<option value="COL" >Колумбия&nbsp;&nbsp;(7)
+
+<option value="LVA" >Латвия&nbsp;&nbsp;(369)
+
+<option value="LBN" >Ливан&nbsp;&nbsp;(8)
+
+<option value="LTU" >Литва&nbsp;&nbsp;(388)
+
+<option value="MYS" >Малайзия&nbsp;&nbsp;(6)
+
+<option value="MLI" >Мали&nbsp;&nbsp;(5)
+
+<option value="MEX" >Мексика&nbsp;&nbsp;(20)
+
+<option value="MDA" >Молдова&nbsp;&nbsp;(1095)
+
+<option value="MNG" >Монголия&nbsp;&nbsp;(60)
+
+<option value="NGA" >Нигерия&nbsp;&nbsp;(4)
+
+<option value="NLD" >Нидерланды&nbsp;&nbsp;(37)
+
+<option value="NOR" >Норвегия&nbsp;&nbsp;(25)
+
+<option value="ARE" >Объединенные Арабские Эмираты&nbsp;&nbsp;(15)
+
+<option value="PAK" >Пакистан&nbsp;&nbsp;(6)
+
+<option value="PER" >Перу&nbsp;&nbsp;(6)
+
+<option value="POL" >Польша&nbsp;&nbsp;(120)
+
+<option value="PRT" >Португалия&nbsp;&nbsp;(13)
+
+<option value="KOR" >Республика Корея&nbsp;&nbsp;(32)
+
+<option value="ROU" >Румыния&nbsp;&nbsp;(19)
+
+<option value="MKD" >Северная Македония&nbsp;&nbsp;(4)
+
+<option value="SRB" >Сербия&nbsp;&nbsp;(72)
+
+<option value="SGP" >Сингапур&nbsp;&nbsp;(6)
+
+<option value="SYR" >Сирия&nbsp;&nbsp;(27)
+
+<option value="SVK" >Словакия&nbsp;&nbsp;(39)
+
+<option value="USA" >США&nbsp;&nbsp;(464)
+
+<option value="TJK" >Таджикистан&nbsp;&nbsp;(8005)
+
+<option value="THA" >Таиланд&nbsp;&nbsp;(7)
+
+<option value="TUN" >Тунис&nbsp;&nbsp;(4)
+
+<option value="TKM" >Туркмения&nbsp;&nbsp;(266)
+
+<option value="TUR" >Турция&nbsp;&nbsp;(78)
+
+<option value="UZB" >Узбекистан&nbsp;&nbsp;(5619)
+
+<option value="UKR" >Украина&nbsp;&nbsp;(18936)
+
+<option value="FIN" >Финляндия&nbsp;&nbsp;(73)
+
+<option value="FRA" >Франция&nbsp;&nbsp;(110)
+
+<option value="HRV" >Хорватия&nbsp;&nbsp;(11)
+
+<option value="MNE" >Черногория&nbsp;&nbsp;(6)
+
+<option value="CZE" >Чехия&nbsp;&nbsp;(66)
+
+<option value="CHE" >Швейцария&nbsp;&nbsp;(51)
+
+<option value="SWE" >Швеция&nbsp;&nbsp;(47)
+
+<option value="ECU" >Эквадор&nbsp;&nbsp;(9)
+
+<option value="EST" >Эстония&nbsp;&nbsp;(267)
+
+<option value="OST" >Южная Осетия&nbsp;&nbsp;(32)
+
+<option value="ZAF" >Южно-Африканская Республика&nbsp;&nbsp;(8)
+
+<option value="JPN" >Япония&nbsp;&nbsp;(39)
+
+</select></div></td>
+<td></td>
+
+<td><div class="formfr"><input type="text" id="town" name="town" value="" style="width:273px" class="inputt" onChange='$("#townid").val(""); $("#regionid").val("");'></div></td>
+</tr>
+</table>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td colspan=2 align=left valign=top>
+<table width=514 cellspacing=0 cellpadding=0 border=0>
+<tr valign=middle class="menus">
+<td width=114 align=left>
+<font color=#00008f>&nbsp;&nbsp;Организация:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Нажмите на кнопку "Выбрать" справа и найдите нужную организацию в нормативном списке организаций РИНЦ. В результатах поиска будут отобраны авторы, у которых эта организация указана в качестве основного места работы. Если установить опцию "Искать в аффилиациях авторов в публикациях", будут отобраны также авторы, имеющие хотя бы одну публикацию с указанием данной организации в качестве места работы автора</p>'>
+</td>
+<td align=center width=15><input type=checkbox name="inaffil" id="inaffil" ></td><td align=left width=305>- Искать в аффилиациях авторов в публикациях</td>
+<td width=80></td>
+</tr></table>
+</tr>
+<tr align=left valign=top>
+<td width=428><div class="formfr"><textarea id="orgname" name="orgname" READONLY rows=2  wrap=virtual style="width:419px;  height:28px; " class="inputt"></textarea></div></td>
+<td width=80 align=right valign=top>
+<div class="butblue" style="width: 67px;" onClick="organizat_add()">Выбрать</div>
+</td>
+</tr></table>
+
+<div style="height:5px;"></div>
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td width=514 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Референтная группа или персональная группа авторов:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Можно выбрать авторов из референтной группы. Можно также создать одну или несколько персональных групп авторов, которые использовать в качестве референтных групп.</p>'></td></tr>
+<tr><td align=left valign=top>
+<div class="formfr"><select id="authorboxid" name="authorboxid" style="width:510px" class="input">
+<option value="" selected>
+
+<option value="r2" >Выдающиеся профессора МГУ (2052)
+
+<option value="r1" >Профессора МГУ (4393)
+
+<option value="r3" >Заслуженные профессора МГУ (1034)
+
+<option value="r4" >Члены РАН за всю историю существования (2488)
+
+<option value="r5" >Актуальный список членов РАН (858)
+
+</select></div></td></tr>
+</table>
+
+<div style="height:5px;"></div>
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td align=left valign=top>
+<table width=373 cellspacing=0 cellpadding=0 border=0>
+<tr valign=middle class="menus">
+<td width=114 align=left>
+<font color=#00008f>&nbsp;&nbsp;Тематика:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Поиск авторов, у которых основная рубрика публикаций соответствует выбранному тематическому направлению. Основная рубрика автора определяется по рубрикам публикаций из списка работ автора. При установке опции "Учитывать рубрики из анкеты автора" добавляются также тематические направления, указанные автором в регистрационной анкете (не более трех направлений). В этом случае автор может оказаться в списках сразу по нескольким направлениям</p>'>
+</td>
+<td align=center width=15><input type=checkbox name="rubricinreg" id="rubricinreg" ></td><td align=left width=244>- Учитывать рубрики из анкеты автора</td>
+</tr></table>
+</td>
+<td width=15></td>
+<td width=120 align=left valign=middle><font color=#00008f>&nbsp;&nbsp;Показатели:</font>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>По какой базе данных рассчитываются показатели (число публикаций, число цитирований и индекс Хирша), которые показываются в списке авторов, и по которым проводится сортировка</p>'></td>
+</tr>
+
+<tr><td align=left valign=top><div class="formfr"><select id="rubriccode" name="rubriccode" style="width:369px" class="input">
+<option value="" selected>
+
+<option value="500000" >Автоматика. Вычислительная техника&nbsp;&nbsp;(16001)
+
+<option value="410000" >Астрономия&nbsp;&nbsp;(2786)
+
+<option value="340000" >Биология&nbsp;&nbsp;(57076)
+
+<option value="620000" >Биотехнология&nbsp;&nbsp;(680)
+
+<option value="720000" >Внешняя торговля&nbsp;&nbsp;(482)
+
+<option value="710000" >Внутренняя торговля. Туристско-экскурсионное обслуживание&nbsp;&nbsp;(565)
+
+<option value="700000" >Водное хозяйство&nbsp;&nbsp;(1585)
+
+<option value="780000" >Военное дело&nbsp;&nbsp;(3437)
+
+<option value="390000" >География&nbsp;&nbsp;(3249)
+
+<option value="360000" >Геодезия. Картография&nbsp;&nbsp;(1603)
+
+<option value="380000" >Геология&nbsp;&nbsp;(16728)
+
+<option value="370000" >Геофизика&nbsp;&nbsp;(11021)
+
+<option value="520000" >Горное дело&nbsp;&nbsp;(11126)
+
+<option value="100000" >Государство и право. Юридические науки&nbsp;&nbsp;(47270)
+
+<option value="050000" >Демография&nbsp;&nbsp;(375)
+
+<option value="750000" >Жилищно-коммунальное хозяйство. Домоводство. Бытовое...&nbsp;&nbsp;(161)
+
+<option value="200000" >Информатика&nbsp;&nbsp;(6255)
+
+<option value="180000" >Искусство. Искусствоведение&nbsp;&nbsp;(7353)
+
+<option value="030000" >История. Исторические науки&nbsp;&nbsp;(27083)
+
+<option value="280000" >Кибернетика&nbsp;&nbsp;(8018)
+
+<option value="230000" >Комплексное изучение отдельных стран и регионов&nbsp;&nbsp;(372)
+
+<option value="260000" >Комплексные проблемы общественных наук&nbsp;&nbsp;(36)
+
+<option value="890000" >Космические исследования&nbsp;&nbsp;(1291)
+
+<option value="130000" >Культура. Культурология&nbsp;&nbsp;(4941)
+
+<option value="640000" >Легкая промышленность&nbsp;&nbsp;(1925)
+
+<option value="660000" >Лесная и деревообрабатывающая промышленность&nbsp;&nbsp;(1319)
+
+<option value="170000" >Литература. Литературоведение. Устное народное творчество&nbsp;&nbsp;(8908)
+
+<option value="190000" >Массовая коммуникация. Журналистика. Средства массовой...&nbsp;&nbsp;(2670)
+
+<option value="270000" >Математика&nbsp;&nbsp;(19311)
+
+<option value="550000" >Машиностроение&nbsp;&nbsp;(30581)
+
+<option value="760000" >Медицина и здравоохранение&nbsp;&nbsp;(137739)
+
+<option value="530000" >Металлургия&nbsp;&nbsp;(8226)
+
+<option value="900000" >Метрология&nbsp;&nbsp;(897)
+
+<option value="300000" >Механика&nbsp;&nbsp;(9676)
+
+<option value="140000" >Народное образование. Педагогика&nbsp;&nbsp;(76311)
+
+<option value="120000" >Науковедение&nbsp;&nbsp;(763)
+
+<option value="000000" >Общественные науки в целом&nbsp;&nbsp;(551)
+
+<option value="430000" >Общие и комплексные проблемы естественных и точных наук&nbsp;&nbsp;(66)
+
+<option value="810000" >Общие и комплексные проблемы технических и прикладных наук...&nbsp;&nbsp;(6564)
+
+<option value="820000" >Организация и управление&nbsp;&nbsp;(553)
+
+<option value="870000" >Охрана окружающей среды. Экология человека&nbsp;&nbsp;(6400)
+
+<option value="860000" >Охрана труда&nbsp;&nbsp;(795)
+
+<option value="850000" >Патентное дело. Изобретательство. Рационализаторство&nbsp;&nbsp;(92)
+
+<option value="650000" >Пищевая промышленность&nbsp;&nbsp;(8346)
+
+<option value="600000" >Полиграфия. Репрография. Фотокинотехника&nbsp;&nbsp;(160)
+
+<option value="110000" >Политика и Политические науки&nbsp;&nbsp;(7872)
+
+<option value="590000" >Приборостроение&nbsp;&nbsp;(1458)
+
+<option value="800000" >Прочие отрасли экономики&nbsp;&nbsp;(39)
+
+<option value="150000" >Психология&nbsp;&nbsp;(16214)
+
+<option value="210000" >Религия. Атеизм. Свободомыслие&nbsp;&nbsp;(1263)
+
+<option value="690000" >Рыбное хозяйство. Аквакультура&nbsp;&nbsp;(1651)
+
+<option value="490000" >Связь&nbsp;&nbsp;(2955)
+
+<option value="680000" >Сельское и лесное хозяйство&nbsp;&nbsp;(51923)
+
+<option value="040000" >Социология&nbsp;&nbsp;(8938)
+
+<option value="840000" >Стандартизация&nbsp;&nbsp;(106)
+
+<option value="830000" >Статистика&nbsp;&nbsp;(126)
+
+<option value="670000" >Строительство. Архитектура&nbsp;&nbsp;(18324)
+
+<option value="420000" >Теория управления&nbsp;&nbsp;(2)
+
+<option value="730000" >Транспорт&nbsp;&nbsp;(10746)
+
+<option value="290000" >Физика&nbsp;&nbsp;(64206)
+
+<option value="770000" >Физическая культура и спорт&nbsp;&nbsp;(17032)
+
+<option value="020000" >Философия&nbsp;&nbsp;(10279)
+
+<option value="610000" >Химическая технология. Химическая промышленность&nbsp;&nbsp;(8378)
+
+<option value="310000" >Химия&nbsp;&nbsp;(51303)
+
+<option value="060000" >Экономика. Экономические науки&nbsp;&nbsp;(106773)
+
+<option value="470000" >Электроника. Радиотехника&nbsp;&nbsp;(11291)
+
+<option value="450000" >Электротехника&nbsp;&nbsp;(5158)
+
+<option value="440000" >Энергетика&nbsp;&nbsp;(14131)
+
+<option value="580000" >Ядерная техника&nbsp;&nbsp;(995)
+
+<option value="160000" >Языкознание&nbsp;&nbsp;(33687)
+
+</select></div></td>
+<td></td>
+<td><div class="formfr"><select name="metrics" style="width:116px" class="input" onKeyPress="submit_enter(event)">
+<option value="0" >по ядру РИНЦ
+<option value="1" selected>по РИНЦ
+<option value="2" >по elibrary.ru
+</select></div></td>
+</tr>
+</table>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr><td align=right width=24><input type=checkbox name="show_nopubl" id="show_nopubl" ></td><td align=left width=484>- показывать только авторов, имеющих публикации&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Если Вы хотите выводить в результатах поиска только авторов, имеющих хотя бы одну публикацию (в ядре РИНЦ, в РИНЦ или на elibrary.ru), установите эту опцию</p>'></td></tr>
+</table>
+
+<table width=520 cellspacing=3 cellpadding=0 border=0>
+<tr valign=top class="menus"><td width=170 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Сортировка:</font></td><td width=15></td><td width=139 align=left valign=top><font color=#00008f>&nbsp;&nbsp;Порядок:</font></td><td width=15></td><td width=80></td><td width=80></td></tr>
+<tr align=left valign=top>
+<td><div class="formfr"><select id="sortorder" name="sortorder" style="width:166px" class="input" onChange='var ord = document.forms["results"].order; switch(this.value) {case "0" : ord.value="0"; break; case "1" : ord.value="1"; break; case "2" : ord.value="1"; break; case "3" : ord.value="1"; break; case "4" : ord.value="0"; document.forms["results"].metrics.value="0"; break;}' onKeyPress="submit_enter(event)">
+<option value="0" >по фамилии
+<option value="1" >по числу публикаций
+<option value="2" selected>по числу цитирований
+<option value="3" >по индексу Хирша
+
+</select></div></td>
+<td></td>
+<td><div class="formfr"><select id="order" name="order" style="width:135px" class="input" onKeyPress="submit_enter(event)">
+<option value="0" >по возрастанию
+<option value="1" selected>по убыванию
+</select></div></td>
+<td></td>
+<td align=left valign=middle>
+<div class="butblue" style="width: 67px;" onClick="reset_form()">Очистить</div>
+</td>
+<td align=right valign=middle>
+<div class="butred" style="width: 67px;" onClick="author_search()">Поиск</div>
+</td>
+</tr>
+</table>
+<div style="height:4px;"></div>
+
+</div>
+</div>
+<div style="height:12px;"></div>
+
+<div style="width: 480px; margin: 30px 0 10px 30px; border: 0; padding: 10px 20px 7px 20px; text-align: center;">
+<table width=480 cellspacing=3 cellpadding=0 border=0>
+<tr><td width=80 align=right valign=top><img src="images/but_orange_!.gif" width=15 height=15 hspace=3 border=0></td><td width=391 align=left valign=top class="redref"><font color=#00008f>Не найдено авторов, удовлетворяющих условиям поиска</td></tr></table>
+</div>
+
+<br>
+</td></tr>
+</table>
+
+<SCRIPT LANGUAGE="JavaScript">
+$(function() {
+$(".help").tooltip({
+	position: "top right",
+	offset: [-15, -100],
+	effect: "fade", 
+	fadeInSpeed: 800, 
+	fadeOutSpeed: 400, 
+	delay: 400,  
+	predelay: 400,
+	opacity: 1.0
+});
+});
+</script>
+<div id="wiki_tooltip"></div>
+
+</td>
+<td align=right valign=top>
+
+<div id="panel_default" style="position: relative; width: 200px; height:0; margin: 0; border: 1px; padding: 0"></div>
+<div id="panel" style="position: relative; width: 200px; margin: 0; border: 0; padding: 0">
+
+<div style="width: 190px;" class="right-panel">
+
+<table width=190 cellspacing=0 cellpadding=3 border=0>
+
+<tr><td colspan=2 align=center valign=top><font color=#F26C4F><b>ИНСТРУМЕНТЫ</b></font><div style="height:5px;"></div></td></tr>
+
+
+
+<tr><td width=15% align=right valign=top>
+<a href="/projects/science_index/author_tutorial.asp"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><font color=#00008f><a href="/projects/science_index/author_tutorial.asp">Инструкция для авторов</a></font>
+</td></tr>
+
+
+
+
+</table>
+</div>
+
+</div>
+</FORM>
+
+</td></tr></table>
+</td></tr></table>
+
+<br><br>
+<table width=970 height=40 border=0 cellpadding=0 cellspacing=0 id="footer">
+<tr align=center valign=middle class="menug">
+<td width=15% valign="bottom">
+
+</td>
+<td width=70%><font color=#00008f><span style="position: relative; top: 3px; right: 15px; color: #F26C4F;">*</span><a href="/copyright.asp">&copy; 2000-2026 ООО НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА. Все права защищены</a></font><span style="position: relative; top: 3px; left: 15px; color: #F26C4F;">*</span></td>
+<td width=15% valign="bottom">
+
+</td>
+</tr></table>
+
+<!-- Yandex.Metrika -->
+<div style="display:none;"><script type="text/javascript">
+(function(w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter171463 = new Ya.Metrika(171463);
+        } catch(e) {}
+    });
+})(window, 'yandex_metrika_callbacks');
+</script></div>
+<script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script>
+<noscript><div style="position:absolute"><img src="//mc.yandex.ru/watch/171463" alt="" /></div></noscript>
+<!-- /Yandex.Metrika -->
+
+
+
+
+<br><br><br>
+</td></tr></table>
+</html>

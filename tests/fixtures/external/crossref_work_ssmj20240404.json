@@ -1,0 +1,178 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "reference-count": 99,
+  "publisher": "Institute of Cytology and Genetics, SB RAS",
+  "issue": "4",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2024,
+       8,
+       28
+      ]
+     ],
+     "date-time": "2024-08-28T00:00:00Z",
+     "timestamp": 1724803200000
+    },
+    "content-version": "vor",
+    "delay-in-days": 0,
+    "URL": "https://sibmed.elpub.ru/jour/about/editorialPolicies#openAccessPolicy"
+   }
+  ],
+  "short-container-title": [
+   "Sibirskij nauchnyj medicinskij zhurnal"
+  ],
+  "DOI": "10.18699/ssmj20240404",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2024,
+     9,
+     2
+    ]
+   ],
+   "date-time": "2024-09-02T11:11:42Z",
+   "timestamp": 1725275502000
+  },
+  "page": "38-52",
+  "source": "Crossref",
+  "is-referenced-by-count": 0,
+  "title": [
+   "Contradictions in traditional ideas about atherosclerosis and the efficacy of lipid-lowering therapy. Promising directions"
+  ],
+  "prefix": "10.18699",
+  "volume": "44",
+  "author": [
+   {
+    "ORCID": "https://orcid.org/0000-0002-4931-5383",
+    "authenticated-orcid": true,
+    "given": "A. P.",
+    "family": "Vasiliev",
+    "sequence": "first",
+    "affiliation": [
+     {
+      "name": "Tyumen Cardiology Research Center, Tomsk National Research Medical Center Russian Academy of Science"
+     }
+    ],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0001-8675-9103",
+    "authenticated-orcid": true,
+    "given": "N. N.",
+    "family": "Streltsova",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Tyumen Cardiology Research Center, Tomsk National Research Medical Center Russian Academy of Science"
+     }
+    ],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   }
+  ],
+  "member": "7950",
+  "published-online": {
+   "date-parts": [
+    [
+     2024,
+     8,
+     28
+    ]
+   ]
+  },
+  "container-title": [
+   "Сибирский научный медицинский журнал"
+  ],
+  "original-title": [],
+  "link": [
+   {
+    "URL": "https://sibmed.elpub.ru/jour/article/viewFile/1610/649",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2024,
+     9,
+     2
+    ]
+   ],
+   "date-time": "2024-09-02T11:22:14Z",
+   "timestamp": 1725276134000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://sibmed.elpub.ru/jour/article/view/1610"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2024,
+     8,
+     28
+    ]
+   ]
+  },
+  "references-count": 99,
+  "journal-issue": {
+   "issue": "4",
+   "published-online": {
+    "date-parts": [
+     [
+      2024,
+      8,
+      30
+     ]
+    ]
+   }
+  },
+  "URL": "https://doi.org/10.18699/ssmj20240404",
+  "ISSN": [
+   "2410-2520",
+   "2410-2512"
+  ],
+  "issn-type": [
+   {
+    "type": "electronic",
+    "value": "2410-2520"
+   },
+   {
+    "type": "print",
+    "value": "2410-2512"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2024,
+     8,
+     28
+    ]
+   ]
+  }
+ }
+}

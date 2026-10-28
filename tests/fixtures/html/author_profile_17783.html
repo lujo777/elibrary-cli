@@ -1,0 +1,2253 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="robots" content="noarchive">
+<title>Иванов Юрий Федорович / анализ публикационной активности</title>
+
+<script type="text/javascript" src="/jquery.min.js"></script>
+<script type="text/javascript" src="/jquery.tools.min.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.easydrag.js"></script>
+<script type="text/javascript" src="/elibrary.js"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/style_sm.css" type="text/css" media="screen">
+
+<SCRIPT LANGUAGE="JavaScript">
+
+but_blue_hover=new Image();
+but_blue_hover.src="/images/but_blue_hover.png";
+but_red_hover=new Image();
+but_red_hover.src="/images/but_red_hover.png";
+but_gray_hover=new Image();
+but_gray_hover.src="/images/but_gray_hover.png";
+img_plus=new Image();
+img_plus.src="/images/or_plus1.png";
+img_minus=new Image();
+img_minus.src="/images/or_minus1.png";
+
+w_down=new Image();
+w_down.src="/pic/w_show.gif";
+w_up=new Image();
+w_up.src="/pic/w_hide.gif";
+ws_down=new Image();
+ws_down.src="/images/or_er2_down.gif";
+ws_up=new Image();
+ws_up.src="/images/or_close2.gif";
+
+function hideShow(elem,parent) {
+  var child =  document.getElementById(elem);
+  child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+  if (parent.className == "win_expandable") parent.src = child.className == "collapsed" ? w_down.src : w_up.src;
+}
+function show_help(topic){
+  anewwin=window.open("", "addwin", "resizable=yes,scrollbars=yes,height=300,width=500,top=0,left=0");
+  document.forms["results"].action=topic;
+  document.forms["results"].target="addwin";
+  document.forms["results"].submit()
+}
+function new_win(page){
+  anewwin=window.open(page, "addwin", "resizable=yes,scrollbars=yes,height=400,width=600,top=0,left=0");
+}
+function update_author_profile(){
+  var frm = document.forms["results"];
+	$.fancybox({
+	href : 'update_author_profile.asp?authorid='+frm.authorid.value+'&rand='+Math.random() ,
+	title : '',
+	padding : 20,     
+	width : 480,
+	height : 150,
+	overlayOpacity : 0.3,	
+	overlayColor : '#000',
+	speedIn : 500,
+	hideOnOverlayClick : false,
+	enableEscapeButton : true,
+	type : 'iframe'
+	});
+}
+function author_profile(par){
+  $.fancybox({
+    href : 'author_profile_new_'+par+'.asp?id=17783&rand=' + Math.random(),
+    title : '',
+	  padding : 20,     
+	  width : 520,
+	  height : 400,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+    });
+}
+function show_author_refs(iid){
+
+  alerts("Для доступа к этой странице необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.forms["login"].login.focus();
+
+}
+function hideShowChild(elem,par) {
+  var parent =  document.getElementById(par);
+  parent.src = parent.src == img_minus.src ? img_plus.src : img_minus.src;
+  $('#'+elem).slideToggle(500, function(){didScroll = true;})
+}
+
+</SCRIPT>
+</head>
+
+<body onLoad='document.all.loading.style.display="none"; document.all.thepage.style.display=""'>
+
+<div id="loading" style="position:absolute; width:100%; text-align:center; top:300px;">
+Пожалуйста, подождите, <br>пока Ваш запрос будет обработан
+<br><img src="/pic/query_wait.gif" border=0 width=31 height=31 vspace=5></div>
+
+<div id="thepage" style="display: none">
+<table width=100% cellpadding=0 cellspacing=0 border=0>
+<tr><td width=100% align=center valign=top>
+
+
+<table  cellpadding=0 cellspacing=0 border=0>
+<tr><td width=170 align=left valign=top id="leftcol">
+
+<table border=0 cellspacing=0 cellpadding=0 width=150>
+
+<tr><td><a href="/defaultx.asp"><img src="/images/welcome1.jpg" width=150 title="НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА eLIBRARY.RU" border=0 vspace=15></a></td></tr>
+
+
+<tr><td><a href="/defaultx.asp"><img id="elibrary_logo" src="/images/elibrary_logo2.svg" width=150 height=39 border=0 vspace=10 title="eLIBRARY.RU - НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА"></a></td></tr>
+<script language="JavaScript">
+if (supportsSVG) {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo2.svg";}
+else {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo.gif";}
+</script>
+<tr><td><img src="/pic/1pix.gif" vspace=7></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_search(){
+if (document.forms["search"].ftext.value.length > 1) {
+  var frm = document.forms["search"];
+  frm.action="/query_results.asp";
+  frm.target="";
+  frm.submit();
+  }
+else {
+  alert("Введите не менее двух символов");
+  }
+}
+function search_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_search();
+	return false;
+  }
+} 
+</SCRIPT>
+<FORM method=post name="search" onSubmit="return false">
+<input type="hidden" name="where_fulltext" value="on">
+<input type="hidden" name="where_name" value="on">
+<input type="hidden" name="where_abstract" value="on">
+<input type="hidden" name="where_keywords" value="on">
+<input type="hidden" name="where_affiliation" value="">
+<input type="hidden" name="where_references" value="">
+<input type="hidden" name="type_article" value="on">
+<input type="hidden" name="type_disser" value="on">
+<input type="hidden" name="type_book" value="on">
+<input type="hidden" name="type_report" value="on">
+<input type="hidden" name="type_conf" value="on">
+<input type="hidden" name="type_patent" value="on">
+<input type="hidden" name="type_preprint" value="on">
+<input type="hidden" name="type_grant" value="on">
+<input type="hidden" name="type_dataset" value="on">
+<input type="hidden" name="search_freetext" value="">
+<input type="hidden" name="search_morph" value="on">
+<input type="hidden" name="search_fulltext" value="">
+<input type="hidden" name="search_open" value="">
+<input type="hidden" name="search_results" value="">
+<input type="hidden" name="titles_all" value="">
+<input type="hidden" name="authors_all" value="">
+<input type="hidden" name="rubrics_all" value="">
+<input type="hidden" name="queryboxid" value="">
+<input type="hidden" name="itemboxid" value="">
+<input type="hidden" name="begin_year" value="">
+<input type="hidden" name="end_year" value="">
+<input type="hidden" name="issues" value="all">
+<input type="hidden" name="orderby" value="rank">
+<input type="hidden" name="order" value="rev">
+<input type="hidden" name="changed" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_search').slideToggle(500, function(){didScroll = true;})" title="Поиск в Научной электронной библиотеке">ПОИСК</span></b></font>
+</td></tr>
+</table>
+<div ID="win_search" class="collapsed">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=140 align=center valign=top>
+<div style="height: 10px;"></div>
+<div class="formfr" style="width:126px;"><input type=text id="ftext" name="ftext" value="" style="width:118px;" class="inputt" onKeyPress="search_enter(event);"></div>
+<div style="height: 11px;"></div>
+
+<div class="butblue" style="width: 52px;" onClick="check_search()">Найти</div>
+
+</td></tr>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+</table>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/querybox.asp?scope=newquery">Расширенный поиск</a></td></tr>
+
+
+<tr><td colspan=2><div style="height:3px;"></div></td></tr>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/neural_search.asp">Нейропоиск</a></td></tr>
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+
+</FORM>
+
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_all(){
+  if (document.forms["login"].login.value==""){
+    alert("Не указано имя пользователя!");
+	return false;
+	}
+  else if (document.forms["login"].password.value==""){
+    alert("Не указан пароль!");
+	return false;
+	}
+  else{
+    var frm = document.forms["login"];
+    frm.action="/start_session.asp";
+    frm.target="";
+    frm.submit();
+   }
+}
+function login_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_all();
+	return false;
+  }
+} 
+function sso_orgs(){
+  var frm = document.forms["results"];
+  $.fancybox({
+    href : 'sso_orgs.asp' ,
+    title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 200,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+  });
+}
+function show_hide_password(target){
+	var input = document.getElementById('password');
+	if (input.getAttribute('type') == 'password') {
+		target.classList.add('view');
+		input.setAttribute('type', 'text');
+	} 
+	else {
+		target.classList.remove('view');
+		input.setAttribute('type', 'password');
+	}
+	return false;
+}
+</SCRIPT>
+
+<FORM method=post name="login" onSubmit="return false">
+<input type=hidden name="rpage" value=https://elibrary.ru/author_profile.asp?id=17783>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_login').slideToggle(500, function(){didScroll = true;})" title="Вход в библиотеку для зарегистрированных пользователей">ВХОД</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_login" class="expanded">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Имя пользователя<br>&nbsp;или адрес эл. почты:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<div class="formfr" style="width:126px;"><input type=text id="login" name="login" value="" style="width:118px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"></div>
+</td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Пароль:</font></td></tr>
+<tr><td align=center width=100%>
+<div class="formfr" style="width:126px;"><input type=password id="password" name="password" value="" style="width:102px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"><a href="#" class="password-control" onclick="return show_hide_password(this);"></a></div>
+</td></tr>
+
+<tr><td align=center width=100%>
+
+<div style="height: 9px;"></div>
+<div class="butred" style="width: 52px;" onClick="check_all()">Вход</div>
+<div style="height: 9px;"></div>
+
+</td></tr></table>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr valign=middle class="menub"><td align=center width=30><input type=checkbox name="knowme"></td><td align=left width=101>Запомнить меня</td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/access_terms.asp">Правила доступа</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/author_info.asp?isnew=1&rpage=https%3A%2F%2Felibrary%2Eru%2Fauthor%5Fprofile%2Easp%3Fid%3D17783">Регистрация</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/pass_request.asp">Забыли пароль?</a></td></tr>
+
+
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:sso_orgs()">Вход через Вашу организацию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+</td></tr>
+</FORM>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_goto').slideToggle(500, function(){didScroll = true;})" title="Быстрый переход на популярные страницы сайта">НАВИГАТОР</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_goto" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=4 cellpadding=0 width=140>
+
+<tr valign=top><td width=25 align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left width=115><a href="/titles.asp">ЖУРНАЛЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/books.asp">КНИГИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/patents.asp">ПАТЕНТЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/querybox.asp">ПОИСК</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/authors.asp">АВТОРЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/orgs.asp">ОРГАНИЗАЦИИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/keywords.asp">КЛЮЧЕВЫЕ СЛОВА</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/rubrics.asp">РУБРИКАТОР</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/region_compare.asp">РЕГИОНЫ</a></td></tr>
+
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=25 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=115 valign=top><a href="/defaultx.asp">Начальная страница</a></td></tr></table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function end_session(){
+
+  document.forms["session"].saveuser.value="1";
+
+  document.forms["session"].action="/end_session.asp";
+  document.forms["session"].target="";
+  document.forms["session"].submit()
+}
+</SCRIPT>
+<FORM action="/end_session.asp" method=POST name="session">
+<input type="hidden" name="saveuser" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_session').slideToggle(500, function(){didScroll = true;})" title="Информация о текущей сессии пользователя">СЕССИЯ</span></b></font>
+</td></tr>
+</table>
+
+
+<div ID="win_session" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>Имя пользователя:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>Незарегистрированный пользователь</font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Начало работы:</font></td></tr>
+
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>13.10.2026 17:51</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Время работы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>00:41</font></td></tr>
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="/project_user_office.asp">Личный кабинет</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:end_session()">Закрыть сессию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+</FORM>
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_contact').slideToggle(500, function(){didScroll = true;})" title="Контактная информация Научной электронной библиотеки">КОНТАКТЫ</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_contact" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Служба поддержки:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 1<br></font>
+<font color=#00008f><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font></td></tr>
+</td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям журналов:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 2<br></font>
+<font color=#00008f><a href="mailto:publish@elibrary.ru">publish@elibrary.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям книг:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 3<br></font>
+<font color=#00008f><a href="mailto:book@elibrary.ru">book@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Space для издательств:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:info@sciencespace.ru">info@sciencespace.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Index для организаций:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:org@scienceindex.ru">org@scienceindex.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Доступ к API:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:api@elibrary.ru">api@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Подписчикам:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 6<br></font>
+<font color=#00008f><a href="mailto:sales.team@elibrary.ru">sales.team@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Конференции, семинары:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 7<br></font>
+<font color=#00008f><a href="mailto:conf@elibrary.ru">conf@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Почтовый адрес:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="/contact_new.asp">117246, г. Москва,
+Научный проезд, д. 14А, стр. 3, таунхаус 1</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Веб-сайт:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://elibrary.ru">https://elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Telegram-канал:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://t.me/elibrary_ru_official" target=_blank>t.me/elibrary_ru_official</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Размещение рекламы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:reklama@elibrary.ru">reklama@elibrary.ru</a></font></td></tr>
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/contact_new.asp">Схема проезда</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="https://support.elibrary.ru">Задать вопрос</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/vacancy.asp">Вакансии</a></td></tr>
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<div style="width: 140px;" class="help-panel">
+<table width=140 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=15% align=right valign=top>
+<img src="/images/but_orange_i.gif" width=15 height=15 hspace=0 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>По всем вопросам, связанным с работой в системе Science Index, обращайтесь, пожалуйста, в службу поддержки:<br><br>
++7 (495) 544-2494<br><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font>
+</td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+
+
+</table>
+
+</td><td align=left valign=top>
+
+<FORM method=post name="results" onSubmit="return false">
+<input type="hidden" name="authorid" value="17783">
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr><td width=600 align=left valign=top>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+<tr><td width=100% align=left valign=top>
+
+<div class="header-panel">
+<div style="margin: 0; border: 0; padding: 0 0 5px 0; text-align: center; font-size: 9pt;"><font color=#5674b9><b>АНАЛИЗ ПУБЛИКАЦИОННОЙ АКТИВНОСТИ АВТОРА</b></font></div>
+</div>
+
+</td></tr></table>
+
+</td><td width=200 align=right valign=middle id="rightcol">
+
+
+<table width=200 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=12% align=right valign=top>
+<a href="https://t.me/elibrary_ru_official/106" target=_blank><img src="/images/telegram.svg" width=24 height=24 border=0></a></td>
+<td width=88% align=left valign=middle><font color=#00008f><a href="https://t.me/elibrary_ru_official/106" target=_blank>Система быстрого поиска по идентификаторам на eLIBRARY.RU</a></font>
+</td></tr>
+</table>
+</td></tr>
+
+
+<tr><td align=left valign=top>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+
+<tr><td width=100% align=left valign=top>
+
+<div style="width:540px; margin:0 20px 10px 20px; border:0; padding:0; text-align: center; font-size: 9pt;">
+<font color=#F26C4F><b>ИВАНОВ ЮРИЙ ФЕДОРОВИЧ</b></font>  <span class="aster" title="Автор зарегистрирован в SCIENCE INDEX">*</span>
+<br><a href="org_profile.asp?id=116">Институт сильноточной электроники СО РАН</a>, лаборатория плазменной эмиссионной электроники (Томск)
+<br>SPIN-код: <font color=#00008f>7576-4810</font>, AuthorID: <font color=#00008f>17783</font>
+</div>
+
+<br>
+</td></tr></table>
+
+
+
+<div class="midtext" style="margin: 35px 0 15px 0; text-align:center;"><font color=#000000><b>МЕСТО РАБОТЫ</b></font></div>
+
+<table width=520 cellspacing=0 cellpadding=3 style="border-spacing: 0px 2px;">
+<tr align=center valign=middle height=15>
+<td width=24></td>
+<td width=404 class="midtext"><font color=#555555>&nbsp;<b>Название организации</b></font>&nbsp;<img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Организации, указанные в публикациях в качестве места работы автора</p>'></td>
+<td width=74 class="midtext"><font color=#555555><b>Период</b></font></td>
+<td width=54 class="midtext"><font color=#555555><b>Публ.</b></font></td>
+</tr>
+<tr><td colspan=4>
+<div style="width: 574px;" class="table-line"></div>
+</td></tr>
+
+<tr><td colspan=4 height=0></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=116" target=_blank>Институт сильноточной электроники СО РАН</a> (Томск)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>1992-2026</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=116" target=_blank rel=nofollow>1679</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=573" target=_blank>Национальный исследовательский Томский политехнический университет</a> (Томск)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>1995-2024</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=573" target=_blank rel=nofollow>396</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=915" target=_blank>Сибирский государственный индустриальный университет</a> (Новокузнецк)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>1996-2024</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=915" target=_blank rel=nofollow>124</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=2378" target=_blank>Сибирское отделение РАН</a> (Новосибирск)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>1995-2023</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=2378" target=_blank rel=nofollow>3</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=401" target=_blank>Омский государственный технический университет</a> (Омск)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>2023</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=401" target=_blank rel=nofollow>1</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=117" target=_blank>Институт физики прочности и материаловедения СО РАН</a> (Томск)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>1994-2022</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=117" target=_blank rel=nofollow>22</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=5350" target=_blank>Российская академия наук</a> (Москва)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>2021</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=5350" target=_blank rel=nofollow>2</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=366" target=_blank>Национальный исследовательский Томский государственный университет</a> (Томск)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>1997-2019</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=366" target=_blank rel=nofollow>153</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=2399" target=_blank>Томский научный центр СО РАН</a> (Томск)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>2006-2019</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=2399" target=_blank rel=nofollow>4</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=930" target=_blank>Томский государственный архитектурно-строительный университет</a> (Томск)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>1985-2018</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=930" target=_blank rel=nofollow>105</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=953" target=_blank>Самарский национальный исследовательский университет им. акад. С.П. Королева</a> (Самара)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>2018</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=953" target=_blank rel=nofollow>1</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=353" target=_blank>Национальный исследовательский ядерный университет МИФИ</a> (Москва)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>2016</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=353" target=_blank rel=nofollow>1</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=98" target=_blank>Институт высокотемпературной электрохимии УрО РАН</a> (Екатеринбург)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>2015</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=98" target=_blank rel=nofollow>1</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=351" target=_blank>Новосибирский государственный технический университет</a> (Новосибирск)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>2014</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=351" target=_blank rel=nofollow>1</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=3538" target=_blank>Западно-Сибирский металлургический комбинат</a> (Новокузнецк)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>2007-2011</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=3538" target=_blank rel=nofollow>6</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=889" target=_blank>Московский авиационный институт (национальный исследовательский университет)</a> (Москва)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>2011</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=889" target=_blank rel=nofollow>1</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=23795" target=_blank>Dalian University of Technology</a> (Dalian)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>2011</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=23795" target=_blank rel=nofollow>1</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=4437" target=_blank>Новокузнецкий металлургический комбинат</a> (Новокузнецк)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>2006-2008</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=4437" target=_blank rel=nofollow>3</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=7596" target=_blank>Институт химии твердого тела и механохимии СО РАН</a> (Новосибирск)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>2008</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=7596" target=_blank rel=nofollow>1</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=340" target=_blank>Белгородский государственный национальный исследовательский университет</a> (Белгород)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>2007</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=340" target=_blank rel=nofollow>1</a></td></tr>
+
+<tr><td align=center valign=top><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td>
+<td align=left valign=top class="midtext"><a href="org_profile.asp?id=369" target=_blank>Омский государственный университет им. Ф.М. Достоевского</a> (Омск)</td><td align=center valign=middle nowrap class="midtext"><font color=#00008f>1998</font></td><td align=center valign=middle nowrap class="midtext"><a href="author_items.asp?orgsid=369" target=_blank rel=nofollow>1</a></td></tr>
+
+</table>
+
+
+<div class="midtext" style="margin: 40px 0 15px 0; text-align:center;"><font color=#000000><b>УЧАСТИЕ В РЕЦЕНЗИРОВАНИИ НАУЧНЫХ ИЗДАНИЙ</b></font></div>
+
+<table width=520 cellspacing=0 cellpadding=3 style="border-spacing: 0px 2px;">
+<tr align=center valign=middle height=15>
+<td width=24></td>
+<td width=364 class="midtext"><font color=#555555>&nbsp;<b>Название издания</b></font></td>
+<td width=94 class="midtext"><font color=#555555><b>Период</b></font></td>
+<td width=74 class="midtext"><font color=#555555><b>Рецензий</b></font></td>
+</tr>
+<tr><td colspan=4>
+<div style="width: 574px;" class="table-line"></div>
+</td></tr>
+
+<tr><td colspan=4 height=0></td></tr>
+
+<tr id="rev28236"><td align=center valign=top></td>
+<td align=left valign=top class="midtext"><a href="title_about_new.asp?id=28236">Вестник Научно-исследовательского института железнодорожного транспорта</a></td>
+<td align=center valign=middle class="midtext"><font color=#00008f>2026</font></td>
+<td align=center valign=middle nowrap class="midtext"><font color=#00008f>1</font></td>
+</tr>
+
+<tr id="rev32646"><td align=center valign=top></td>
+<td align=left valign=top class="midtext"><a href="title_about_new.asp?id=32646">Вестник Пермского национального исследовательского политехнического университета. Машиностроение, материаловедение</a></td>
+<td align=center valign=middle class="midtext"><font color=#00008f>2022</font></td>
+<td align=center valign=middle nowrap class="midtext"><font color=#00008f>1</font></td>
+</tr>
+
+<tr id="rev35931"><td align=center valign=top></td>
+<td align=left valign=top class="midtext"><a href="title_about_new.asp?id=35931">Вестник Сибирского государственного индустриального университета</a></td>
+<td align=center valign=middle class="midtext"><font color=#00008f>2023</font></td>
+<td align=center valign=middle nowrap class="midtext"><font color=#00008f>1</font></td>
+</tr>
+
+<tr id="revbooks"><td align=center valign=top></td>
+<td align=left valign=top class="midtext"><font color=#00008f>Монографии и сборники</font></td>
+<td align=center valign=middle class="midtext"><font color=#00008f>2020</font></td>
+<td align=center valign=middle nowrap class="midtext"><font color=#00008f>2</font></td>
+</tr>
+
+</table>
+
+
+
+<div class="midtext" style="margin: 40px 0 15px 0; text-align:center;"><font color=#000000><b>ОБЩИЕ ПОКАЗАТЕЛИ</b></font></div>
+
+<table width=580 cellspacing=0 cellpadding=3 style="border-spacing: 0px 2px;">
+<tr align=center valign=middle height=15>
+<td width=24></td>
+<td width=444 class="midtext"><font color=#555555>&nbsp;<b>Название показателя</b></font></td>
+<td width=94 class="midtext"><font color=#555555><b>Значение</b></font></td>
+</tr>
+<tr><td colspan=3>
+<div style="width: 574px;" class="table-line"></div>
+</td></tr>
+
+<tr><td colspan=3 height=0></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются все публикации автора, в том числе: </p> <p>публикации, извлеченные из списков цитируемой литературы, </p> <p>статьи в научно-популярных, информационных изданиях, </p> <p>нежурнальные публикации (монографии, статьи в сборниках, трудах конференций, диссертации, патенты и т.д.), </p> <p>публикации, где данный ученый принимал участие в качестве редактора, составителя, переводчика и т.д., </p> <p>а также статьи в журналах и сборниках, исключенных из РИНЦ.</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число публикаций на elibrary.ru</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&show_refs=1" title="Полный список публикаций автора на портале elibrary.ru" target=_blank rel=nofollow>2583</a></font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются только публикации, в которых данный ученый является автором или соавтором (не учитываются работы, где он является только редактором, составителем, переводчиком и т.д.).</p> <p>Учитываются не только публикации, имеющие библиографические описания в РИНЦ, но и статьи автора, найденные в списках цитируемой литературы.</p> <p>Не учитываются статьи в информационных, научно-популярных изданиях, а также журналах и сборниках, исключенных из РИНЦ.</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число публикаций в РИНЦ</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ" target=_blank rel=nofollow>2515</a></font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются только публикации автора в журналах, входящих в ядро РИНЦ (включенных в базы данных Web of Science, Scopus или RSCI)</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число публикаций, входящих в ядро РИНЦ</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора, входящих в ядро РИНЦ" target=_blank rel=nofollow>1500</a></font></td></tr>
+
+<tr><td colspan=3><div style="width:100%; border-bottom: 1px dashed #F26C4F; margin: 5px 0 5px 0;"></div></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются все ссылки на все публикации автора на портале elibrary.ru, в том числе: </p> <p>статьи в научно-популярных, информационных изданиях, </p> <p>нежурнальные публикации (монографии, статьи в сборниках, трудах конференций, диссертации, патенты и т.д.), </p> <p>публикации, где данный ученый принимал участие в качестве редактора, составителя, переводчика и т.д., </p> <p>статьи в журналах и сборниках, исключенных из РИНЦ, </p> <p>а также нераспознанные ссылки.</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число цитирований из публикаций на elibrary.ru</font></td><td align=center class="midtext"><font color=#000000><a href="author_refs.asp?authorid=17783&show_refs=1" title="Список цитирований публикаций автора на elibrary.ru" target=_blank rel=nofollow>21818</a></font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются ссылки на все публикации автора из публикаций, входящих в РИНЦ, в том числе нераспознанные ссылки.</p> <p>Не учитываются цитирования из реферативных и научно-популярных журналов, словарей, справочников, методических указаний, авторефератов диссертаций, ненаучных публикаций в журналах (аннотации, персоналии, разное и т.д.), а также из журналов и сборников, исключенных из РИНЦ.</p> <p>Не учитываются ссылки на публикации, где данный ученый является редактором, составителем, переводчиком и т.д., но не является автором.</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число цитирований из публикаций, входящих в РИНЦ</font></td><td align=center class="midtext"><font color=#000000><a href="author_refs.asp?authorid=17783&pubcat=risc&show_refs=1&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований публикаций автора в РИНЦ" target=_blank rel=nofollow>20878</a></font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются ссылки на все публикации автора из публикаций, входящих в ядро РИНЦ, в том числе нераспознанные ссылки.</p> <p>Не учитываются цитирования из реферативных и научно-популярных журналов, словарей, справочников, методических указаний, авторефератов диссертаций, ненаучных публикаций в журналах (аннотации, персоналии, разное и т.д.).</p> <p>Не учитываются ссылки на публикации, где данный ученый является редактором, составителем, переводчиком и т.д., но не является автором.</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число цитирований из публикаций, входящих в ядро РИНЦ</font></td><td align=center class="midtext"><font color=#000000><a href="author_refs.asp?authorid=17783&pubcat=corerisc&show_refs=1&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований публикаций автора по ядру РИНЦ" target=_blank rel=nofollow>12859</a></font></td></tr>
+
+<tr><td colspan=3><div style="width:100%; border-bottom: 1px dashed #F26C4F; margin: 5px 0 5px 0;"></div></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>При расчете учитываются все ссылки на все публикации автора на портале elibrary.ru, в том числе: </p> <p>статьи в научно-популярных, информационных изданиях, </p> <p>нежурнальные публикации (монографии, статьи в сборниках, трудах конференций, диссертации, патенты и т.д.), </p> <p>статьи в журналах и сборниках, исключенных из РИНЦ.</p> <p>Не учитываются ссылки на публикации, где данный ученый является редактором, составителем, переводчиком и т.д., но не является автором.</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Индекс Хирша по всем публикациям на elibrary.ru</font></td><td align=center class="midtext"><font color=#000000>51</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>При расчете учитываются ссылки на все публикации автора в РИНЦ из публикаций, входящих в РИНЦ.</p> <p>Не учитываются цитирования из реферативных и научно-популярных журналов, словарей, справочников, методических указаний, авторефератов диссертаций, ненаучных публикаций в журналах (аннотации, персоналии, разное и т.д.), а также из журналов и сборников, исключенных из РИНЦ.</p> <p>Не учитываются ссылки на публикации, где данный ученый является редактором, составителем, переводчиком и т.д., но не является автором.</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Индекс Хирша по публикациям в РИНЦ</font></td><td align=center class="midtext"><font color=#000000>50</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>При расчете учитываются ссылки на все публикации автора в ядре РИНЦ из публикаций, входящих в ядро РИНЦ.</p> <p>Не учитываются цитирования из реферативных и научно-популярных журналов, словарей, справочников, методических указаний, авторефератов диссертаций, ненаучных публикаций в журналах (аннотации, персоналии, разное и т.д.).</p> <p>Не учитываются ссылки на публикации, где данный ученый является редактором, составителем, переводчиком и т.д., но не является автором.</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Индекс Хирша по ядру РИНЦ</font></td><td align=center class="midtext"><font color=#000000>39</font></td></tr>
+
+
+<tr><td colspan=3><div style="width:100%; border-bottom: 1px dashed #F26C4F; margin: 5px 0 5px 0;"></div></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Это число меньше, чем суммарное число цитирований автора, поскольку в одной публикации может цитироваться сразу несколько разных работ автора</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число публикаций, процитировавших работы автора</font></td><td align=center class="midtext"><font color=#000000>8633</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Максимальное количество цитирований одной публикации автора. Учитываются любые типы публикаций</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число ссылок на самую цитируемую публикацию</font></td><td align=center class="midtext"><font color=#000000>653</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются публикации любого типа, имеющие хотя бы одно цитирование в РИНЦ</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число публикаций автора, процитированных хотя бы один раз</font></td><td align=center class="midtext"><font color=#000000>1655 (65,8%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Рассчитывается на основе количества цитирований публикаций, имеющих библиографические описания в РИНЦ</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Среднее число цитирований в расчете на одну публикацию</font></td><td align=center class="midtext"><font color=#000000>7,38</font></td></tr>
+
+<tr><td colspan=3><div style="width:100%; border-bottom: 1px dashed #F26C4F; margin: 5px 0 5px 0;"></div></td></tr>
+
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Рассчитывается аналогично индексу Хирша по РИНЦ, но при этом не учитываются цитирования, сделанные из работ этого же автора</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Индекс Хирша без учета самоцитирований</font></td><td align=center class="midtext"><font color=#000000>41</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Рассчитывается аналогично индексу Хирша по ядру РИНЦ, но при этом не учитываются цитирования, сделанные из работ этого же автора</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Индекс Хирша по ядру РИНЦ без учета самоцитирований</font></td><td align=center class="midtext"><font color=#000000>31</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Рассчитывается аналогично индексу Хирша по РИНЦ, но при этом учитываются цитирования только статей в журналах и только из статей в журналах</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Индекс Хирша с учетом только статей в журналах</font></td><td align=center class="midtext"><font color=#000000>37</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Год первой публикации автора в РИНЦ</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Год первой публикации</font></td><td align=center class="midtext"><font color=#000000>1982</font></td></tr>
+
+<tr><td colspan=3><div style="width:100%; border-bottom: 1px dashed #F26C4F; margin: 5px 0 5px 0;"></div></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Число ссылок, полученных из работ этого же автора (в абсолютной величине и в процентах по отношению к общему числу цитирований автора)</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число самоцитирований</font></td><td align=center class="midtext"><font color=#000000>7764 (37,2%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Число ссылок, полученных из работ этого же автора или его соавторов (в абсолютной величине и в процентах по отношению к общему числу цитирований автора)</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число цитирований соавторами</font></td><td align=center class="midtext"><font color=#000000>15134 (72,5%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Число авторов, совместно с которыми публиковались работы. Может быть завышено из-за различных вариантов транслитерации фамилии и инициалов</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число соавторов</font></td><td align=center class="midtext"><font color=#000000>1775</font></td></tr>
+
+<tr><td colspan=3><div style="width:100%; border-bottom: 1px dashed #F26C4F; margin: 5px 0 5px 0;"></div></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Число статей в журналах, издаваемых в зарубежных странах.</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число статей в зарубежных журналах</font></td><td align=center class="midtext"><font color=#000000>263 (10,5%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Число статей в журналах, издаваемых в России</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число статей в российских журналах</font></td><td align=center class="midtext"><font color=#000000>1203 (47,8%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются журналы из текущего перечня ВАК</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число статей в российских журналах из перечня ВАК</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&pubrole=100&show_refs=1&pubcat=vak" title="Список статей данного автора в журналах из перечня ВАК" target=_blank rel=nofollow>1170</a> (46,5%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются российские журналы, имеющие переводную версию на английском языке</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число статей в российских переводных журналах</font></td><td align=center class="midtext"><font color=#000000>473 (18,8%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются статьи в журналах, которые имеют ненулевой импакт-фактор ISI или импакт-фактор РИНЦ</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число статей в журналах с ненулевым импакт-фактором</font></td><td align=center class="midtext"><font color=#000000>1353 (53,8%)</font></td></tr>
+
+<tr><td colspan=3><div style="width:100%; border-bottom: 1px dashed #F26C4F; margin: 5px 0 5px 0;"></div></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Число цитирований публикаций автора, входящих в РИНЦ из журналов, издаваемых в зарубежных странах</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число цитирований из зарубежных журналов на публикации автора</font></td><td align=center class="midtext"><font color=#000000>4847 (23,2%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Число цитирований публикаций автора, входящих в РИНЦ из журналов, издаваемых в России</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число цитирований из российских журналов</font></td><td align=center class="midtext"><font color=#000000>7917 (37,9%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются цитирования из журналов, входящих в текущий перечень ВАК на публикации автора, входящие в РИНЦ</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число цитирований из российских журналов из перечня ВАК</font></td><td align=center class="midtext"><font color=#000000><a href="author_refs.asp?authorid=17783&pubcat=vak&show_refs=1&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований публикаций автора из журналов, входящих в перечень ВАК" target=_blank rel=nofollow>7685</a> (36,8%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются цитирования из журналов, имеющих переводную версию на английском языке на публикации автора, входящие в РИНЦ</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число цитирований из российских переводных журналов</font></td><td align=center class="midtext"><font color=#000000>2425 (11,6%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются ссылки из журналов, которые имеют ненулевой импакт-фактор JCR или импакт-фактор РИНЦ на все публикации автора, входящие в РИНЦ</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число цитирований из журналов с ненулевым импакт-фактором</font></td><td align=center class="midtext"><font color=#000000>11590 (55,5%)</font></td></tr>
+
+<tr><td colspan=3><div style="width:100%; border-bottom: 1px dashed #F26C4F; margin: 5px 0 5px 0;"></div></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>При расчете для зарубежных журналов используется импакт-фактор JCR, для российских - импакт-фактор РИНЦ. Если журнал имеет оба импакт-фактора, выбирается наибольший из них</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Средневзвешенный импакт-фактор журналов, в которых были опубликованы статьи</font></td><td align=center class="midtext"><font color=#000000>0,811</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>При расчете для зарубежных журналов используется импакт-фактор JCR, для российских - импакт-фактор РИНЦ. Если журнал имеет оба импакт-фактора, выбирается наибольший из них</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Средневзвешенный импакт-фактор журналов, в которых были процитированы статьи</font></td><td align=center class="midtext"><font color=#000000>1,528</font></td></tr>
+
+<tr><td colspan=3><div style="width:100%; border-bottom: 1px dashed #F26C4F; margin: 5px 0 5px 0;"></div></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются публикации, имеющие библиографические описания в РИНЦ, и статьи, найденные в списках цитируемой литературы (абсолютное значение и процент по отношению к числу публикаций автора за все годы)</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число публикаций в РИНЦ за последние 5 лет (2021-2025)</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&show_refs=1&pubrole=100&pubcat=risc&pubyear=2021|2022|2023|2024|2025" title="Список публикаций автора в РИНЦ за 2021-2025 годы" target=_blank rel=nofollow>556</a> (22,1%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются публикации, входящие в ядро РИНЦ, в том числе статьи, найденные в списках цитируемой литературы (абсолютное значение и процент по отношению к числу публикаций автора в РИНЦ за 5 лет)</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число публикаций в ядре РИНЦ за последние 5 лет</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&show_refs=1&pubrole=100&pubcat=corerisc&pubyear=2021|2022|2023|2024|2025" title="Список публикаций автора в ядре РИНЦ за 2021-2025 годы" target=_blank rel=nofollow>310</a> (55,8%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются ссылки из публикаций 2021-2025 годов на работы автора, опубликованные в этот же период (абсолютное значение и процент по отношению к общему количеству цитирований автора)</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число ссылок из РИНЦ на работы, опубликованные за последние 5 лет</font></td><td align=center class="midtext"><font color=#000000><a href="author_refs.asp?authorid=17783&pubcat=risc&show_refs=1&pubrole=100&pubyear=2021|2022|2023|2024|2025&sourceyear=2021|2022|2023|2024|2025&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований публикаций автора из журналов, входящих в РИНЦ, за 2021-2025 годы" target=_blank rel=nofollow>1897</a> (9,1%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются ссылки из публикаций 2021-2025 годов, входящих в ядро РИНЦ, на все работы автора в РИНЦ, опубликованные в этот же период (абсолютное значение и процент по отношению к общему количеству цитирований автора)</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число ссылок из ядра РИНЦ на работы, опубликованные за последние 5 лет</font></td><td align=center class="midtext"><font color=#000000><a href="author_refs.asp?authorid=17783&pubcat=corerisc&show_refs=1&pubrole=100&pubyear=2021|2022|2023|2024|2025&sourceyear=2021|2022|2023|2024|2025&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований публикаций автора из журналов, входящих в ядро РИНЦ, за 2021-2025 годы" target=_blank rel=nofollow>1124</a> (5,4%)</font></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Учитываются ссылки из публикаций 2021-2025 годов на все работы автора (абсолютное значение и процент по отношению к общему количеству цитирований автора)</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Число ссылок на работы автора из всех публикаций за последние 5 лет</font></td><td align=center class="midtext"><font color=#000000><a href="author_refs.asp?authorid=17783&pubcat=risc&show_refs=1&pubrole=100&sourceyear=2021|2022|2023|2024|2025&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований публикаций автора из журналов, входящих в РИНЦ, за 2021-2025 годы" target=_blank rel=nofollow>6023</a> (28,8%)</font></td></tr>
+
+
+<tr><td colspan=3><div style="width:100%; border-bottom: 1px dashed #F26C4F; margin: 5px 0 5px 0;"></div></td></tr>
+
+<tr><td colspan=3>
+<table width=100% cellspacing=0 cellpadding=3 style="border-spacing: 0px 2px;">
+
+<tr><td width=20 align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Основная тематическая рубрика публикаций автора по рубрикатору ГРНТИ</p>'></td><td width=200 align=left valign=top class="midtext"><font color=#00008f>&nbsp;Основная рубрика (ГРНТИ)</font></td><td width=350 align=right valign=top class="midtext"><font color=#000000>290000. Физика</font></td></tr>
+
+<tr><td width=20 align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Основная тематическая рубрика публикаций автора по рубрикатору OECD</p>'></td><td width=200 align=left valign=top class="midtext"><font color=#00008f>&nbsp;Основная рубрика (OECD)</font></td><td width=350 align=right valign=top class="midtext"><font color=#000000>103. Physical sciences and astronomy</font></td></tr>
+
+</table>
+</td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Для расчета показателя все авторы в данном научном направлении (в соответствии с рубрикой OECD) сортируются в порядке убывания числа цитирований из ядра РИНЦ на работы, опубликованные за последние 5 лет. Процентиль отражает место в полученном рейтинге в предположении, что все авторы в этом ряду разбиты на 100 равных групп. Первый процентиль соответствует одному проценту авторов с самыми высокими показателями.</p><p>При расчете числа цитирований из ядра РИНЦ учитываются ссылки из публикаций 2021-2025 годов, входящих в ядро РИНЦ, на все работы автора в РИНЦ, опубликованные в этот же период. Процентиль рассчитывается для авторов, имеющих хотя бы одну публикацию в РИНЦ за 5 лет (2021-2025).</p><p>При одинаковом числе цитирований из ядра РИНЦ сортировка осуществляется по числу цитирований из РИНЦ на публикации автора за 5 лет, затем по числу его публикаций за 5 лет.</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Процентиль по ядру РИНЦ</font></td><td align=center class="midtext"><font color=#000000>2</font></td></tr>
+
+<tr><td colspan=3><div style="width:100%; border-bottom: 1px dashed #F26C4F; margin: 5px 0 5px 0;"></div></td></tr>
+
+<tr><td align=center valign=top><img src="/images/but_orange_question.gif" width=12 height=12 class="imghelp help" title='<p>Указывается число публикаций в РИНЦ, в работе над которыми ученый принимал различное творческое участие.</p>'></td><td align=left valign=top class="midtext"><font color=#00008f>Участие в публикациях:</font></td><td align=center class="midtext"><font color=#000000></font></td></tr>
+
+<tr><td></td><td align=left valign=top class="midtext">&nbsp;&nbsp;&nbsp;&nbsp;<font color=#00008f>автор</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&pubrole=100&show_refs=0&pubcat=risc" title="Список публикаций в РИНЦ с участием в данной роли" target=_blank rel=nofollow>2570</a></font></td></tr>
+
+<tr><td></td><td align=left valign=top class="midtext">&nbsp;&nbsp;&nbsp;&nbsp;<font color=#00008f>ответственный редактор</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&pubrole=1&show_refs=0&pubcat=risc" title="Список публикаций в РИНЦ с участием в данной роли" target=_blank rel=nofollow>2</a></font></td></tr>
+
+<tr><td></td><td align=left valign=top class="midtext">&nbsp;&nbsp;&nbsp;&nbsp;<font color=#00008f>редактор</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&pubrole=0&show_refs=0&pubcat=risc" title="Список публикаций в РИНЦ с участием в данной роли" target=_blank rel=nofollow>4</a></font></td></tr>
+
+<tr><td></td><td align=left valign=top class="midtext">&nbsp;&nbsp;&nbsp;&nbsp;<font color=#00008f>рецензент</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&pubrole=23&show_refs=0&pubcat=risc" title="Список публикаций в РИНЦ с участием в данной роли" target=_blank rel=nofollow>5</a></font></td></tr>
+
+<tr><td></td><td align=left valign=top class="midtext">&nbsp;&nbsp;&nbsp;&nbsp;<font color=#00008f>научный руководитель</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&pubrole=26&show_refs=0&pubcat=risc" title="Список публикаций в РИНЦ с участием в данной роли" target=_blank rel=nofollow>15</a></font></td></tr>
+
+<tr><td></td><td align=left valign=top class="midtext">&nbsp;&nbsp;&nbsp;&nbsp;<font color=#00008f>официальный оппонент</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&pubrole=28&show_refs=0&pubcat=risc" title="Список публикаций в РИНЦ с участием в данной роли" target=_blank rel=nofollow>33</a></font></td></tr>
+
+<tr><td></td><td align=left valign=top class="midtext">&nbsp;&nbsp;&nbsp;&nbsp;<font color=#00008f>руководитель НИР</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&pubrole=37&show_refs=0&pubcat=risc" title="Список публикаций в РИНЦ с участием в данной роли" target=_blank rel=nofollow>6</a></font></td></tr>
+
+<tr><td></td><td align=left valign=top class="midtext">&nbsp;&nbsp;&nbsp;&nbsp;<font color=#00008f>патентообладатель</font></td><td align=center class="midtext"><font color=#000000><a href="author_items.asp?authorid=17783&pubrole=36&show_refs=0&pubcat=risc" title="Список публикаций в РИНЦ с участием в данной роли" target=_blank rel=nofollow>1</a></font></td></tr>
+
+</table>
+
+
+
+
+<div style="height:40px"></div>
+<div class="midtext" style="margin: 0 0 15px 0; text-align:center;"><font color=#000000><b>ПОКАЗАТЕЛИ ПО ГОДАМ</b></font></div>
+
+<div style="position:relative;">
+<div id="years_ind" style="overflow-x:scroll; width: 400px; margin-left:180px; direction:rtl;">
+<table width=400 cellspacing=0 cellpadding=3 style="border-spacing: 0px 2px; table-layout: fixed;">
+<tr align=center valign=middle height=15>
+<th width=174 class="headcol" style="position:absolute; left:0;"><font color=#555555>&nbsp;<b>Название показателя</b></font></th>
+
+<td width=34><font color=#555555><b>2025</b></font></td>
+
+<td width=34><font color=#555555><b>2024</b></font></td>
+
+<td width=34><font color=#555555><b>2023</b></font></td>
+
+<td width=34><font color=#555555><b>2022</b></font></td>
+
+<td width=34><font color=#555555><b>2021</b></font></td>
+
+<td width=34><font color=#555555><b>2020</b></font></td>
+
+<td width=34><font color=#555555><b>2019</b></font></td>
+
+<td width=34><font color=#555555><b>2018</b></font></td>
+
+<td width=34><font color=#555555><b>2017</b></font></td>
+
+<td width=34><font color=#555555><b>2016</b></font></td>
+
+<td width=34><font color=#555555><b>2015</b></font></td>
+
+<td width=34><font color=#555555><b>2014</b></font></td>
+
+<td width=34><font color=#555555><b>2013</b></font></td>
+
+<td width=34><font color=#555555><b>2012</b></font></td>
+
+<td width=34><font color=#555555><b>2011</b></font></td>
+
+<td width=34><font color=#555555><b>2010</b></font></td>
+
+<td width=34><font color=#555555><b>2009</b></font></td>
+
+<td width=34><font color=#555555><b>2008</b></font></td>
+
+<td width=34><font color=#555555><b>2007</b></font></td>
+
+<td width=34><font color=#555555><b>2006</b></font></td>
+
+<td width=34><font color=#555555><b>2005</b></font></td>
+
+<td width=34><font color=#555555><b>2004</b></font></td>
+
+<td width=34><font color=#555555><b>2003</b></font></td>
+
+<td width=34><font color=#555555><b>2002</b></font></td>
+
+<td width=34><font color=#555555><b>2001</b></font></td>
+
+<td width=34><font color=#555555><b>2000</b></font></td>
+
+<td width=34><font color=#555555><b>1999</b></font></td>
+
+<td width=34><font color=#555555><b>1998</b></font></td>
+
+<td width=34><font color=#555555><b>1997</b></font></td>
+
+<td width=34><font color=#555555><b>1996</b></font></td>
+
+<td width=34><font color=#555555><b>1995</b></font></td>
+
+<td width=34><font color=#555555><b>1994</b></font></td>
+
+<td width=34><font color=#555555><b>1993</b></font></td>
+
+<td width=34><font color=#555555><b>1992</b></font></td>
+
+<td width=34><font color=#555555><b>1991</b></font></td>
+
+<td width=34><font color=#555555><b>1990</b></font></td>
+
+<td width=34><font color=#555555><b>1989</b></font></td>
+
+<td width=34><font color=#555555><b>1988</b></font></td>
+
+<td width=34><font color=#555555><b>1987</b></font></td>
+
+<td width=34><font color=#555555><b>1986</b></font></td>
+
+<td width=34><font color=#555555><b>1985</b></font></td>
+
+<td width=34><font color=#555555><b>1984</b></font></td>
+
+<td width=34><font color=#555555><b>1983</b></font></td>
+
+<td width=34><font color=#555555><b>1982</b></font></td>
+
+</tr>
+
+<tr height=20 valign=top><td style="position:absolute; left:0;">
+<div style="width:574px" class="table-line"></div>
+</td></tr>
+
+<tr height=20>
+<td align=left valign=top style="position:absolute; left:0;"><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Число публикаций в РИНЦ за год расчета показателя</p>' style="float: left; margin: 1px 10px 10px 0;"><font color=#00008f>Число публикаций в РИНЦ</font></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2025&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2025 год" target=_blank rel=nofollow>29</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2024&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2024 год" target=_blank rel=nofollow>93</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2023&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2023 год" target=_blank rel=nofollow>113</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2022&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2022 год" target=_blank rel=nofollow>164</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2021&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2021 год" target=_blank rel=nofollow>160</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2020&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2020 год" target=_blank rel=nofollow>98</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2019&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2019 год" target=_blank rel=nofollow>96</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2018&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2018 год" target=_blank rel=nofollow>102</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2017&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2017 год" target=_blank rel=nofollow>135</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2016&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2016 год" target=_blank rel=nofollow>133</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2015&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2015 год" target=_blank rel=nofollow>170</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2014&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2014 год" target=_blank rel=nofollow>137</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2013&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2013 год" target=_blank rel=nofollow>98</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2012&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2012 год" target=_blank rel=nofollow>111</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2011&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2011 год" target=_blank rel=nofollow>107</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2010&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2010 год" target=_blank rel=nofollow>78</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2009&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2009 год" target=_blank rel=nofollow>65</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2008&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2008 год" target=_blank rel=nofollow>59</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2007&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2007 год" target=_blank rel=nofollow>52</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2006&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2006 год" target=_blank rel=nofollow>87</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2005&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2005 год" target=_blank rel=nofollow>60</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2004&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2004 год" target=_blank rel=nofollow>58</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2003&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2003 год" target=_blank rel=nofollow>38</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2002&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2002 год" target=_blank rel=nofollow>46</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2001&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2001 год" target=_blank rel=nofollow>26</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2000&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 2000 год" target=_blank rel=nofollow>46</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1999&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1999 год" target=_blank rel=nofollow>15</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1998&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1998 год" target=_blank rel=nofollow>17</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1997&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1997 год" target=_blank rel=nofollow>17</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1996&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1996 год" target=_blank rel=nofollow>19</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1995&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1995 год" target=_blank rel=nofollow>18</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1994&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1994 год" target=_blank rel=nofollow>15</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1993&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1993 год" target=_blank rel=nofollow>11</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1992&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1992 год" target=_blank rel=nofollow>18</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1991&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1991 год" target=_blank rel=nofollow>14</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1990&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1990 год" target=_blank rel=nofollow>3</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1989&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1989 год" target=_blank rel=nofollow>3</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1988&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1988 год" target=_blank rel=nofollow>3</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1987&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1987 год" target=_blank rel=nofollow>2</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1986&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1986 год" target=_blank rel=nofollow>3</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1985&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1985 год" target=_blank rel=nofollow>1</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1984&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1984 год" target=_blank rel=nofollow>1</a></td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1982&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 1982 год" target=_blank rel=nofollow>1</a></td>
+
+</tr>
+
+<tr height=32>
+<td align=left valign=top style="position:absolute; left:0;"><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Число публикаций в ядре РИНЦ за год расчета показателя</p>' style="float: left; margin: 1px 10px 10px 0;"><font color=#00008f>Число публикаций в ядре<br>РИНЦ</font></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2025&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2025 год" target=_blank rel=nofollow>12</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2024&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2024 год" target=_blank rel=nofollow>57</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2023&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2023 год" target=_blank rel=nofollow>71</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2022&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2022 год" target=_blank rel=nofollow>93</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2021&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2021 год" target=_blank rel=nofollow>80</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2020&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2020 год" target=_blank rel=nofollow>67</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2019&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2019 год" target=_blank rel=nofollow>63</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2018&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2018 год" target=_blank rel=nofollow>62</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2017&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2017 год" target=_blank rel=nofollow>71</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2016&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2016 год" target=_blank rel=nofollow>99</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2015&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2015 год" target=_blank rel=nofollow>95</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2014&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2014 год" target=_blank rel=nofollow>83</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2013&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2013 год" target=_blank rel=nofollow>64</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2012&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2012 год" target=_blank rel=nofollow>55</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2011&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2011 год" target=_blank rel=nofollow>59</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2010&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2010 год" target=_blank rel=nofollow>36</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2009&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2009 год" target=_blank rel=nofollow>40</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2008&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2008 год" target=_blank rel=nofollow>46</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2007&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2007 год" target=_blank rel=nofollow>38</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2006&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2006 год" target=_blank rel=nofollow>46</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2005&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2005 год" target=_blank rel=nofollow>40</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2004&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2004 год" target=_blank rel=nofollow>35</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2003&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2003 год" target=_blank rel=nofollow>28</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2002&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2002 год" target=_blank rel=nofollow>18</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2001&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2001 год" target=_blank rel=nofollow>17</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2000&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 2000 год" target=_blank rel=nofollow>19</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1999&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 1999 год" target=_blank rel=nofollow>6</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1998&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 1998 год" target=_blank rel=nofollow>13</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1997&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 1997 год" target=_blank rel=nofollow>12</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1996&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 1996 год" target=_blank rel=nofollow>15</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1995&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 1995 год" target=_blank rel=nofollow>18</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1994&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 1994 год" target=_blank rel=nofollow>8</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1993&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 1993 год" target=_blank rel=nofollow>8</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1992&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 1992 год" target=_blank rel=nofollow>12</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1991&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 1991 год" target=_blank rel=nofollow>14</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1990&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 1990 год" target=_blank rel=nofollow>3</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1989&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 1989 год" target=_blank rel=nofollow>3</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1988&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 1988 год" target=_blank rel=nofollow>1</a></td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+</tr>
+
+<tr height=20>
+<td align=left valign=top style="position:absolute; left:0;"><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Число цитирований публикаций автора в РИНЦ за все годы из публикаций РИНЦ текущего года.</p>' style="float: left; margin: 1px 10px 10px 0;"><font color=#00008f>Число цитирований в РИНЦ</font></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2025&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2025 году" target=_blank rel=nofollow>821</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2024&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2024 году" target=_blank rel=nofollow>1487</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2023&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2023 году" target=_blank rel=nofollow>1166</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2022&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2022 году" target=_blank rel=nofollow>1354</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2021&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2021 году" target=_blank rel=nofollow>1206</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2020&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2020 году" target=_blank rel=nofollow>1355</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2019&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2019 году" target=_blank rel=nofollow>1024</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2018&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2018 году" target=_blank rel=nofollow>939</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2017&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2017 году" target=_blank rel=nofollow>1124</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2016&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2016 году" target=_blank rel=nofollow>1249</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2015&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2015 году" target=_blank rel=nofollow>1124</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2014&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2014 году" target=_blank rel=nofollow>1059</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2013&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2013 году" target=_blank rel=nofollow>981</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2012&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2012 году" target=_blank rel=nofollow>1029</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2011&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2011 году" target=_blank rel=nofollow>903</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2010&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2010 году" target=_blank rel=nofollow>505</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2009&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2009 году" target=_blank rel=nofollow>431</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2008&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2008 году" target=_blank rel=nofollow>468</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2007&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2007 году" target=_blank rel=nofollow>411</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2006&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2006 году" target=_blank rel=nofollow>394</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2005&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2005 году" target=_blank rel=nofollow>305</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2004&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2004 году" target=_blank rel=nofollow>314</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2003&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2003 году" target=_blank rel=nofollow>152</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2002&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2002 году" target=_blank rel=nofollow>190</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2001&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2001 году" target=_blank rel=nofollow>118</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2000&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 2000 году" target=_blank rel=nofollow>94</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1999&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 1999 году" target=_blank rel=nofollow>73</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1998&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 1998 году" target=_blank rel=nofollow>63</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1997&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 1997 году" target=_blank rel=nofollow>41</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1996&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 1996 году" target=_blank rel=nofollow>53</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1995&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 1995 году" target=_blank rel=nofollow>21</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1994&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 1994 году" target=_blank rel=nofollow>7</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1993&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 1993 году" target=_blank rel=nofollow>4</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1992&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 1992 году" target=_blank rel=nofollow>7</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1991&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из РИНЦ в 1991 году" target=_blank rel=nofollow>3</a></td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+</tr>
+
+<tr height=32>
+<td align=left valign=top style="position:absolute; left:0;"><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Число цитирований публикаций автора в РИНЦ за все годы из публикаций ядра РИНЦ текущего года.</p>' style="float: left; margin: 1px 10px 10px 0;"><font color=#00008f>Число цитирований из ядра<br>РИНЦ</font></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2025&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2025 году" target=_blank rel=nofollow>466</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2024&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2024 году" target=_blank rel=nofollow>726</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2023&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2023 году" target=_blank rel=nofollow>687</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2022&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2022 году" target=_blank rel=nofollow>876</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2021&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2021 году" target=_blank rel=nofollow>877</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2020&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2020 году" target=_blank rel=nofollow>749</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2019&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2019 году" target=_blank rel=nofollow>769</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2018&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2018 году" target=_blank rel=nofollow>589</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2017&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2017 году" target=_blank rel=nofollow>705</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2016&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2016 году" target=_blank rel=nofollow>677</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2015&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2015 году" target=_blank rel=nofollow>701</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2014&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2014 году" target=_blank rel=nofollow>647</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2013&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2013 году" target=_blank rel=nofollow>555</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2012&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2012 году" target=_blank rel=nofollow>476</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2011&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2011 году" target=_blank rel=nofollow>548</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2010&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2010 году" target=_blank rel=nofollow>354</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2009&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2009 году" target=_blank rel=nofollow>339</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2008&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2008 году" target=_blank rel=nofollow>325</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2007&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2007 году" target=_blank rel=nofollow>286</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2006&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2006 году" target=_blank rel=nofollow>252</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2005&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2005 году" target=_blank rel=nofollow>248</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2004&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2004 году" target=_blank rel=nofollow>259</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2003&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2003 году" target=_blank rel=nofollow>138</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2002&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2002 году" target=_blank rel=nofollow>141</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2001&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2001 году" target=_blank rel=nofollow>67</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=2000&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 2000 году" target=_blank rel=nofollow>70</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1999&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 1999 году" target=_blank rel=nofollow>64</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1998&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 1998 году" target=_blank rel=nofollow>57</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1997&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 1997 году" target=_blank rel=nofollow>37</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1996&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 1996 году" target=_blank rel=nofollow>44</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1995&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 1995 году" target=_blank rel=nofollow>18</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1994&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 1994 году" target=_blank rel=nofollow>3</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1993&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 1993 году" target=_blank rel=nofollow>4</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1992&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 1992 году" target=_blank rel=nofollow>7</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&sourceyear=1991&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований из ядра РИНЦ в 1991 году" target=_blank rel=nofollow>3</a></td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+</tr>
+
+<tr height=10 valign=top><td style="position:absolute; left:0;">
+<div style="width:574px; border-bottom: 1px dashed #F26C4F; margin: 0 0 8px 0;"></div>
+</td></tr>
+
+<tr height=32>
+<td align=left valign=top style="position:absolute; left:0;"><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Число публикаций в РИНЦ за 5 последних лет (год расчета показателя и 4 предыдущих года)</p>' style="float: left; margin: 1px 10px 10px 0;"><font color=#00008f>Число публикаций в РИНЦ<br>за 5 лет</font></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2021|2022|2023|2024|2025&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2021-2025)" target=_blank rel=nofollow>556</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2020|2021|2022|2023|2024&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2020-2024)" target=_blank rel=nofollow>624</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2019|2020|2021|2022|2023&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2019-2023)" target=_blank rel=nofollow>628</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2018|2019|2020|2021|2022&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2018-2022)" target=_blank rel=nofollow>616</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2017|2018|2019|2020|2021&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2017-2021)" target=_blank rel=nofollow>587</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2016|2017|2018|2019|2020&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2016-2020)" target=_blank rel=nofollow>559</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2015|2016|2017|2018|2019&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2015-2019)" target=_blank rel=nofollow>630</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2014|2015|2016|2017|2018&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2014-2018)" target=_blank rel=nofollow>673</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2013|2014|2015|2016|2017&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2013-2017)" target=_blank rel=nofollow>669</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2012|2013|2014|2015|2016&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2012-2016)" target=_blank rel=nofollow>647</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2011|2012|2013|2014|2015&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2011-2015)" target=_blank rel=nofollow>623</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2010|2011|2012|2013|2014&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2010-2014)" target=_blank rel=nofollow>531</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2009|2010|2011|2012|2013&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2009-2013)" target=_blank rel=nofollow>459</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2008|2009|2010|2011|2012&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2008-2012)" target=_blank rel=nofollow>420</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2007|2008|2009|2010|2011&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2007-2011)" target=_blank rel=nofollow>361</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2006|2007|2008|2009|2010&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2006-2010)" target=_blank rel=nofollow>341</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2005|2006|2007|2008|2009&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2005-2009)" target=_blank rel=nofollow>323</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2004|2005|2006|2007|2008&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2004-2008)" target=_blank rel=nofollow>316</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2003|2004|2005|2006|2007&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2003-2007)" target=_blank rel=nofollow>295</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2002|2003|2004|2005|2006&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2002-2006)" target=_blank rel=nofollow>289</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2001|2002|2003|2004|2005&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2001-2005)" target=_blank rel=nofollow>228</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2000|2001|2002|2003|2004&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (2000-2004)" target=_blank rel=nofollow>214</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1999|2000|2001|2002|2003&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1999-2003)" target=_blank rel=nofollow>171</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1998|1999|2000|2001|2002&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1998-2002)" target=_blank rel=nofollow>150</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1997|1998|1999|2000|2001&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1997-2001)" target=_blank rel=nofollow>121</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1996|1997|1998|1999|2000&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1996-2000)" target=_blank rel=nofollow>114</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1995|1996|1997|1998|1999&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1995-1999)" target=_blank rel=nofollow>86</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1994|1995|1996|1997|1998&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1994-1998)" target=_blank rel=nofollow>86</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1993|1994|1995|1996|1997&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1993-1997)" target=_blank rel=nofollow>80</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1992|1993|1994|1995|1996&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1992-1996)" target=_blank rel=nofollow>81</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1991|1992|1993|1994|1995&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1991-1995)" target=_blank rel=nofollow>76</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1990|1991|1992|1993|1994&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1990-1994)" target=_blank rel=nofollow>61</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1989|1990|1991|1992|1993&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1989-1993)" target=_blank rel=nofollow>49</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1988|1989|1990|1991|1992&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1988-1992)" target=_blank rel=nofollow>41</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1987|1988|1989|1990|1991&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1987-1991)" target=_blank rel=nofollow>25</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1986|1987|1988|1989|1990&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1986-1990)" target=_blank rel=nofollow>14</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1985|1986|1987|1988|1989&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1985-1989)" target=_blank rel=nofollow>12</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1984|1985|1986|1987|1988&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1984-1988)" target=_blank rel=nofollow>10</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1983|1984|1985|1986|1987&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1983-1987)" target=_blank rel=nofollow>7</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1982|1983|1984|1985|1986&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1982-1986)" target=_blank rel=nofollow>6</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1981|1982|1983|1984|1985&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1981-1985)" target=_blank rel=nofollow>3</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1980|1981|1982|1983|1984&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1980-1984)" target=_blank rel=nofollow>2</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1979|1980|1981|1982|1983&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1979-1983)" target=_blank rel=nofollow>1</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1978|1979|1980|1981|1982&pubcat=risc&show_refs=1&pubrole=100" title="Список публикаций автора в РИНЦ за 5 лет (1978-1982)" target=_blank rel=nofollow>1</a></td>
+
+</tr>
+
+<tr height=32>
+<td align=left valign=top style="position:absolute; left:0;"><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Число публикаций в ядре РИНЦ за 5 последних лет (год расчета показателя и 4 предыдущих года)</p>' style="float: left; margin: 1px 10px 10px 0;"><font color=#00008f>Число публикаций в ядре<br>РИНЦ за 5 лет</font></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2021|2022|2023|2024|2025&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2021-2025)" target=_blank rel=nofollow>310</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2020|2021|2022|2023|2024&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2020-2024)" target=_blank rel=nofollow>364</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2019|2020|2021|2022|2023&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2019-2023)" target=_blank rel=nofollow>371</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2018|2019|2020|2021|2022&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2018-2022)" target=_blank rel=nofollow>361</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2017|2018|2019|2020|2021&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2017-2021)" target=_blank rel=nofollow>339</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2016|2017|2018|2019|2020&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2016-2020)" target=_blank rel=nofollow>357</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2015|2016|2017|2018|2019&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2015-2019)" target=_blank rel=nofollow>384</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2014|2015|2016|2017|2018&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2014-2018)" target=_blank rel=nofollow>406</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2013|2014|2015|2016|2017&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2013-2017)" target=_blank rel=nofollow>408</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2012|2013|2014|2015|2016&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2012-2016)" target=_blank rel=nofollow>394</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2011|2012|2013|2014|2015&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2011-2015)" target=_blank rel=nofollow>356</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2010|2011|2012|2013|2014&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2010-2014)" target=_blank rel=nofollow>297</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2009|2010|2011|2012|2013&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2009-2013)" target=_blank rel=nofollow>254</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2008|2009|2010|2011|2012&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2008-2012)" target=_blank rel=nofollow>236</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2007|2008|2009|2010|2011&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2007-2011)" target=_blank rel=nofollow>219</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2006|2007|2008|2009|2010&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2006-2010)" target=_blank rel=nofollow>206</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2005|2006|2007|2008|2009&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2005-2009)" target=_blank rel=nofollow>210</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2004|2005|2006|2007|2008&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2004-2008)" target=_blank rel=nofollow>205</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2003|2004|2005|2006|2007&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2003-2007)" target=_blank rel=nofollow>187</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2002|2003|2004|2005|2006&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2002-2006)" target=_blank rel=nofollow>167</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2001|2002|2003|2004|2005&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2001-2005)" target=_blank rel=nofollow>138</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=2000|2001|2002|2003|2004&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (2000-2004)" target=_blank rel=nofollow>117</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1999|2000|2001|2002|2003&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1999-2003)" target=_blank rel=nofollow>88</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1998|1999|2000|2001|2002&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1998-2002)" target=_blank rel=nofollow>73</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1997|1998|1999|2000|2001&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1997-2001)" target=_blank rel=nofollow>67</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1996|1997|1998|1999|2000&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1996-2000)" target=_blank rel=nofollow>65</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1995|1996|1997|1998|1999&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1995-1999)" target=_blank rel=nofollow>64</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1994|1995|1996|1997|1998&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1994-1998)" target=_blank rel=nofollow>66</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1993|1994|1995|1996|1997&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1993-1997)" target=_blank rel=nofollow>61</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1992|1993|1994|1995|1996&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1992-1996)" target=_blank rel=nofollow>61</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1991|1992|1993|1994|1995&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1991-1995)" target=_blank rel=nofollow>60</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1990|1991|1992|1993|1994&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1990-1994)" target=_blank rel=nofollow>45</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1989|1990|1991|1992|1993&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1989-1993)" target=_blank rel=nofollow>40</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1988|1989|1990|1991|1992&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1988-1992)" target=_blank rel=nofollow>33</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1987|1988|1989|1990|1991&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1987-1991)" target=_blank rel=nofollow>21</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1986|1987|1988|1989|1990&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1986-1990)" target=_blank rel=nofollow>7</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1985|1986|1987|1988|1989&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1985-1989)" target=_blank rel=nofollow>4</a></td>
+
+<td align=center valign=top><a href="author_items.asp?authorid=17783&pubyear=1984|1985|1986|1987|1988&pubcat=corerisc&show_refs=1&pubrole=100" title="Список публикаций автора в ядре РИНЦ за 5 лет (1984-1988)" target=_blank rel=nofollow>1</a></td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+</tr>
+
+<tr height=32>
+<td align=left valign=top style="position:absolute; left:0;"><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Цитирующие и цитируемые публикации входят в РИНЦ и относятся к пятилетнему периоду (год расчета показателя и 4 предыдущих года)</p>' style="float: left; margin: 1px 10px 10px 0;"><font color=#00008f>Число цитирований в РИНЦ<br>за 5 лет</font></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2021|2022|2023|2024|2025&sourceyear=2021|2022|2023|2024|2025&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2021-2025)" target=_blank rel=nofollow>1897</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2020|2021|2022|2023|2024&sourceyear=2020|2021|2022|2023|2024&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2020-2024)" target=_blank rel=nofollow>2222</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2019|2020|2021|2022|2023&sourceyear=2019|2020|2021|2022|2023&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2019-2023)" target=_blank rel=nofollow>2064</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2018|2019|2020|2021|2022&sourceyear=2018|2019|2020|2021|2022&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2018-2022)" target=_blank rel=nofollow>1762</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2017|2018|2019|2020|2021&sourceyear=2017|2018|2019|2020|2021&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2017-2021)" target=_blank rel=nofollow>1431</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2016|2017|2018|2019|2020&sourceyear=2016|2017|2018|2019|2020&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2016-2020)" target=_blank rel=nofollow>1450</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2015|2016|2017|2018|2019&sourceyear=2015|2016|2017|2018|2019&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2015-2019)" target=_blank rel=nofollow>1486</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2014|2015|2016|2017|2018&sourceyear=2014|2015|2016|2017|2018&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2014-2018)" target=_blank rel=nofollow>1496</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2013|2014|2015|2016|2017&sourceyear=2013|2014|2015|2016|2017&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2013-2017)" target=_blank rel=nofollow>1681</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2012|2013|2014|2015|2016&sourceyear=2012|2013|2014|2015|2016&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2012-2016)" target=_blank rel=nofollow>1529</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2011|2012|2013|2014|2015&sourceyear=2011|2012|2013|2014|2015&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2011-2015)" target=_blank rel=nofollow>1454</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2010|2011|2012|2013|2014&sourceyear=2010|2011|2012|2013|2014&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2010-2014)" target=_blank rel=nofollow>1179</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2009|2010|2011|2012|2013&sourceyear=2009|2010|2011|2012|2013&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2009-2013)" target=_blank rel=nofollow>1029</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2008|2009|2010|2011|2012&sourceyear=2008|2009|2010|2011|2012&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2008-2012)" target=_blank rel=nofollow>925</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2007|2008|2009|2010|2011&sourceyear=2007|2008|2009|2010|2011&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2007-2011)" target=_blank rel=nofollow>777</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2006|2007|2008|2009|2010&sourceyear=2006|2007|2008|2009|2010&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2006-2010)" target=_blank rel=nofollow>576</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2005|2006|2007|2008|2009&sourceyear=2005|2006|2007|2008|2009&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2005-2009)" target=_blank rel=nofollow>588</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2004|2005|2006|2007|2008&sourceyear=2004|2005|2006|2007|2008&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2004-2008)" target=_blank rel=nofollow>610</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2003|2004|2005|2006|2007&sourceyear=2003|2004|2005|2006|2007&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2003-2007)" target=_blank rel=nofollow>483</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2002|2003|2004|2005|2006&sourceyear=2002|2003|2004|2005|2006&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2002-2006)" target=_blank rel=nofollow>415</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2001|2002|2003|2004|2005&sourceyear=2001|2002|2003|2004|2005&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2001-2005)" target=_blank rel=nofollow>295</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2000|2001|2002|2003|2004&sourceyear=2000|2001|2002|2003|2004&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (2000-2004)" target=_blank rel=nofollow>341</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1999|2000|2001|2002|2003&sourceyear=1999|2000|2001|2002|2003&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (1999-2003)" target=_blank rel=nofollow>213</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1998|1999|2000|2001|2002&sourceyear=1998|1999|2000|2001|2002&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (1998-2002)" target=_blank rel=nofollow>186</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1997|1998|1999|2000|2001&sourceyear=1997|1998|1999|2000|2001&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (1997-2001)" target=_blank rel=nofollow>113</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1996|1997|1998|1999|2000&sourceyear=1996|1997|1998|1999|2000&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (1996-2000)" target=_blank rel=nofollow>101</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1995|1996|1997|1998|1999&sourceyear=1995|1996|1997|1998|1999&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (1995-1999)" target=_blank rel=nofollow>69</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1994|1995|1996|1997|1998&sourceyear=1994|1995|1996|1997|1998&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (1994-1998)" target=_blank rel=nofollow>108</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1993|1994|1995|1996|1997&sourceyear=1993|1994|1995|1996|1997&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (1993-1997)" target=_blank rel=nofollow>85</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1992|1993|1994|1995|1996&sourceyear=1992|1993|1994|1995|1996&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (1992-1996)" target=_blank rel=nofollow>55</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1991|1992|1993|1994|1995&sourceyear=1991|1992|1993|1994|1995&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (1991-1995)" target=_blank rel=nofollow>34</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1990|1991|1992|1993|1994&sourceyear=1990|1991|1992|1993|1994&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (1990-1994)" target=_blank rel=nofollow>21</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1989|1990|1991|1992|1993&sourceyear=1989|1990|1991|1992|1993&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (1989-1993)" target=_blank rel=nofollow>14</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1988|1989|1990|1991|1992&sourceyear=1988|1989|1990|1991|1992&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (1988-1992)" target=_blank rel=nofollow>10</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1987|1988|1989|1990|1991&sourceyear=1987|1988|1989|1990|1991&pubcat=risc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в РИНЦ за 5 лет (1987-1991)" target=_blank rel=nofollow>3</a></td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+</tr>
+
+<tr height=32>
+<td align=left valign=top style="position:absolute; left:0;"><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Цитирующие и цитируемые публикации относятся к пятилетнему периоду (год расчета показателя и 4 предыдущих года). Цитирующие публикации входят в ядро РИНЦ, цитируемые - в РИНЦ.</p>' style="float: left; margin: 1px 10px 10px 0;"><font color=#00008f>Число цитирований из ядра<br>РИНЦ за 5 лет</font></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2021|2022|2023|2024|2025&sourceyear=2021|2022|2023|2024|2025&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2021-2025)" target=_blank rel=nofollow>1124</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2020|2021|2022|2023|2024&sourceyear=2020|2021|2022|2023|2024&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2020-2024)" target=_blank rel=nofollow>1423</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2019|2020|2021|2022|2023&sourceyear=2019|2020|2021|2022|2023&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2019-2023)" target=_blank rel=nofollow>1395</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2018|2019|2020|2021|2022&sourceyear=2018|2019|2020|2021|2022&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2018-2022)" target=_blank rel=nofollow>1200</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2017|2018|2019|2020|2021&sourceyear=2017|2018|2019|2020|2021&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2017-2021)" target=_blank rel=nofollow>950</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2016|2017|2018|2019|2020&sourceyear=2016|2017|2018|2019|2020&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2016-2020)" target=_blank rel=nofollow>873</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2015|2016|2017|2018|2019&sourceyear=2015|2016|2017|2018|2019&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2015-2019)" target=_blank rel=nofollow>933</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2014|2015|2016|2017|2018&sourceyear=2014|2015|2016|2017|2018&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2014-2018)" target=_blank rel=nofollow>868</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2013|2014|2015|2016|2017&sourceyear=2013|2014|2015|2016|2017&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2013-2017)" target=_blank rel=nofollow>995</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2012|2013|2014|2015|2016&sourceyear=2012|2013|2014|2015|2016&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2012-2016)" target=_blank rel=nofollow>878</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2011|2012|2013|2014|2015&sourceyear=2011|2012|2013|2014|2015&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2011-2015)" target=_blank rel=nofollow>842</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2010|2011|2012|2013|2014&sourceyear=2010|2011|2012|2013|2014&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2010-2014)" target=_blank rel=nofollow>636</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2009|2010|2011|2012|2013&sourceyear=2009|2010|2011|2012|2013&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2009-2013)" target=_blank rel=nofollow>506</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2008|2009|2010|2011|2012&sourceyear=2008|2009|2010|2011|2012&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2008-2012)" target=_blank rel=nofollow>515</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2007|2008|2009|2010|2011&sourceyear=2007|2008|2009|2010|2011&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2007-2011)" target=_blank rel=nofollow>488</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2006|2007|2008|2009|2010&sourceyear=2006|2007|2008|2009|2010&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2006-2010)" target=_blank rel=nofollow>359</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2005|2006|2007|2008|2009&sourceyear=2005|2006|2007|2008|2009&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2005-2009)" target=_blank rel=nofollow>383</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2004|2005|2006|2007|2008&sourceyear=2004|2005|2006|2007|2008&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2004-2008)" target=_blank rel=nofollow>401</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2003|2004|2005|2006|2007&sourceyear=2003|2004|2005|2006|2007&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2003-2007)" target=_blank rel=nofollow>314</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2002|2003|2004|2005|2006&sourceyear=2002|2003|2004|2005|2006&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2002-2006)" target=_blank rel=nofollow>299</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2001|2002|2003|2004|2005&sourceyear=2001|2002|2003|2004|2005&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2001-2005)" target=_blank rel=nofollow>235</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=2000|2001|2002|2003|2004&sourceyear=2000|2001|2002|2003|2004&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (2000-2004)" target=_blank rel=nofollow>250</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1999|2000|2001|2002|2003&sourceyear=1999|2000|2001|2002|2003&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (1999-2003)" target=_blank rel=nofollow>143</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1998|1999|2000|2001|2002&sourceyear=1998|1999|2000|2001|2002&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (1998-2002)" target=_blank rel=nofollow>113</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1997|1998|1999|2000|2001&sourceyear=1997|1998|1999|2000|2001&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (1997-2001)" target=_blank rel=nofollow>64</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1996|1997|1998|1999|2000&sourceyear=1996|1997|1998|1999|2000&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (1996-2000)" target=_blank rel=nofollow>79</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1995|1996|1997|1998|1999&sourceyear=1995|1996|1997|1998|1999&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (1995-1999)" target=_blank rel=nofollow>59</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1994|1995|1996|1997|1998&sourceyear=1994|1995|1996|1997|1998&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (1994-1998)" target=_blank rel=nofollow>95</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1993|1994|1995|1996|1997&sourceyear=1993|1994|1995|1996|1997&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (1993-1997)" target=_blank rel=nofollow>73</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1992|1993|1994|1995|1996&sourceyear=1992|1993|1994|1995|1996&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (1992-1996)" target=_blank rel=nofollow>46</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1991|1992|1993|1994|1995&sourceyear=1991|1992|1993|1994|1995&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (1991-1995)" target=_blank rel=nofollow>27</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1990|1991|1992|1993|1994&sourceyear=1990|1991|1992|1993|1994&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (1990-1994)" target=_blank rel=nofollow>17</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1989|1990|1991|1992|1993&sourceyear=1989|1990|1991|1992|1993&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (1989-1993)" target=_blank rel=nofollow>14</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1988|1989|1990|1991|1992&sourceyear=1988|1989|1990|1991|1992&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (1988-1992)" target=_blank rel=nofollow>10</a></td>
+
+<td align=center valign=top><a href="author_refs.asp?authorid=17783&pubyear=1987|1988|1989|1990|1991&sourceyear=1987|1988|1989|1990|1991&pubcat=corerisc&pubrole=100&pubtype=ARC|BKC|BRO|BRV|CLA|CMG|CNF|COR|CPG|DPM|DSR|EDI|EDU|LWC|MNG|PRC|RAR|REP|REV|RPR|SCO|SRP|THS|UNK" title="Список цитирований в ядре РИНЦ за 5 лет (1987-1991)" target=_blank rel=nofollow>3</a></td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+</tr>
+
+<tr height=10 valign=top><td style="position:absolute; left:0;">
+<div style="width:574px; border-bottom: 1px dashed #F26C4F; margin: 0 0 8px 0;"></div>
+</td></tr>
+
+<tr height=20>
+<td align=left valign=top style="position:absolute; left:0;"><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Индекс Хирша в РИНЦ на год расчета показателя</p>' style="float: left; margin: 1px 10px 10px 0;"><font color=#00008f>Индекс Хирша в РИНЦ</font></td>
+
+<td align=center valign=top>50</td>
+
+<td align=center valign=top>48</td>
+
+<td align=center valign=top>47</td>
+
+<td align=center valign=top>45</td>
+
+<td align=center valign=top>43</td>
+
+<td align=center valign=top>41</td>
+
+<td align=center valign=top>39</td>
+
+<td align=center valign=top>37</td>
+
+<td align=center valign=top>36</td>
+
+<td align=center valign=top>34</td>
+
+<td align=center valign=top>33</td>
+
+<td align=center valign=top>30</td>
+
+<td align=center valign=top>29</td>
+
+<td align=center valign=top>27</td>
+
+<td align=center valign=top>25</td>
+
+<td align=center valign=top>22</td>
+
+<td align=center valign=top>21</td>
+
+<td align=center valign=top>20</td>
+
+<td align=center valign=top>18</td>
+
+<td align=center valign=top>17</td>
+
+<td align=center valign=top>14</td>
+
+<td align=center valign=top>13</td>
+
+<td align=center valign=top>12</td>
+
+<td align=center valign=top>10</td>
+
+<td align=center valign=top>8</td>
+
+<td align=center valign=top>8</td>
+
+<td align=center valign=top>7</td>
+
+<td align=center valign=top>6</td>
+
+<td align=center valign=top>5</td>
+
+<td align=center valign=top>5</td>
+
+<td align=center valign=top>4</td>
+
+<td align=center valign=top>3</td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>1</td>
+
+<td align=center valign=top>1</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+</tr>
+
+<tr height=20>
+<td align=left valign=top style="position:absolute; left:0;"><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Индекс Хирша по ядру РИНЦ на год расчета показателя</p>' style="float: left; margin: 1px 10px 10px 0;"><font color=#00008f>Индекс Хирша по ядру РИНЦ</font></td>
+
+<td align=center valign=top>39</td>
+
+<td align=center valign=top>38</td>
+
+<td align=center valign=top>37</td>
+
+<td align=center valign=top>35</td>
+
+<td align=center valign=top>33</td>
+
+<td align=center valign=top>32</td>
+
+<td align=center valign=top>30</td>
+
+<td align=center valign=top>28</td>
+
+<td align=center valign=top>27</td>
+
+<td align=center valign=top>25</td>
+
+<td align=center valign=top>24</td>
+
+<td align=center valign=top>22</td>
+
+<td align=center valign=top>21</td>
+
+<td align=center valign=top>19</td>
+
+<td align=center valign=top>18</td>
+
+<td align=center valign=top>17</td>
+
+<td align=center valign=top>16</td>
+
+<td align=center valign=top>14</td>
+
+<td align=center valign=top>13</td>
+
+<td align=center valign=top>13</td>
+
+<td align=center valign=top>12</td>
+
+<td align=center valign=top>10</td>
+
+<td align=center valign=top>10</td>
+
+<td align=center valign=top>8</td>
+
+<td align=center valign=top>6</td>
+
+<td align=center valign=top>6</td>
+
+<td align=center valign=top>5</td>
+
+<td align=center valign=top>5</td>
+
+<td align=center valign=top>4</td>
+
+<td align=center valign=top>4</td>
+
+<td align=center valign=top>3</td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>1</td>
+
+<td align=center valign=top>1</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+<td align=center valign=top>0</td>
+
+</tr>
+
+
+
+<tr height=30>
+<td align=left valign=top style="position:absolute; left:0;"><img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Для расчета показателя все авторы в данном научном направлении (в соответствии с рубрикой OECD) сортируются в порядке убывания числа цитирований из ядра РИНЦ на работы, опубликованные за 5 лет (год расчета показателя и 4 предыдущих года). Процентиль отражает место в полученном рейтинге в предположении, что все авторы в этом ряду разбиты на 100 равных групп. Первый процентиль соответствует одному проценту авторов с самыми высокими показателями. Показатель рассчитывается только с 2000 года.</p>' style="float: left; margin: 1px 10px 10px 0;"><font color=#00008f>Процентиль по ядру РИНЦ</font></td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>3</td>
+
+<td align=center valign=top>3</td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>3</td>
+
+<td align=center valign=top>3</td>
+
+<td align=center valign=top>3</td>
+
+<td align=center valign=top>3</td>
+
+<td align=center valign=top>4</td>
+
+<td align=center valign=top>3</td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>3</td>
+
+<td align=center valign=top>3</td>
+
+<td align=center valign=top>3</td>
+
+<td align=center valign=top>2</td>
+
+<td align=center valign=top>4</td>
+
+<td align=center valign=top>5</td>
+
+<td align=center valign=top>8</td>
+
+<td align=center valign=top>5</td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+<td align=center valign=top></td>
+
+</tr>
+
+
+</table>
+</div>
+</div>
+
+
+
+
+<div class="midtext" style="margin: 40px 0 15px 0; text-align:center;"><font color=#000000><b>СТАТИСТИЧЕСКИЕ ОТЧЕТЫ</b></font></div>
+
+<table width=580 cellspacing=0 cellpadding=0 border=0>
+<tr><td width=270 valign=top>
+
+<table width=100% cellspacing=1 cellpadding=4>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("rubrics")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("rubrics")' rel=nofollow>Распределение публикаций по тематике</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("keywords")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("keywords")' rel=nofollow>Распределение публикаций по ключевым словам</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("titles")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("titles")' rel=nofollow>Распределение публикаций по журналам</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("orgs")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("orgs")' rel=nofollow>Распределение публикаций по организациям</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("authors")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("authors")' rel=nofollow>Распределение публикаций по соавторам</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("years")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("years")' rel=nofollow>Распределение публикаций по годам</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("types")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("types")' rel=nofollow>Распределение публикаций по типу</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("citednum")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("citednum")' rel=nofollow>Распределение публикаций по числу цитирований</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("authorsnum")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("authorsnum")' rel=nofollow>Распределение публикаций по числу соавторов</a></font></td></tr>
+
+</table>
+
+</td><td width=20></td><td width=290 valign=top>
+
+<table width=100% cellspacing=1 cellpadding=4>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("cit_rubrics")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("cit_rubrics")' rel=nofollow>Распределение цитирующих публикаций<BR> по тематике</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("cit_keywords")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("cit_keywords")' rel=nofollow>Распределение цитирующих публикаций<BR> по ключевым словам</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("cit_titles")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13 border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("cit_titles")' rel=nofollow>Распределение цитирующих публикаций<BR> по журналам</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("cit_orgs")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("cit_orgs")' rel=nofollow>Распределение цитирующих публикаций<BR> по организациям</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("cit_authors")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("cit_authors")' rel=nofollow>Распределение цитирующих публикаций<BR> по соавторам</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("cit_years")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("cit_years")' rel=nofollow>Распределение цитирующих публикаций<BR> по годам</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("cit_types")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("cit_types")' rel=nofollow>Распределение цитирующих публикаций<BR> по типу</a></font></td></tr>
+
+</table>
+
+</td></tr></table>
+
+<div style="height: 15px;">&nbsp;</div>
+
+<table width=580 cellspacing=0 cellpadding=0 border=0>
+<tr><td width=270 valign=top>
+
+<table width=100% cellspacing=1 cellpadding=4>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("ref_syears")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("ref_syears")' rel=nofollow>Распределение цитирований по годам цитирующих публикаций</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("cit_rubrics")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("ref_rubrics");' rel=nofollow>Распределение цитирований по тематике<BR> цитирующих публикаций</font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("cit_titles")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13 border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("ref_titles");' rel=nofollow>Распределение цитирований по цитирующим журналам</a></font></td></tr>
+
+</table>
+
+</td><td width=20></td><td width=290 valign=top>
+
+<table width=100% cellspacing=1 cellpadding=4>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("ref_years")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("ref_years")' rel=nofollow>Распределение цитирований по годам цитируемых публикаций</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("ref_authors")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("ref_authors")' rel=nofollow>Распределение цитирований по соавторам цитируемых публикаций</a></font></td></tr>
+
+<tr bgcolor=#f5f5f5><td width=10% align=left valign=top><a href='javascript:author_profile("ref_types")' rel=nofollow><img src="/pic/stat.gif" width=12 height=13  border=0></a></td><td width=90% align=left class="midtext"><font color=#00008f><a href='javascript:author_profile("ref_types")' rel=nofollow>Распределение цитирований по типу цитирующих публикаций</a></font></td></tr>
+
+</table>
+
+</td></tr></table>
+
+</td>
+<td align=right valign=top>
+
+<div id="panel_default" style="position: relative; width: 200px; height:0; margin: 0; border: 1px; padding: 0"></div>
+<div id="panel" style="position: relative; width: 200px; margin: 0; border: 0; padding: 0">
+
+<div style="width: 190px;" class="right-panel">
+
+<table width=190 cellspacing=0 cellpadding=3 border=0>
+
+<tr><td colspan=2 align=center valign=top><font color=#F26C4F><b>ИНСТРУМЕНТЫ</b></font><br><img src="/pic/1pix.gif" vspace=1><br></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="author_items.asp?authorid=17783" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="author_items.asp?authorid=17783" rel=nofollow>Список публикаций автора</a></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="cit_author_items.asp?id=17783" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="cit_author_items.asp?id=17783" rel=nofollow>Список публикаций, ссылающихся на работы автора</a>
+</td></tr>
+
+
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:show_author_refs(17783)" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:show_author_refs(17783)" rel=nofollow>Список ссылок на работы автора</a>
+</td></tr>
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="https://orcid.org/0000-0001-8022-7958" target=_blank rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="https://orcid.org/0000-0001-8022-7958" target=_blank rel=nofollow>Профиль автора в ORCID</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="https://www.webofscience.com/wos/author/record/A-9268-2014" target=_blank rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="https://www.webofscience.com/wos/author/record/A-9268-2014" target=_blank rel=nofollow>Профиль автора в ResearcherID</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="https://www.scopus.com/authid/detail.url?authorId=56197197400" target=_blank rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="https://www.scopus.com/authid/detail.url?authorId=56197197400" target=_blank rel=nofollow>Профиль автора в Scopus</a>
+</td></tr>
+
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="/projects/science_index/author_tutorial.asp"><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="/projects/science_index/author_tutorial.asp">Инструкция для авторов по работе в системе SCIENCE INDEX</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="authors.asp" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="authors.asp" rel=nofollow>Авторский указатель</a>
+</td></tr>
+
+</table>
+</div>
+
+
+<img src="/pic/1pix.gif" vspace=10>
+<div style="width: 190px;" class="help-panel">
+<table width=190 cellspacing=0 cellpadding=3 border=0>
+
+<tr><td width=15% align=right valign=top>
+<img src="images/but_orange_!.gif" width=15 height=15 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Дата обновления показателей автора: 07.07.2026</font></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<img src="images/but_orange_!.gif" width=15 height=15 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>При расчете показателей в РИНЦ учитываются только публикации, в которых данный ученый является автором или соавтором (не учитываются работы, где он является только редактором, составителем, переводчиком и т.д.). Также не учитываются публикации в реферативных, научно-популярных и информационных изданиях, а также в журналах и сборниках, исключенных из РИНЦ</font></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<img src="images/but_orange_!.gif" width=15 height=15 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>При расчете показателей в РИНЦ не учитываются цитирования из реферативных и научно-популярных журналов, словарей, справочников, методических указаний, авторефератов диссертаций, ненаучных публикаций в журналах (аннотации, персоналии, разное и т.д.), а также из журналов и сборников, исключенных из РИНЦ</font></td></tr>
+
+</table>
+</div>
+
+
+</div>
+
+</td></tr></table>
+</td></tr></table>
+</FORM>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+$(function() {
+$(".help").tooltip({
+	position: "top right",
+	offset: [-15, -100],
+	effect: "fade", 
+	fadeInSpeed: 400, 
+	fadeOutSpeed: 400, 
+	delay: 400,  
+	predelay: 400,
+	opacity: 1.0
+});
+});
+
+</script>
+
+
+<br><br>
+<table width=970 height=40 border=0 cellpadding=0 cellspacing=0 id="footer">
+<tr align=center valign=middle class="menug">
+<td width=15% valign="bottom">
+
+</td>
+<td width=70%><font color=#00008f><span style="position: relative; top: 3px; right: 15px; color: #F26C4F;">*</span><a href="/copyright.asp">&copy; 2000-2026 ООО НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА. Все права защищены</a></font><span style="position: relative; top: 3px; left: 15px; color: #F26C4F;">*</span></td>
+<td width=15% valign="bottom">
+
+</td>
+</tr></table>
+
+<!-- Yandex.Metrika -->
+<div style="display:none;"><script type="text/javascript">
+(function(w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter171463 = new Ya.Metrika(171463);
+        } catch(e) {}
+    });
+})(window, 'yandex_metrika_callbacks');
+</script></div>
+<script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script>
+<noscript><div style="position:absolute"><img src="//mc.yandex.ru/watch/171463" alt="" /></div></noscript>
+<!-- /Yandex.Metrika -->
+
+
+
+
+<br><br><br>
+</td></tr></table>
+</html>

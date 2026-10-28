@@ -1,0 +1,1945 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="robots" content="noarchive">
+
+
+<title>Вычислительные технологии / содержание выпуска  Т.31 № 4 за 2026 год</title>
+
+<script type="text/javascript" src="/jquery.min.js"></script>
+<script type="text/javascript" src="/jquery.tools.min.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="/fancybox/jquery.easydrag.js"></script>
+<script type="text/javascript" src="/elibrary1.js"></script>
+<script type="text/javascript" src="/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/style_sm.css" type="text/css" media="screen">
+
+<SCRIPT LANGUAGE="JavaScript">
+
+but_blue_hover=new Image();
+but_blue_hover.src="/images/but_blue_hover.png";
+but_red_hover=new Image();
+but_red_hover.src="/images/but_red_hover.png";
+but_gray_hover=new Image();
+but_gray_hover.src="/images/but_gray_hover.png";
+
+w_down=new Image();
+w_down.src="/pic/w_show.gif";
+w_up=new Image();
+w_up.src="/pic/w_hide.gif";
+r_down=new Image();
+r_down.src="/images/or_plus1.png";
+r_up=new Image();
+r_up.src="/images/or_minus1.png";
+
+var selRow;
+var row_color;
+function onRowClick(row){
+  if(row != selRow){
+     if (selRow != null){
+        selRow.bgColor = row_color;
+     }
+  selRow = row;
+  row_color = row.bgColor;
+  selRow.bgColor="#e8e8e8";
+  }
+}
+function hideShow(elem,parent) {
+  var child =  document.getElementById(elem);
+  child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+  if (parent.className == "win_expandable") parent.src = child.className == "collapsed" ? w_down.src : w_up.src;
+}
+function hideShowRed(elem,par) {
+  var child = document.getElementById(elem);
+  var parent = document.getElementById(par);
+  child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+  if (parent.className == "win_expandable") parent.src = child.className == "collapsed" ? r_down.src : r_up.src;
+}
+function RowSelect(row,sel){
+  var rbgc = sel==1 ? "#e8e8e8" : "#f5f5f5";
+  $('#'+row+' td').attr('bgColor', rbgc);
+}
+function select_all(){
+  $('input:checkbox[name^="tid"]').attr('checked', true);
+  $('input:checkbox[name^="pid"]').attr('checked', true);
+  $('tr[id^="arw"] td').attr('bgColor', "#e8e8e8");
+  $('tr[id^="brw"] td').attr('bgColor', "#e8e8e8");
+}
+function deselect_all(){
+  $('input:checkbox[name^="tid"]').attr('checked', false);
+  $('input:checkbox[name^="pid"]').attr('checked', false);
+  $('tr[id^="arw"] td').attr('bgColor', "#f5f5f5");
+  $('tr[id^="brw"] td').attr('bgColor', "#f5f5f5");
+}
+function qr_code(dd){
+  $.fancybox({
+    href : '/qr_code_edn.asp?edn='+dd+'&rand=' + Math.random(),
+    title : '',
+	  padding : 20,     
+	  width : 250,
+	  height : 300,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+    });
+}
+function itembox_add(){
+  var frm = document.forms["results"];
+  var issel=0;
+  frm.items_all.value="";
+  for (var i = 0; i < frm.elements.length; i++) {
+    if (frm.elements[i].name.substring(0,3)=="tid"){
+       if (frm.elements[i].checked) {
+	     issel=issel+1;
+	     frm.items_all.value = frm.items_all.value + frm.elements[i].name.substring(3, frm.elements[i].name.length) + "|";
+	   }
+    }
+ }
+ if (issel==0) {
+    alerts ("Не выделено ни одной публикации")}
+ else {
+    $.fancybox({
+      href : 'itembox_item_add2.asp?itemboxid='+frm.itemboxid.value+'&items_all='+frm.items_all.value ,
+      title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 150,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+    });
+  }
+}
+
+function itembox_new(aid,anam){
+  var frm = document.forms["results"];
+  var el = document.createElement("OPTION");
+  el.text=anam;
+  el.value=aid;
+  frm.itemboxid.options[frm.itemboxid.options.length]=el;
+  frm.itemboxid[frm.itemboxid.length-1].selected=true;
+}
+function itembox_add_all(){
+  var frm = document.forms["results"];
+    $.fancybox({
+      href : 'itembox_item_add2.asp?itemboxid='+frm.itemboxid.value+'&add_all=2&items_all='+frm.items_all.value ,
+      title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 150,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+    });
+}
+function newquery(){
+  document.forms["results"].action="querybox.asp";
+  document.forms["results"].target="";
+  document.forms["results"].submit()
+}
+function show_help(topic){
+  anewwin=window.open("", "addwin", "resizable=yes,scrollbars=yes,height=300,width=500,top=0,left=0");
+  document.forms["results"].action=topic;
+  document.forms["results"].target="addwin";
+  document.forms["results"].submit()
+}
+function load_article(id){
+
+  alerts("Для доступа к полному тексту необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function file_article(fid, filenum){
+
+  alerts("Для просмотра файла необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function url_article(idid, urlnum){
+
+  alerts("Для просмотра документа необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+function order_item(id, pr){
+
+  alerts("Для заказа полного текста публикации необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.forms["login"].login.focus();
+
+}
+
+
+function isVisible(tag) {
+    var t = $(tag);
+    var w = $(window);
+    var wt = w.scrollTop();
+    var tt = t.offset().top;
+    var tb = tt + t.height();
+    return ((tb <= wt + w.height()) && (tt >= wt));
+}
+function pdf_icon(b) {
+  if (!b.prop("shown") && isVisible(b)) {
+    b.prop("shown", true);
+    b.load("ispdf.asp?itemid=" + b.attr('name').substring(4) + "&rand=" + Math.random());
+  }
+}
+function get_pdfs(){
+  $('div[id^="pdf_"]:not(prop("shown"))').each(function(){
+    pdf_icon($(this))
+  });
+}
+setInterval(function() {
+  if ( didScroll2 ) {
+	didScroll2=false;
+	get_pdfs();
+    }
+ }, 200);
+
+$(document).ready(function() { 
+	didScroll=true;
+})
+	
+</SCRIPT>
+</head>
+
+<body onLoad='document.all.loading.style.display="none"; document.all.thepage.style.display=""'>
+
+<div id="loading" style="position:absolute; width:100%; text-align:center; top:300px;">
+Пожалуйста, подождите, <br>пока Ваш запрос будет обработан
+<br><img src="/pic/query_wait.gif" border=0 width=31 height=31 vspace=5></div>
+
+<div id="thepage" style="display: none">
+<table width=100% cellpadding=0 cellspacing=0 border=0>
+<tr><td width=100% align=center valign=top>
+
+
+<table  cellpadding=0 cellspacing=0 border=0>
+<tr><td width=170 align=left valign=top id="leftcol">
+
+<table border=0 cellspacing=0 cellpadding=0 width=150>
+
+<tr><td><a href="/defaultx.asp"><img src="/images/welcome1.jpg" width=150 title="НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА eLIBRARY.RU" border=0 vspace=15></a></td></tr>
+
+<tr><td><a href="/defaultx.asp"><img id="elibrary_logo" src="/images/elibrary_logo2.svg" width=150 height=39 border=0 vspace=10 title="eLIBRARY.RU - НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА"></a></td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=5></td></tr>
+<tr><td width=150 align=center valign=top>
+<a href="title_about_new.asp?id=8610"><img src="/itemfiles/0/9/1/9/8/2/8/1/1//001-1.jpg" border=0 width=120 title='О журнале "Вычислительные технологии"' style="behavior: url(/pie/PIE.htc); box-shadow: 1px 2px 3px #888;" hspace=0></a>
+</td></tr>
+
+
+<tr><td><img src="/pic/1pix.gif" vspace=10></td></tr>
+<script language="JavaScript">
+if (supportsSVG) {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo2.svg";}
+else {
+  document.getElementById("elibrary_logo").src="/images/elibrary_logo.gif";}
+</script>
+<SCRIPT LANGUAGE="JavaScript">
+function check_all(){
+  if (document.forms["login"].login.value==""){
+    alert("Не указано имя пользователя!");
+	return false;
+	}
+  else if (document.forms["login"].password.value==""){
+    alert("Не указан пароль!");
+	return false;
+	}
+  else{
+    var frm = document.forms["login"];
+    frm.action="/start_session.asp";
+    frm.target="";
+    frm.submit();
+   }
+}
+function login_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_all();
+	return false;
+  }
+} 
+function sso_orgs(){
+  var frm = document.forms["results"];
+  $.fancybox({
+    href : 'sso_orgs.asp' ,
+    title : '',
+	  padding : 20,     
+	  width : 480,
+	  height : 200,
+	  overlayOpacity : 0.3,	
+	  overlayColor : '#000',
+	  speedIn : 500,
+	  hideOnOverlayClick : false,
+	  enableEscapeButton : true,
+	  type : 'iframe'
+  });
+}
+function show_hide_password(target){
+	var input = document.getElementById('password');
+	if (input.getAttribute('type') == 'password') {
+		target.classList.add('view');
+		input.setAttribute('type', 'text');
+	} 
+	else {
+		target.classList.remove('view');
+		input.setAttribute('type', 'password');
+	}
+	return false;
+}
+</SCRIPT>
+
+<FORM method=post name="login" onSubmit="return false">
+<input type=hidden name="rpage" value=https://elibrary.ru/contents.asp?titleid=8610>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_login').slideToggle(500, function(){didScroll = true;})" title="Вход в библиотеку для зарегистрированных пользователей">ВХОД</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_login" class="expanded">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>IP-адрес компьютера:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>192.0.2.1</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Название организации:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<font color=#00008f>не определена</font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Имя пользователя<br>&nbsp;или адрес эл. почты:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<div class="formfr" style="width:126px;"><input type=text id="login" name="login" value="" style="width:118px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"></div>
+</td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Пароль:</font></td></tr>
+<tr><td align=center width=100%>
+<div class="formfr" style="width:126px;"><input type=password id="password" name="password" value="" style="width:102px; text-align:center;" class="inputt" onKeyPress="login_enter(event)"><a href="#" class="password-control" onclick="return show_hide_password(this);"></a></div>
+</td></tr>
+
+<tr><td align=center width=100%>
+
+<div style="height: 9px;"></div>
+<div class="butred" style="width: 52px;" onClick="check_all()">Вход</div>
+<div style="height: 9px;"></div>
+
+</td></tr></table>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr valign=middle class="menub"><td align=center width=30><input type=checkbox name="knowme"></td><td align=left width=101>Запомнить меня</td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/access_terms.asp">Правила доступа</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/author_info.asp?isnew=1&rpage=https%3A%2F%2Felibrary%2Eru%2Fcontents%2Easp%3Ftitleid%3D8610">Регистрация</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top ><a href="/pass_request.asp">Забыли пароль?</a></td></tr>
+
+
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:sso_orgs()">Вход через Вашу организацию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+</td></tr>
+</FORM>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_basket').slideToggle(500, function(){didScroll = true;})" title="Состояние корзины в электронном магазине eLIBRARY.ru">КОРЗИНА</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_basket" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+<tr><td width=100% align=center valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Всего в корзине:&nbsp;</font><font color=#00008f><b><span id="basket_num">0</span></b>&nbsp;публ.</font></td></tr>
+<tr><td width=100% align=center valign=top>
+&nbsp;<font color=#000000>на сумму:&nbsp;</font><font color=#00008f><b><span id="basket_sum">0</span></b>&nbsp;руб.</font></td></tr>
+</td></tr>
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=center width=30 valign=bottom><a href="/basket.asp"><img src="/images/basket.png" width=15 height=15 border=0></a></td><td align=left width=110 valign=top><a href="/basket.asp">Содержание корзины</a></td></tr>
+</table>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function check_search(){
+if (document.forms["search"].ftext.value.length > 1) {
+  var frm = document.forms["search"];
+  frm.action="/query_results.asp";
+  frm.target="";
+  frm.submit();
+  }
+else {
+  alert("Введите не менее двух символов");
+  }
+}
+function search_enter(event){ 
+  var keycode; 
+  event = event || window.event; 
+  keycode = event.keyCode || event.which;
+  if(keycode==13){
+    check_search();
+	return false;
+  }
+} 
+</SCRIPT>
+<FORM method=post name="search" onSubmit="return false">
+<input type="hidden" name="where_fulltext" value="on">
+<input type="hidden" name="where_name" value="on">
+<input type="hidden" name="where_abstract" value="on">
+<input type="hidden" name="where_keywords" value="on">
+<input type="hidden" name="where_affiliation" value="">
+<input type="hidden" name="where_references" value="">
+<input type="hidden" name="type_article" value="on">
+<input type="hidden" name="type_disser" value="on">
+<input type="hidden" name="type_book" value="on">
+<input type="hidden" name="type_report" value="on">
+<input type="hidden" name="type_conf" value="on">
+<input type="hidden" name="type_patent" value="on">
+<input type="hidden" name="type_preprint" value="on">
+<input type="hidden" name="type_grant" value="on">
+<input type="hidden" name="type_dataset" value="on">
+<input type="hidden" name="search_freetext" value="">
+<input type="hidden" name="search_morph" value="on">
+<input type="hidden" name="search_fulltext" value="">
+<input type="hidden" name="search_open" value="">
+<input type="hidden" name="search_results" value="">
+<input type="hidden" name="titles_all" value="">
+<input type="hidden" name="authors_all" value="">
+<input type="hidden" name="rubrics_all" value="">
+<input type="hidden" name="queryboxid" value="">
+<input type="hidden" name="itemboxid" value="">
+<input type="hidden" name="begin_year" value="">
+<input type="hidden" name="end_year" value="">
+<input type="hidden" name="issues" value="all">
+<input type="hidden" name="orderby" value="rank">
+<input type="hidden" name="order" value="rev">
+<input type="hidden" name="changed" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_search').slideToggle(500, function(){didScroll = true;})" title="Поиск в Научной электронной библиотеке">ПОИСК</span></b></font>
+</td></tr>
+</table>
+<div ID="win_search" class="collapsed">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=140 align=center valign=top>
+<div style="height: 10px;"></div>
+<div class="formfr" style="width:126px;"><input type=text id="ftext" name="ftext" value="" style="width:118px;" class="inputt" onKeyPress="search_enter(event);"></div>
+<div style="height: 11px;"></div>
+
+<div class="butblue" style="width: 52px;" onClick="check_search()">Найти</div>
+
+</td></tr>
+<tr><td><img src="/pic/1pix.gif"></td></tr>
+</table>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/querybox.asp?scope=newquery">Расширенный поиск</a></td></tr>
+
+
+<tr><td colspan=2><div style="height:3px;"></div></td></tr>
+<tr class="menub"><td align=center width=20 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 vspace=1 class="shadow"></td><td align=left width=120 valign=top><a href="/neural_search.asp">Нейропоиск</a></td></tr>
+</table>
+<div style="height: 4px;"></div>
+</div>
+</div>
+
+</FORM>
+
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_goto').slideToggle(500, function(){didScroll = true;})" title="Быстрый переход на популярные страницы сайта">НАВИГАТОР</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_goto" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=4 cellpadding=0 width=140>
+
+<tr valign=top><td width=25 align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left width=115><a href="/titles.asp">ЖУРНАЛЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/books.asp">КНИГИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/patents.asp">ПАТЕНТЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/querybox.asp">ПОИСК</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/authors.asp">АВТОРЫ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/orgs.asp">ОРГАНИЗАЦИИ</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/keywords.asp">КЛЮЧЕВЫЕ СЛОВА</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/rubrics.asp">РУБРИКАТОР</a></td></tr>
+<tr valign=top><td align=center><img src="/images/bl_kv.gif" border=0 width=7 height=7 hspace=3 class="shadow"></td><td align=left><a href="/region_compare.asp">РЕГИОНЫ</a></td></tr>
+
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=25 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=115 valign=top><a href="/defaultx.asp">Начальная страница</a></td></tr></table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_legend').slideToggle(500, function(){didScroll = true;})" title="Назначение используе">ЛЕГЕНДА</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_legend" class="expanded">
+
+<div style="height: 10px;"></div>
+<table width=100% cellspacing=0 cellpadding=3 border=0 bgcolor=#eeeeee>
+<tr><td width=15% align=right valign=top><img src="/images/download_green.png" width=16 hspace=3 border=0></td><td width=85% align=left valign=middle><font color=#00008f>Доступ к полному тексту документа открыт</font></td></tr>
+<tr><td align=right valign=top><img src="/images/download_blue.png" width=16 hspace=3 border=0></td><td align=left valign=middle><font color=#00008f>Полный текст доступен на сайте издателя</font></td></tr>
+<tr><td align=right valign=top><img src="/images/download_yellow.png" width=16 hspace=3 border=0></td><td align=left valign=middle><font color=#00008f>Полный текст может быть получен через систему заказа</font></td></tr>
+<tr><td align=right valign=top><img src="/images/download_orange.png" width=16 hspace=3 border=0></td><td align=left valign=middle><font color=#00008f>Доступ к полному тексту закрыт</font></td></tr>
+<tr><td valign=top align=center><font color=#00008f>-</font></td><td align=left><font color=#00008f>Если иконки нет - полный текст документа отсутствует в НЭБ</font></td></tr>
+
+</table>
+
+</div></div>
+</td></tr>
+
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<SCRIPT LANGUAGE="JavaScript">
+function end_session(){
+
+  document.forms["session"].saveuser.value="1";
+
+  document.forms["session"].action="/end_session.asp";
+  document.forms["session"].target="";
+  document.forms["session"].submit()
+}
+</SCRIPT>
+<FORM action="/end_session.asp" method=POST name="session">
+<input type="hidden" name="saveuser" value="1">
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_session').slideToggle(500, function(){didScroll = true;})" title="Информация о текущей сессии пользователя">СЕССИЯ</span></b></font>
+</td></tr>
+</table>
+
+
+<div ID="win_session" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+<tr><td width=100% align=left valign=top>
+&nbsp;<font color=#000000>Имя пользователя:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>Незарегистрированный пользователь</font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Начало работы:</font></td></tr>
+
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>13.10.2026 14:43</font></td></tr>
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Время работы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>00:19</font></td></tr>
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=3 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="/project_user_office.asp">Личный кабинет</a></td></tr>
+<tr class="menub"><td align=right width=30 valign=top><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=9 vspace=1 class="shadow"></td><td align=left width=101 valign=top><a href="javascript:end_session()">Закрыть сессию</a></td></tr>
+
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+</FORM>
+
+<tr><td width=100% align=center valign=top>
+
+<div class="left-panel">
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr><td width=100% align=center valign=top><font color=#F26C4F><b><span class="expandable" onClick="$('#win_contact').slideToggle(500, function(){didScroll = true;})" title="Контактная информация Научной электронной библиотеки">КОНТАКТЫ</span></b></font>
+</td></tr>
+</table>
+
+<div ID="win_contact" class="collapsed">
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=2 width=140>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Служба поддержки:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 1<br></font>
+<font color=#00008f><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font></td></tr>
+</td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям журналов:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 2<br></font>
+<font color=#00008f><a href="mailto:publish@elibrary.ru">publish@elibrary.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Издателям книг:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 3<br></font>
+<font color=#00008f><a href="mailto:book@elibrary.ru">book@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Space для издательств:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:info@sciencespace.ru">info@sciencespace.ru</a></font></td></tr>
+
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Science Index для организаций:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:org@scienceindex.ru">org@scienceindex.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Доступ к API:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 4<br></font>
+<font color=#00008f><a href="mailto:api@elibrary.ru">api@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Подписчикам:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 6<br></font>
+<font color=#00008f><a href="mailto:sales.team@elibrary.ru">sales.team@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Конференции, семинары:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f>+7 (495) 544-2494 доб. 7<br></font>
+<font color=#00008f><a href="mailto:conf@elibrary.ru">conf@elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Почтовый адрес:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="/contact_new.asp">117246, г. Москва,
+Научный проезд, д. 14А, стр. 3, таунхаус 1</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Веб-сайт:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://elibrary.ru">https://elibrary.ru</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Telegram-канал:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="https://t.me/elibrary_ru_official" target=_blank>t.me/elibrary_ru_official</a></font></td></tr>
+
+<tr><td width=100% align=left valign=top>
+<div style="height: 2px;"></div>
+&nbsp;<font color=#000000>Размещение рекламы:</font></td></tr>
+<tr><td width=100% align=center valign=top>
+<font color=#00008f><a href="mailto:reklama@elibrary.ru">reklama@elibrary.ru</a></font></td></tr>
+
+</table>
+
+<div style="height: 10px;"></div>
+
+<table border=0 cellspacing=0 cellpadding=0 width=140>
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/contact_new.asp">Схема проезда</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="https://support.elibrary.ru">Задать вопрос</a></td></tr>
+
+<tr class="menub"><td align=right width=30 valign=bottom><img src="/images/or_kv.gif" width=7 height=7 border=0 hspace=6 vspace=1 class="shadow"></td><td align=left width=110 valign=top><a href="/vacancy.asp">Вакансии</a></td></tr>
+
+</table>
+<div style="height: 4px;"></div>
+
+</div>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+<tr><td width=100% align=center valign=top>
+<div style="width: 140px;" class="help-panel">
+<table width=140 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=15% align=right valign=top>
+<img src="/images/but_orange_i.gif" width=15 height=15 hspace=0 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>По всем вопросам, связанным с работой в системе Science Index, обращайтесь, пожалуйста, в службу поддержки:<br><br>
++7 (495) 544-2494<br><a href="mailto:support@elibrary.ru">support@elibrary.ru</a></font>
+</td></tr>
+</table>
+</div>
+</td></tr>
+
+<tr><td><img src="/pic/1pix.gif" vspace=9></td></tr>
+
+
+</table>
+
+</td><td align=left valign=top>
+
+<FORM method=post name="results" onSubmit="return false">
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr><td width=600 align=left valign=top>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+<tr><td width=100% align=left valign=top>
+
+<div class="header-panel">
+<div style="margin: 0; border: 0; padding: 0 0 5px 0; text-align: center; font-size: 9pt;"><font color=#5674b9><b>СОДЕРЖАНИЕ ВЫПУСКА</b></font></div>
+</div>
+
+</td></tr></table>
+
+</td><td width=200 align=right valign=middle id="rightcol">
+
+
+<table width=200 cellspacing=0 cellpadding=3 border=0>
+<tr><td width=12% align=right valign=top>
+<a href="https://t.me/elibrary_ru_official/106" target=_blank><img src="/images/telegram.svg" width=24 height=24 border=0></a></td>
+<td width=88% align=left valign=middle><font color=#00008f><a href="https://t.me/elibrary_ru_official/106" target=_blank>Система быстрого поиска по идентификаторам на eLIBRARY.RU</a></font>
+</td></tr>
+</table>
+</td></tr>
+
+
+<tr><td align=left valign=top>
+
+<table width=550 cellspacing=0 cellpadding=3 border=0>
+<tr valign=middle>
+<td width=2%></td>
+<td width=25% align=left>eLIBRARY ID:&nbsp;<font color=#00008f><a href="contents.asp?id=91982811">91982811</a></font></td>
+<td width=15% align=center>EDN:&nbsp;<font color=#00008f><a href="/mabysk" rel="nofollow">MABYSK</a></font></td>
+
+<td align=left width=5%><a href='javascript:qr_code("mabysk")' rel="nofollow"><img src="/images/qr_code2.png" width=16 height=16 class='help' title="Сгенерировать QR код для ссылки на этот документ"></a></td>
+
+<td width=53% align=right></td>
+</tr>
+
+</table>
+<div style="height:5px;"></div>
+
+<table width=580 border=0 cellspacing=0 cellpadding=0>
+
+<input type="hidden" name="itembox_name" value="">
+<input type="hidden" name="titleid" value="8610">
+<input type="hidden" name="add_all" value="">
+<input type="hidden" name="paysum" value="">
+<input type="hidden" name="payitemid" value="">
+<input type="hidden" name="items_all" value="">
+<input type="hidden" name="did" value="1">
+<input type="hidden" name="urlnum" value="1">
+<input type="hidden" name="filenum" value="1">
+<input type="hidden" name="fileid" value="8610">
+
+<tr><td width=100% align=left valign=top>
+
+<div style="width:540px; margin:10px 20px 10px 20px; border:0; padding:0; text-align: center; font-size: 10pt;">
+<a href="title_about_new.asp?id=8610"><font color=#F26C4F><b>ВЫЧИСЛИТЕЛЬНЫЕ ТЕХНОЛОГИИ</b></font></a>
+<div style="height:5px;"></div>
+<span style="font-size:8pt;"><font color=#00008F><a href='org_profile.asp?id=34'>Федеральный исследовательский центр информационных и вычислительных технологий</a><br></font> <i>(Новосибирск)</i></span>
+</div>
+
+
+
+
+<table width=580 border=0 cellspacing=0 cellpadding=2>
+<tr><td width=574 align=center valign=middle>
+<div style="width:540px; margin:0 20px 10px 20px; border:0; padding:0; text-align: center; font-size: 9pt;">
+Том:&nbsp;<font color=#F26C4F><b><span style="font-size:10pt;">31</span></b></font><img src="/pic/1pix.gif" hspace=10>Номер:&nbsp;<font color=#F26C4F><b><span style="font-size:10pt;">4</span></b></font>
+<img src="/pic/1pix.gif" hspace=10>Год:&nbsp;<font color=#F26C4F><b><span style="font-size:10pt;">2026</span></b></font>
+
+</div>
+</td></tr>
+
+
+</table>
+
+
+
+
+
+<div style="height:16px;"></div>
+
+<table width=580 cellspacing=0 cellpadding=3 id="restab" style="border-spacing: 0px 4px; table-layout:fixed;">
+<tr align=center valign=middle height=15>
+<td width=24>&nbsp;</td>
+<td width=454><font color=#555555><b>Название статьи</b></font></td>
+<td width=54><font color=#555555><b>Стр.</b></font></td>
+<td width=24><span title="Число цитирований публикации в РИНЦ"><font color=#555555><b>Цит.</b></font></span></td></tr>
+<tr><td colspan=4>
+<div style="width: 574px;" class="table-line"></div>
+</td></tr>
+
+<tr><td colspan=4 height=0></td></tr>
+
+
+  <tr valign=middle bgcolor=#f5f5f5><td align=center colspan=4><b>МАТЕМАТИЧЕСКОЕ МОДЕЛИРОВАНИЕ</b></td></tr>
+
+<tr valign=middle id="arw91982812">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid91982812" id="tid91982812"  onClick='if (this.checked) {RowSelect("arw91982812",1)} else {RowSelect("arw91982812",0)}'><div id="pdf_91982812" name="pdf_91982812"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=91982812"><b><span style="line-height:1.0;">КОРРЕЛЯЦИОННО-РЕГРЕССИОННЫЙ АНАЛИЗ ВРЕМЕННЫХ РЯДОВ ПОТРЕБЛЕНИЯ ПРИРОДНОГО ГАЗА</span></b></a><br><font color=#00008f><i>Башарина О.Ю.</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+7-19
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw91982813">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid91982813" id="tid91982813"  onClick='if (this.checked) {RowSelect("arw91982813",1)} else {RowSelect("arw91982813",0)}'><div id="pdf_91982813" name="pdf_91982813"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=91982813"><b><span style="line-height:1.0;">МОДЕЛИРОВАНИЕ И ЧИСЛЕННЫЙ АНАЛИЗ ПРОБЛЕМНОГО УЧАСТКА ТРАНССИБИРСКОЙ МАГИСТРАЛИ С УЧЕТОМ ЭКОЛОГИЧЕСКИХ ФАКТОРОВ</span></b></a><br><font color=#00008f><i>Жарков М.Л., Казаков А.Л., Лемперт А.А.</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+20-30
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+  <tr valign=middle bgcolor=#f5f5f5><td align=center colspan=4><b>ВЫЧИСЛИТЕЛЬНЫЕ ТЕХНОЛОГИИ</b></td></tr>
+
+<tr valign=middle id="arw91982814">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid91982814" id="tid91982814"  onClick='if (this.checked) {RowSelect("arw91982814",1)} else {RowSelect("arw91982814",0)}'><div id="pdf_91982814" name="pdf_91982814"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=91982814"><b><span style="line-height:1.0;">ИССЛЕДОВАНИЕ АЛГОРИТМА УТОЧНЕНИЯ МОДЕЛЕЙ АДВЕКЦИИ - ДИФФУЗИИ - РЕАКЦИИ НА ОСНОВЕ ИДЕНТИФИКАЦИИ ИСТОЧНИКОВ И МЕТОДОВ МАШИННОГО ОБУЧЕНИЯ</span></b></a><br><font color=#00008f><i>Пененко А.В., Емельянов М.К.</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+31-44
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+  <tr valign=middle bgcolor=#f5f5f5><td align=center colspan=4><b>ИНФОРМАЦИОННЫЕ ТЕХНОЛОГИИ</b></td></tr>
+
+<tr valign=middle id="arw91982815">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid91982815" id="tid91982815"  onClick='if (this.checked) {RowSelect("arw91982815",1)} else {RowSelect("arw91982815",0)}'><div id="pdf_91982815" name="pdf_91982815"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=91982815"><b><span style="line-height:1.0;">РИСКИ РАЗВИТИЯ И ОЦЕНКА ЗАЩИЩЕННОСТИ БАЙКАЛЬСКОЙ ПРИРОДНОЙ ТЕРРИТОРИИ</span></b></a><br><font color=#00008f><i>Бычков И.В., Москвичев В.В., Постникова У.С., Тасейко О.В., Чернякова Н.А.</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+45-60
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw91982816">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid91982816" id="tid91982816"  onClick='if (this.checked) {RowSelect("arw91982816",1)} else {RowSelect("arw91982816",0)}'><div id="pdf_91982816" name="pdf_91982816"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=91982816"><b><span style="line-height:1.0;">УСОВЕРШЕНСТВОВАНИЕ ПРОГРАММНО-АППАРАТНОЙ ИНФРАСТРУКТУРЫ ДЛЯ ИМИТАЦИОННОГО МОДЕЛИРОВАНИЯ МИКРОСЕТИ</span></b></a><br><font color=#00008f><i>Бычков И.В., Феоктистов А.Г., Боднюк М.Е., Карамов Д.Н.</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+61-71
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw91982817">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid91982817" id="tid91982817"  onClick='if (this.checked) {RowSelect("arw91982817",1)} else {RowSelect("arw91982817",0)}'><div id="pdf_91982817" name="pdf_91982817"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=91982817"><b><span style="line-height:1.0;">ЭКОЛОГИЧЕСКИЙ МОНИТОРИНГ ПРИРОДНОЙ ТЕРРИТОРИИ:ВЕБ-СЕРВИСЫ ОБРАБОТКИ И АНАЛИЗА МЕТЕОДАННЫХ</span></b></a><br><font color=#00008f><i>Бычков И.В., Феоктистов А.Г., Юмашев Е.А., Карамов Д.Н.</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+72-82
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw91982818">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid91982818" id="tid91982818"  onClick='if (this.checked) {RowSelect("arw91982818",1)} else {RowSelect("arw91982818",0)}'><div id="pdf_91982818" name="pdf_91982818"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=91982818"><b><span style="line-height:1.0;">ПОСЛЕДОВАТЕЛЬНАЯ РЕКОМЕНДАЦИЯ ВЕБ-СЕРВИСОВ ДЛЯ ОБРАБОТКИ ПРОСТРАНСТВЕННЫХ ДАННЫХ НА ОСНОВЕ DAGNN</span></b></a><br><font color=#00008f><i>Климонов М.С., Фёдоров Р.К.</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+83-92
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw91982819">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid91982819" id="tid91982819"  onClick='if (this.checked) {RowSelect("arw91982819",1)} else {RowSelect("arw91982819",0)}'><div id="pdf_91982819" name="pdf_91982819"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=91982819"><b><span style="line-height:1.0;">АВТОМАТИЗАЦИЯ СБОРКИ, НАСТРОЙКИ И РАЗВЕРТЫВАНИЯ НАУЧНЫХ ПРИЛОЖЕНИЙ В ГЕТЕРОГЕННОЙ РАСПРЕДЕЛЕННОЙ ВЫЧИСЛИТЕЛЬНОЙ СРЕДЕ НА ОСНОВЕ АГЕНТОВ</span></b></a><br><font color=#00008f><i>Николаев Е.П., Воскобойников М.Л.</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+93-104
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw91982820">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid91982820" id="tid91982820"  onClick='if (this.checked) {RowSelect("arw91982820",1)} else {RowSelect("arw91982820",0)}'><div id="pdf_91982820" name="pdf_91982820"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=91982820"><b><span style="line-height:1.0;">АРХИТЕКТУРА ЦИФРОВОЙ ПЛАТФОРМЫ ДЛЯ ПОДДЕРЖКИ МЕЖДИСЦИПЛИНАРНЫХ НАУЧНЫХ ИССЛЕДОВАНИЙ</span></b></a><br><font color=#00008f><i>Фереферов Е.С.</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+105-122
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+<tr valign=middle id="arw91982821">
+<td align=center valign=top class="select-tr-left"><input type=checkbox name="tid91982821" id="tid91982821"  onClick='if (this.checked) {RowSelect("arw91982821",1)} else {RowSelect("arw91982821",0)}'><div id="pdf_91982821" name="pdf_91982821"></div></td>
+<td align=left valign=top>
+<a href="item.asp?id=91982821"><b><span style="line-height:1.0;">ВЕКТОРНОЕ ПРЕДСТАВЛЕНИЕ ИСХОДНОГО КОДА НА ОСНОВЕ ХЕШИРОВАНИЯ АБСТРАКТНОГО СИНТАКСИЧЕСКОГО ДЕРЕВА</span></b></a><br><font color=#00008f><i>Шипицын М.Н., Фёдоров Р.К.</i></font>
+
+</td>
+<td align=center><font color=#00008f>
+123-131
+</font></td>
+<td align=center valign=middle class="select-tr-right">0</td>
+</tr>
+
+
+</table>
+
+
+
+<br>
+</td></tr></table>
+
+</td>
+<td align=right valign=top>
+
+<div id="panel_default" style="position: relative; width: 200px; height:0; margin: 0; border: 1px; padding: 0"></div>
+<div id="panel" style="position: relative; width: 200px; margin: 0; border: 0; padding: 0">
+
+<div style="width: 190px;" class="right-panel">
+
+<table width=190 cellspacing=0 cellpadding=3 border=0>
+
+<tr><td colspan=2 align=center valign=top><font color=#F26C4F><b>ИНСТРУМЕНТЫ</b></font><br><img src="/pic/1pix.gif" vspace=1><br></td></tr>
+
+
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:select_all()" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:select_all()" rel=nofollow>Выделить все статьи</a>
+</td></tr>
+<tr><td width=15% align=right valign=top>
+<a href="javascript:deselect_all()" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:deselect_all()" rel=nofollow>Снять выделение</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="javascript:itembox_add()" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="javascript:itembox_add()" rel=nofollow>Добавить выделенные статьи в подборку:</a></td></tr>
+
+<tr><td colspan=2 align=center><div class="formfr"><select name="itemboxid" style="width:180px" class="input">
+
+<option value="0" selected>Новая подборка
+</select></div>&nbsp;</td></tr>
+
+
+
+<script type="text/javascript">
+function order_issue(){
+
+  alerts("Для заказа полных текстов публикаций необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+</script>
+
+<tr><td width=15% align=center valign=top><div id="buy1"><a href="javascript:order_issue()" rel=nofollow><img src="/images/basket.png" width=18 height=18 hspace=3 border=0></a></div></td><td width=85% align=left valign=middle><div id="buy2"><a href="javascript:order_issue()" rel=nofollow>Приобрести этот выпуск<br>за 1633 руб.</a>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Инструкция по приобретению электронной версии выпуска доступна <a href="/projects/subscription/private.asp" target=_ablank>по&nbsp;ссылке</a></p>'></div></td></tr>
+
+
+<script type="text/javascript">
+function subscribe_title(){
+
+  alerts("Для заказа полных текстов публикаций необходимо вначале войти в библиотеку!");
+  document.getElementById("win_login").className = "expanded";
+  document.getElementById("img_login").src = w_up.src;
+  document.forms["login"].login.focus();
+
+}
+</script>
+<tr><td width=15% align=right valign=top><a href="javascript:subscribe_title()" rel=nofollow><img src="/images/basket.png" width=18 height=18 hspace=3 border=0></a></td><td width=85% align=left valign=middle><a href="javascript:subscribe_title()" rel=nofollow>Подписаться на все выпуски<br>журнала за</a>&nbsp;<img src="/images/but_orange_question.gif" class="imghelp help" title='<p>Инструкция по приобретению электронных версий научного издания доступна <a href="/projects/subscription/private.asp" target=_blank rel=nofollow>по&nbsp;ссылке</a></p>'><br><div class="formfr" style="width:124px; margin:5px 0 0 0;"><select name="subs_year" id="subs_year" style="width:120px" class="input">
+
+<option value="2027" selected>2027 год - 8000 руб.
+
+<option value="2026" >2026 год - 6500 руб.
+
+<option value="2025" >2025 год - 6500 руб.
+
+<option value="2024" >2024 год - 6500 руб.
+
+</select></div></td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></td>
+<td width=85% align=left valign=middle><font color=#00008f>Список выпусков</font></td></tr>
+<tr><td></td><td align=left valign=top>
+
+<table width=100% cellspacing=0 cellpadding=2 border=0>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=49632283">
+&nbsp;Online First
+</a>&nbsp;(0&nbsp;ст.)</td></tr>
+
+<tr><td width=12% align=left valign=top><img id="issimg2026" src="/images/or_minus1.png" class="win_expandable" onClick="hideShowRed('issueyear2026', 'issimg2026')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2026', 'issimg2026')">2026</span></font></b></td></tr>
+<tbody ID="issueyear2026" class="expanded">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=89118995" >
+&nbsp;Т.&nbsp;31&nbsp; №&nbsp;1</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=89897450" >
+&nbsp;Т.&nbsp;31&nbsp; №&nbsp;2</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=91758938" >
+&nbsp;Т.&nbsp;31&nbsp; №&nbsp;3</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><span ><font color=#F26C4F>
+&nbsp;Т.&nbsp;31&nbsp; №&nbsp;4</font></span>&nbsp;(10&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2025" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2025', 'issimg2025')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2025', 'issimg2025')">2025</span></font></b></td></tr>
+<tbody ID="issueyear2025" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=80460906" >
+&nbsp;Т.&nbsp;30&nbsp; №&nbsp;1</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=82336337" >
+&nbsp;Т.&nbsp;30&nbsp; №&nbsp;2</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=82760440" >
+&nbsp;Т.&nbsp;30&nbsp; №&nbsp;3</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=82817761" >
+&nbsp;Т.&nbsp;30&nbsp; №&nbsp;4</a>&nbsp;(14&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=83179407" >
+&nbsp;Т.&nbsp;30&nbsp; №&nbsp;5</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=87912282" >
+&nbsp;Т.&nbsp;30&nbsp; №&nbsp;6</a>&nbsp;(9&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2024" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2024', 'issimg2024')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2024', 'issimg2024')">2024</span></font></b></td></tr>
+<tbody ID="issueyear2024" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=62415621" >
+&nbsp;Т.&nbsp;29&nbsp; №&nbsp;1</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=65956299" >
+&nbsp;Т.&nbsp;29&nbsp; №&nbsp;2</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=68592798" >
+&nbsp;Т.&nbsp;29&nbsp; №&nbsp;3</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=69157148" >
+&nbsp;Т.&nbsp;29&nbsp; №&nbsp;4</a>&nbsp;(7&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=74481026" >
+&nbsp;Т.&nbsp;29&nbsp; №&nbsp;5</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=79558917" >
+&nbsp;Т.&nbsp;29&nbsp; №&nbsp;6</a>&nbsp;(9&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2023" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2023', 'issimg2023')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2023', 'issimg2023')">2023</span></font></b></td></tr>
+<tbody ID="issueyear2023" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=50359863" >
+&nbsp;Т.&nbsp;28&nbsp; №&nbsp;1</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=53926685" >
+&nbsp;Т.&nbsp;28&nbsp; №&nbsp;2</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=54177946" >
+&nbsp;Т.&nbsp;28&nbsp; №&nbsp;3</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=54386527" >
+&nbsp;Т.&nbsp;28&nbsp; №&nbsp;4</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=54720864" >
+&nbsp;Т.&nbsp;28&nbsp; №&nbsp;5</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=59076835" >
+&nbsp;Т.&nbsp;28&nbsp; №&nbsp;6</a>&nbsp;(12&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2022" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2022', 'issimg2022')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2022', 'issimg2022')">2022</span></font></b></td></tr>
+<tbody ID="issueyear2022" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=48089504" >
+&nbsp;Т.&nbsp;27&nbsp; №&nbsp;1</a>&nbsp;(7&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=48408420" >
+&nbsp;Т.&nbsp;27&nbsp; №&nbsp;2</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=48755134" >
+&nbsp;Т.&nbsp;27&nbsp; №&nbsp;3</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=49484385" >
+&nbsp;Т.&nbsp;27&nbsp; №&nbsp;4</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=49798725" >
+&nbsp;Т.&nbsp;27&nbsp; №&nbsp;5</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=49956984" >
+&nbsp;Т.&nbsp;27&nbsp; №&nbsp;6</a>&nbsp;(9&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2021" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2021', 'issimg2021')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2021', 'issimg2021')">2021</span></font></b></td></tr>
+<tbody ID="issueyear2021" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=44896741" >
+&nbsp;Т.&nbsp;26&nbsp; №&nbsp;1</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=45668390" >
+&nbsp;Т.&nbsp;26&nbsp; №&nbsp;2</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=46335459" >
+&nbsp;Т.&nbsp;26&nbsp; №&nbsp;3</a>&nbsp;(7&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=46449191" >
+&nbsp;Т.&nbsp;26&nbsp; №&nbsp;4</a>&nbsp;(7&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=47216276" >
+&nbsp;Т.&nbsp;26&nbsp; №&nbsp;5</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=47338188" >
+&nbsp;Т.&nbsp;26&nbsp; №&nbsp;6</a>&nbsp;(7&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2020" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2020', 'issimg2020')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2020', 'issimg2020')">2020</span></font></b></td></tr>
+<tbody ID="issueyear2020" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=42466593" >
+&nbsp;Т.&nbsp;25&nbsp; №&nbsp;1</a>&nbsp;(7&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=42777490" >
+&nbsp;Т.&nbsp;25&nbsp; №&nbsp;2</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=43066611" >
+&nbsp;Т.&nbsp;25&nbsp; №&nbsp;3</a>&nbsp;(15&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=43867388" >
+&nbsp;Т.&nbsp;25&nbsp; №&nbsp;4</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=44150195" >
+&nbsp;Т.&nbsp;25&nbsp; №&nbsp;5</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=44500282" >
+&nbsp;Т.&nbsp;25&nbsp; №&nbsp;6</a>&nbsp;(6&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2019" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2019', 'issimg2019')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2019', 'issimg2019')">2019</span></font></b></td></tr>
+<tbody ID="issueyear2019" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=37092571" >
+&nbsp;Т.&nbsp;24&nbsp; №&nbsp;1</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=37245785" >
+&nbsp;Т.&nbsp;24&nbsp; №&nbsp;2</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=38027313" >
+&nbsp;Т.&nbsp;24&nbsp; №&nbsp;3</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=39387069" >
+&nbsp;Т.&nbsp;24&nbsp; №&nbsp;4</a>&nbsp;(7&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=41318340" >
+&nbsp;Т.&nbsp;24&nbsp; №&nbsp;5</a>&nbsp;(7&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=41602931" >
+&nbsp;Т.&nbsp;24&nbsp; №&nbsp;6</a>&nbsp;(14&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2018" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2018', 'issimg2018')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2018', 'issimg2018')">2018</span></font></b></td></tr>
+<tbody ID="issueyear2018" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34834827" >
+&nbsp;Т.&nbsp;23&nbsp; №&nbsp;1</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34845589" >
+&nbsp;Т.&nbsp;23&nbsp; №&nbsp;2</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=35095973" >
+&nbsp;Т.&nbsp;23&nbsp; №&nbsp;3</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=35562878" >
+&nbsp;Т.&nbsp;23&nbsp; №&nbsp;4</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=36319342" >
+&nbsp;Т.&nbsp;23&nbsp; №&nbsp;5</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=36684758" >
+&nbsp;Т.&nbsp;23&nbsp; №&nbsp;6</a>&nbsp;(9&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2017" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2017', 'issimg2017')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2017', 'issimg2017')">2017</span></font></b></td></tr>
+<tbody ID="issueyear2017" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34468541" >
+&nbsp;Т.&nbsp;22&nbsp; №&nbsp;1</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34480312" >
+&nbsp;Т.&nbsp;22&nbsp; №&nbsp;2</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34527845" >
+&nbsp;Т.&nbsp;22&nbsp; №&nbsp;3</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34536886" >
+&nbsp;Т.&nbsp;22&nbsp; №&nbsp;4</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34545521" >
+&nbsp;Т.&nbsp;22&nbsp; №&nbsp;5</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34825542" >
+&nbsp;Т.&nbsp;22&nbsp; №&nbsp;6</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34480313" title='Тема выпуска: Избранные труды молодежной конференции'>
+&nbsp;Т.&nbsp;22&nbsp; №&nbsp;S1</a>&nbsp;(9&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2016" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2016', 'issimg2016')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2016', 'issimg2016')">2016</span></font></b></td></tr>
+<tbody ID="issueyear2016" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34223635" >
+&nbsp;Т.&nbsp;21&nbsp; №&nbsp;1</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34468540" >
+&nbsp;Т.&nbsp;21&nbsp; №&nbsp;2</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34255961" >
+&nbsp;Т.&nbsp;21&nbsp; №&nbsp;3</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34259885" >
+&nbsp;Т.&nbsp;21&nbsp; №&nbsp;4</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34330422" >
+&nbsp;Т.&nbsp;21&nbsp; №&nbsp;5</a>&nbsp;(7&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34468325" >
+&nbsp;Т.&nbsp;21&nbsp; №&nbsp;6</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34398714" title='Тема выпуска: Информационные технологии, системы и приборы в агропромышленном комплексе'>
+&nbsp;Т.&nbsp;21&nbsp; №&nbsp;S1</a>&nbsp;(9&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2015" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2015', 'issimg2015')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2015', 'issimg2015')">2015</span></font></b></td></tr>
+<tbody ID="issueyear2015" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34064251" >
+&nbsp;Т.&nbsp;20&nbsp; №&nbsp;1</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34064919" >
+&nbsp;Т.&nbsp;20&nbsp; №&nbsp;2</a>&nbsp;(7&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34082697" >
+&nbsp;Т.&nbsp;20&nbsp; №&nbsp;3</a>&nbsp;(6&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34115424" >
+&nbsp;Т.&nbsp;20&nbsp; №&nbsp;4</a>&nbsp;(7&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34139683" >
+&nbsp;Т.&nbsp;20&nbsp; №&nbsp;5</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34215549" >
+&nbsp;Т.&nbsp;20&nbsp; №&nbsp;6</a>&nbsp;(8&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2014" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2014', 'issimg2014')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2014', 'issimg2014')">2014</span></font></b></td></tr>
+<tbody ID="issueyear2014" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33949888" >
+&nbsp;Т.&nbsp;19&nbsp; №&nbsp;1</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33952955" >
+&nbsp;Т.&nbsp;19&nbsp; №&nbsp;2</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33970739" >
+&nbsp;Т.&nbsp;19&nbsp; №&nbsp;3</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33975518" >
+&nbsp;Т.&nbsp;19&nbsp; №&nbsp;4</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34033844" >
+&nbsp;Т.&nbsp;19&nbsp; №&nbsp;5</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34061876" >
+&nbsp;Т.&nbsp;19&nbsp; №&nbsp;6</a>&nbsp;(9&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2013" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2013', 'issimg2013')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2013', 'issimg2013')">2013</span></font></b></td></tr>
+<tbody ID="issueyear2013" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33820126" >
+&nbsp;Т.&nbsp;18&nbsp; №&nbsp;1</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33839408" >
+&nbsp;Т.&nbsp;18&nbsp; №&nbsp;2</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33839368" >
+&nbsp;Т.&nbsp;18&nbsp; №&nbsp;3</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33845352" >
+&nbsp;Т.&nbsp;18&nbsp; №&nbsp;4</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33849017" >
+&nbsp;Т.&nbsp;18&nbsp; №&nbsp;5</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33938046" >
+&nbsp;Т.&nbsp;18&nbsp; №&nbsp;6</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34037460" title='Тема выпуска: Специальный выпуск: "Труды Всероссийской конференции "Индустриальные информационные системы-2013"'>
+&nbsp;Т.&nbsp;18&nbsp; №&nbsp;S1</a>&nbsp;(25&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2012" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2012', 'issimg2012')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2012', 'issimg2012')">2012</span></font></b></td></tr>
+<tbody ID="issueyear2012" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33727592" >
+&nbsp;Т.&nbsp;17&nbsp; №&nbsp;1</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33732955" >
+&nbsp;Т.&nbsp;17&nbsp; №&nbsp;2</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33745418" >
+&nbsp;Т.&nbsp;17&nbsp; №&nbsp;3</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33746382" >
+&nbsp;Т.&nbsp;17&nbsp; №&nbsp;4</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33759007" >
+&nbsp;Т.&nbsp;17&nbsp; №&nbsp;5</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33808263" >
+&nbsp;Т.&nbsp;17&nbsp; №&nbsp;6</a>&nbsp;(8&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2011" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2011', 'issimg2011')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2011', 'issimg2011')">2011</span></font></b></td></tr>
+<tbody ID="issueyear2011" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33656030" >
+&nbsp;Т.&nbsp;16&nbsp; №&nbsp;1</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33658055" >
+&nbsp;Т.&nbsp;16&nbsp; №&nbsp;2</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33662650" >
+&nbsp;Т.&nbsp;16&nbsp; №&nbsp;3</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33666298" >
+&nbsp;Т.&nbsp;16&nbsp; №&nbsp;4</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33697638" >
+&nbsp;Т.&nbsp;16&nbsp; №&nbsp;5</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33725782" >
+&nbsp;Т.&nbsp;16&nbsp; №&nbsp;6</a>&nbsp;(12&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2010" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2010', 'issimg2010')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2010', 'issimg2010')">2010</span></font></b></td></tr>
+<tbody ID="issueyear2010" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33600346" >
+&nbsp;Т.&nbsp;15&nbsp; №&nbsp;1</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33600347" >
+&nbsp;Т.&nbsp;15&nbsp; №&nbsp;2</a>&nbsp;(14&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33600348" >
+&nbsp;Т.&nbsp;15&nbsp; №&nbsp;3</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33600073" >
+&nbsp;Т.&nbsp;15&nbsp; №&nbsp;4</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33602261" >
+&nbsp;Т.&nbsp;15&nbsp; №&nbsp;5</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33654334" >
+&nbsp;Т.&nbsp;15&nbsp; №&nbsp;6</a>&nbsp;(9&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2009" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2009', 'issimg2009')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2009', 'issimg2009')">2009</span></font></b></td></tr>
+<tbody ID="issueyear2009" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33339096" >
+&nbsp;Т.&nbsp;14&nbsp; №&nbsp;1</a>&nbsp;(14&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33600512" >
+&nbsp;Т.&nbsp;14&nbsp; №&nbsp;2</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33388980" >
+&nbsp;Т.&nbsp;14&nbsp; №&nbsp;3</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33388981" >
+&nbsp;Т.&nbsp;14&nbsp; №&nbsp;4</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33389548" >
+&nbsp;Т.&nbsp;14&nbsp; №&nbsp;5</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33388982" >
+&nbsp;Т.&nbsp;14&nbsp; №&nbsp;6</a>&nbsp;(15&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2008" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2008', 'issimg2008')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2008', 'issimg2008')">2008</span></font></b></td></tr>
+<tbody ID="issueyear2008" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33340820" >
+&nbsp;Т.&nbsp;13&nbsp; №&nbsp;1</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34081646" title='Тема выпуска: Совместный выпуск по материалам Международной конференции "Вычислительные и информационные технологии в науке, технике, и образовании"'>
+&nbsp;Т.&nbsp;13&nbsp; №&nbsp;1-1</a>&nbsp;(3&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33340821" >
+&nbsp;Т.&nbsp;13&nbsp; №&nbsp;2</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33340822" >
+&nbsp;Т.&nbsp;13&nbsp; №&nbsp;3</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33300999" >
+&nbsp;Т.&nbsp;13&nbsp; №&nbsp;4</a>&nbsp;(14&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33301631" >
+&nbsp;Т.&nbsp;13&nbsp; №&nbsp;5</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33300228" >
+&nbsp;Т.&nbsp;13&nbsp; №&nbsp;6</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33602599" title='Тема выпуска: Материалы XII Байкальской всероссийской конференции с международным участием "Информационные и математические технологии в науке и управлении", 2-11 июля 2007 г., Иркутск, 2008 г.'>
+&nbsp;Т.&nbsp;13&nbsp; №&nbsp;S1</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33602650" title='Тема выпуска: Труды IX Всероссийской конференции "Современные методы математического моделирования природных и антропогенных катастроф", 18 - 21 сентября 2007 г., Барнаул, 2008 г.'>
+&nbsp;Т.&nbsp;13&nbsp; №&nbsp;S2</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33603493" title='Тема выпуска: Избранные доклады Международной конференции и школы молодых ученых по вычислительно-информационным технологиям для наук об окружающей среде, 14- 25 июля 2007 г., Томск, 2008 г.'>
+&nbsp;Т.&nbsp;13&nbsp; №&nbsp;S3</a>&nbsp;(19&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33603494" title='Тема выпуска: Избранные труды молодых ученых Всероссийской конференции по вычислительной математике (КВМ-2007), 18-20 июня 2007 г., Новосибирск, 2008 г.'>
+&nbsp;Т.&nbsp;13&nbsp; №&nbsp;S4</a>&nbsp;(20&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33651852" title='Тема выпуска: Избранные доклады VI Международной научно-практической конференции "Информационные технологии и математическое моделирование", 9-10 ноября 2007 г., Анжеро-Судженск, Россия, 2008 г.'>
+&nbsp;Т.&nbsp;13&nbsp; №&nbsp;S5</a>&nbsp;(23&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2007" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2007', 'issimg2007')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2007', 'issimg2007')">2007</span></font></b></td></tr>
+<tbody ID="issueyear2007" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33601640" >
+&nbsp;Т.&nbsp;12&nbsp; №&nbsp;1</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33380504" >
+&nbsp;Т.&nbsp;12&nbsp; №&nbsp;2</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33380505" >
+&nbsp;Т.&nbsp;12&nbsp; №&nbsp;3</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33380506" >
+&nbsp;Т.&nbsp;12&nbsp; №&nbsp;4</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33380507" >
+&nbsp;Т.&nbsp;12&nbsp; №&nbsp;5</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33380508" >
+&nbsp;Т.&nbsp;12&nbsp; №&nbsp;6</a>&nbsp;(16&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33602505" >
+&nbsp;Т.&nbsp;12&nbsp; №&nbsp;S1</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33602506" >
+&nbsp;Т.&nbsp;12&nbsp; №&nbsp;S2</a>&nbsp;(18&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33602597" >
+&nbsp;Т.&nbsp;12&nbsp; №&nbsp;S3</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33602598" title='Тема выпуска: Труды V Совещания российско-казахстанской рабочей группы по вычислительным и информационным технологиям, Новосибирск, 6-8 февраля 2007 г., 2007 г.'>
+&nbsp;Т.&nbsp;12&nbsp; №&nbsp;S4</a>&nbsp;(11&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2006" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2006', 'issimg2006')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2006', 'issimg2006')">2006</span></font></b></td></tr>
+<tbody ID="issueyear2006" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33373701" >
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;1</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33380500" >
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;2</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33380501" >
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;3</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33373702" >
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;4</a>&nbsp;(15&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33380502" >
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;5</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33380503" >
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;6</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33602504" >
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;S1</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33603108" >
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;S2</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33603109" >
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;S3</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33603110" title='Тема выпуска: Избранные доклады VIII Международного семинара-совещания "Кубатурные формулы и их приложения" (Улан-Удэ, август 2005 г.), 2006 г.'>
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;S4</a>&nbsp;(17&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33603111" title='Тема выпуска: Избранные доклады Международной конференции по измерениям, моделированию и информационным системам для изучения окружающей среды: ENVIROMIS-2006 (Томск, Россия), часть 1, 2006 г.'>
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;S5</a>&nbsp;(20&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33603112" title='Тема выпуска: Избранные доклады Международной конференции по измерениям, моделированию и информационным системам для изучения окружающей среды: ENVIROMIS-2006 (Томск, Россия), часть 2, 2006 г.'>
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;S6</a>&nbsp;(22&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33603113" title='Тема выпуска: Избранные доклады Международной конференции по измерениям, моделированию и информационным системам для изучения окружающей среды: ENVIROMIS-2006 (Томск, Россия), часть 3, 2006 г.'>
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;S7</a>&nbsp;(22&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33603114" title='Тема выпуска: Избранные доклады X Российской конференции "Распределенные информационно-вычислительные ресурсы" (DICR-2005), Новосибирск 6-8 октября 2005 г., 2006 г.'>
+&nbsp;Т.&nbsp;11&nbsp; №&nbsp;S8</a>&nbsp;(15&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2005" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2005', 'issimg2005')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2005', 'issimg2005')">2005</span></font></b></td></tr>
+<tbody ID="issueyear2005" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33383356" >
+&nbsp;Т.&nbsp;10&nbsp; №&nbsp;1</a>&nbsp;(22&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33383357" >
+&nbsp;Т.&nbsp;10&nbsp; №&nbsp;2</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33383358" >
+&nbsp;Т.&nbsp;10&nbsp; №&nbsp;3</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33382947" >
+&nbsp;Т.&nbsp;10&nbsp; №&nbsp;4</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33382948" >
+&nbsp;Т.&nbsp;10&nbsp; №&nbsp;5</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33382949" >
+&nbsp;Т.&nbsp;10&nbsp; №&nbsp;6</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33662827" title='Тема выпуска: Том 10, Специальный выпуск: Труды IX рабочего совещания по электронным публикациям (El-Pub2004). Новосибирск, 23-25 сентября 2004 г., 2005 г.'>
+&nbsp;Т.&nbsp;10&nbsp; №&nbsp;S1</a>&nbsp;(16&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33662854" title='Тема выпуска: Специальный выпуск: Труды международной конференции и школы молодых ученых "Вычислительно-информационные технологии для наук об окружающей среде" (CITES 2005). Томск, 13-23 марта 2005 г. Часть 1., 2005 г.'>
+&nbsp;Т.&nbsp;10&nbsp; №&nbsp;S2</a>&nbsp;(21&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33662855" title='Тема выпуска: Специальный выпуск: Труды международной конференции и школы молодых ученых "Вычислительно-информационные технологии для наук об окружающей среде" (CITES 2005). Томск, 13-23 марта 2005 г. Часть 2., 2005 г.'>
+&nbsp;Т.&nbsp;10&nbsp; №&nbsp;S3</a>&nbsp;(16&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33662856" title='Тема выпуска: Специальный выпуск, посвященный 30-летию Института вычислительного моделирования Сибирского отделения РАН'>
+&nbsp;Т.&nbsp;10&nbsp; №&nbsp;S4</a>&nbsp;(16&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2004" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2004', 'issimg2004')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2004', 'issimg2004')">2004</span></font></b></td></tr>
+<tbody ID="issueyear2004" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386193" >
+&nbsp;Т.&nbsp;9&nbsp; №&nbsp;1</a>&nbsp;(21&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386271" >
+&nbsp;Т.&nbsp;9&nbsp; №&nbsp;2</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386272" >
+&nbsp;Т.&nbsp;9&nbsp; №&nbsp;3</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386273" >
+&nbsp;Т.&nbsp;9&nbsp; №&nbsp;4</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386274" >
+&nbsp;Т.&nbsp;9&nbsp; №&nbsp;5</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386194" >
+&nbsp;Т.&nbsp;9&nbsp; №&nbsp;6</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=38194153" >
+&nbsp;Т.&nbsp;9&nbsp; №&nbsp;S1</a>&nbsp;(1&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34485390" title='Тема выпуска: Труды международной конференции "Вычислительно-информационные технологии для наук об окружающей среде" (CITES 2003). Томск, 1-11 сентября 2003 г. Часть 2., 2004 г.'>
+&nbsp;Т.&nbsp;9&nbsp; №&nbsp;S2</a>&nbsp;(2&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=42096058" title='Тема выпуска: СОВМЕСТНЫЙ ВЫПУСК. По материалам Международной конференции "Вычислительные и информационные технологии в науке, технике и образовании" (7-9 октября). ВЫЧИСЛИТЕЛЬНЫЕ ТЕХНОЛОГИИ. Том 9. ВЕСТНИК КАЗНУ им. АЛЬ-ФАРАБИ. Серия: математика, механика и информатика No 3 (42). ЧАСТЬ I'>
+&nbsp;Т.&nbsp;9&nbsp; №&nbsp;S3-1</a>&nbsp;(4&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=36586059" title='Тема выпуска: СОВМЕСТНЫЙ ВЫПУСК. По материалам Международной конференции "Вычислительные и информационные технологии в науке, технике и образовании" (7-9 октября). ВЫЧИСЛИТЕЛЬНЫЕ ТЕХНОЛОГИИ. Том 9. ВЕСТНИК КАЗНУ им. АЛЬ-ФАРАБИ. Серия: математика, механика и информатика No 3 (42). ЧАСТЬ II.'>
+&nbsp;Т.&nbsp;9&nbsp; №&nbsp;S3-2</a>&nbsp;(1&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34113010" title='Тема выпуска: Специальный выпуск, посвященный 30-летию Института вычислительного моделирования Сибирского отделения РАН, 2004 г.'>
+&nbsp;Т.&nbsp;9&nbsp; №&nbsp;S5</a>&nbsp;(2&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=35676989" title='Тема выпуска: Совместный выпуск Вычислительные технологии и Вестник КазНУ'>
+&nbsp;Т.&nbsp;9&nbsp; №&nbsp;S</a>&nbsp;(4&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2003" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2003', 'issimg2003')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2003', 'issimg2003')">2003</span></font></b></td></tr>
+<tbody ID="issueyear2003" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386950" >
+&nbsp;Т.&nbsp;8&nbsp; №&nbsp;1</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386951" >
+&nbsp;Т.&nbsp;8&nbsp; №&nbsp;2</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386952" >
+&nbsp;Т.&nbsp;8&nbsp; №&nbsp;3</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386953" >
+&nbsp;Т.&nbsp;8&nbsp; №&nbsp;4</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386954" >
+&nbsp;Т.&nbsp;8&nbsp; №&nbsp;5</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386955" >
+&nbsp;Т.&nbsp;8&nbsp; №&nbsp;6</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33992361" title='Тема выпуска: СОВМЕСТНЫЙ ВЫПУСК. Вычислительные технологии, Т. 8, Региональный вестник Востока, № 3 (19), совместный выпуск по материалам Международной конференции "Вычислительные и информационные технологии в науке, технике и образовании" Усть-Каменогорск, Казахстан, 11-14 сентября 2003 года'>
+&nbsp;Т.&nbsp;8&nbsp; №&nbsp;S1</a>&nbsp;(6&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34113007" title='Тема выпуска: Специальный выпуск, посвященный двухлетнему "юбилею" отдела проблем информатизации Томского научного центра СО РАН'>
+&nbsp;Т.&nbsp;8&nbsp; №&nbsp;S5</a>&nbsp;(1&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34075172" title='Тема выпуска: Специальный выпуск, посвященный проблеме "Моделирование в задачах конструкционной прочности и информационные системы природно-техногенной безопасности"'>
+&nbsp;Т.&nbsp;8&nbsp; №&nbsp;S6</a>&nbsp;(7&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2002" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2002', 'issimg2002')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2002', 'issimg2002')">2002</span></font></b></td></tr>
+<tbody ID="issueyear2002" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387026" >
+&nbsp;Т.&nbsp;7&nbsp; №&nbsp;1</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386946" >
+&nbsp;Т.&nbsp;7&nbsp; №&nbsp;2</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387821" >
+&nbsp;Т.&nbsp;7&nbsp; №&nbsp;3</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386947" >
+&nbsp;Т.&nbsp;7&nbsp; №&nbsp;4</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386948" >
+&nbsp;Т.&nbsp;7&nbsp; №&nbsp;5</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386949" >
+&nbsp;Т.&nbsp;7&nbsp; №&nbsp;6</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=36582530" title='Тема выпуска: СОВМЕСТНЫЙ ВЫПУСК. Вычислительные технологии, Т. 7, Вестник КазНУ, № 4 (32), совместный выпуск по материалам Международной конференции "Вычислительные технологии и математическое моделирование в науке, технике и образовании" ВТММ-2002 (18-20 сентября). Часть 2.'>
+&nbsp;Т.&nbsp;7&nbsp; №&nbsp;S2</a>&nbsp;(1&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34539163" >
+&nbsp;Т.&nbsp;7&nbsp; №&nbsp;S3</a>&nbsp;(2&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2001" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2001', 'issimg2001')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2001', 'issimg2001')">2001</span></font></b></td></tr>
+<tbody ID="issueyear2001" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387020" >
+&nbsp;Т.&nbsp;6&nbsp; №&nbsp;1</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387021" >
+&nbsp;Т.&nbsp;6&nbsp; №&nbsp;2</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387022" >
+&nbsp;Т.&nbsp;6&nbsp; №&nbsp;3</a>&nbsp;(8&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387023" >
+&nbsp;Т.&nbsp;6&nbsp; №&nbsp;4</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387024" >
+&nbsp;Т.&nbsp;6&nbsp; №&nbsp;5</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387025" >
+&nbsp;Т.&nbsp;6&nbsp; №&nbsp;6</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34832709" >
+&nbsp;Т.&nbsp;6&nbsp; №&nbsp;S1</a>&nbsp;(2&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=49510176" >
+&nbsp;Т.&nbsp;6&nbsp; №&nbsp;S2</a>&nbsp;(1&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg2000" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear2000', 'issimg2000')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear2000', 'issimg2000')">2000</span></font></b></td></tr>
+<tbody ID="issueyear2000" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387014" >
+&nbsp;Т.&nbsp;5&nbsp; №&nbsp;1</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387015" >
+&nbsp;Т.&nbsp;5&nbsp; №&nbsp;2</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387016" >
+&nbsp;Т.&nbsp;5&nbsp; №&nbsp;3</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387017" >
+&nbsp;Т.&nbsp;5&nbsp; №&nbsp;4</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387018" >
+&nbsp;Т.&nbsp;5&nbsp; №&nbsp;5</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387019" >
+&nbsp;Т.&nbsp;5&nbsp; №&nbsp;6</a>&nbsp;(13&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34254626" title='Тема выпуска: Специальный выпуск, посвященный 10-летней годовщине Лаборатории теоретической генетики Института цитологии и генетики СО РАН'>
+&nbsp;Т.&nbsp;5&nbsp; №&nbsp;S2</a>&nbsp;(1&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34050202" title='Тема выпуска: Специальный выпуск, посвященный вопросам развития геоинформационных технологий и дистанционного зондирования в СО РАН'>
+&nbsp;Т.&nbsp;5&nbsp; №&nbsp;S</a>&nbsp;(4&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg1999" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear1999', 'issimg1999')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear1999', 'issimg1999')">1999</span></font></b></td></tr>
+<tbody ID="issueyear1999" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387534" >
+&nbsp;Т.&nbsp;4&nbsp; №&nbsp;1</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386192" >
+&nbsp;Т.&nbsp;4&nbsp; №&nbsp;2</a>&nbsp;(7&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387535" >
+&nbsp;Т.&nbsp;4&nbsp; №&nbsp;3</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387634" >
+&nbsp;Т.&nbsp;4&nbsp; №&nbsp;4</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387819" >
+&nbsp;Т.&nbsp;4&nbsp; №&nbsp;5</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33387820" >
+&nbsp;Т.&nbsp;4&nbsp; №&nbsp;6</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=34113018" title='Тема выпуска: Специальный выпуск, посвященный 25-летию Института математического моделирования СО РАН, 1999 г.'>
+&nbsp;Т.&nbsp;4&nbsp; №&nbsp;S</a>&nbsp;(1&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg1998" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear1998', 'issimg1998')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear1998', 'issimg1998')">1998</span></font></b></td></tr>
+<tbody ID="issueyear1998" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386267" >
+&nbsp;Т.&nbsp;3&nbsp; №&nbsp;1</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386268" >
+&nbsp;Т.&nbsp;3&nbsp; №&nbsp;2</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386269" >
+&nbsp;Т.&nbsp;3&nbsp; №&nbsp;3</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386270" >
+&nbsp;Т.&nbsp;3&nbsp; №&nbsp;4</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386190" >
+&nbsp;Т.&nbsp;3&nbsp; №&nbsp;5</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386191" >
+&nbsp;Т.&nbsp;3&nbsp; №&nbsp;6</a>&nbsp;(10&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg1997" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear1997', 'issimg1997')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear1997', 'issimg1997')">1997</span></font></b></td></tr>
+<tbody ID="issueyear1997" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386264" >
+&nbsp;Т.&nbsp;2&nbsp; №&nbsp;1</a>&nbsp;(12&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386265" >
+&nbsp;Т.&nbsp;2&nbsp; №&nbsp;2</a>&nbsp;(15&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386266" >
+&nbsp;Т.&nbsp;2&nbsp; №&nbsp;3</a>&nbsp;(14&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386187" >
+&nbsp;Т.&nbsp;2&nbsp; №&nbsp;4</a>&nbsp;(6&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386188" >
+&nbsp;Т.&nbsp;2&nbsp; №&nbsp;5</a>&nbsp;(9&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386189" >
+&nbsp;Т.&nbsp;2&nbsp; №&nbsp;6</a>&nbsp;(9&nbsp;ст.)</td></tr>
+</tbody>
+<tr><td width=12% align=left valign=top><img id="issimg1996" src="/images/or_plus1.png" class="win_expandable" onClick="hideShowRed('issueyear1996', 'issimg1996')"></td><td width=88% align=left valign=top><b><font color=#00008f><span class="win_expandable" onClick="hideShowRed('issueyear1996', 'issimg1996')">1996</span></font></b></td></tr>
+<tbody ID="issueyear1996" class="collapsed">
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386261" >
+&nbsp;Т.&nbsp;1&nbsp; №&nbsp;1</a>&nbsp;(11&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386262" >
+&nbsp;Т.&nbsp;1&nbsp; №&nbsp;2</a>&nbsp;(10&nbsp;ст.)</td></tr>
+
+<tr><td width=12%></td><td width=88% align=left valign=top><a href="contents.asp?id=33386263" >
+&nbsp;Т.&nbsp;1&nbsp; №&nbsp;3</a>&nbsp;(14&nbsp;ст.)</td></tr>
+
+</tbody>
+</table>
+
+</td></tr>
+
+
+<tr><td colspan=2><div style="height:5px;"></div></td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="title_items.asp?id=8610" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="title_items.asp?id=8610" rel=nofollow>Список статей, опубликованных в данном журнале</a>
+</td></tr>
+
+<tr><td width=15% align=right valign=top>
+<a href="cit_title_items.asp?id=8610" rel=nofollow><img src="images/but_orange.gif" width=15 height=15 hspace=3 border=0></a></td>
+<td width=85% align=left valign=middle><a href="cit_title_items.asp?id=8610" rel=nofollow>Список публикаций, ссылающихся на статьи в журнале</a>
+</td></tr>
+
+
+<tr><td width=15% align=right valign=top>
+<a href="title_profile.asp?id=8610"><img src="/pic/stat.gif" width=12 height=13 hspace=4 border=0></a></td>
+<td width=85% align=left valign=middle><a href="title_profile.asp?id=8610">Анализ публикационной активности журнала</a>
+</td></tr>
+
+
+</table>
+</div>
+
+</div>
+
+</td></tr></table>
+</td></tr></table>
+</FORM>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+$(function() {
+$(".help").tooltip({
+	position: "top right",
+	offset: [-15, -100],
+	effect: "fade", 
+	fadeInSpeed: 400, 
+	fadeOutSpeed: 400, 
+	delay: 400,  
+	predelay: 400,
+	opacity: 1.0
+});
+});
+$(function() {
+$(".help1").tooltip({
+	position: "top right",
+	offset: [-15, -300],
+	effect: "fade", 
+	fadeInSpeed: 400, 
+	fadeOutSpeed: 400, 
+	delay: 400,  
+	predelay: 400,
+	opacity: 1.0
+});
+});
+</script>
+
+
+<br><br>
+<table width=970 height=40 border=0 cellpadding=0 cellspacing=0 id="footer">
+<tr align=center valign=middle class="menug">
+<td width=15% valign="bottom">
+
+</td>
+<td width=70%><font color=#00008f><span style="position: relative; top: 3px; right: 15px; color: #F26C4F;">*</span><a href="/copyright.asp">&copy; 2000-2026 ООО НАУЧНАЯ ЭЛЕКТРОННАЯ БИБЛИОТЕКА. Все права защищены</a></font><span style="position: relative; top: 3px; left: 15px; color: #F26C4F;">*</span></td>
+<td width=15% valign="bottom">
+
+</td>
+</tr></table>
+
+<!-- Yandex.Metrika -->
+<div style="display:none;"><script type="text/javascript">
+(function(w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter171463 = new Ya.Metrika(171463);
+        } catch(e) {}
+    });
+})(window, 'yandex_metrika_callbacks');
+</script></div>
+<script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script>
+<noscript><div style="position:absolute"><img src="//mc.yandex.ru/watch/171463" alt="" /></div></noscript>
+<!-- /Yandex.Metrika -->
+
+
+
+
+<br><br><br>
+</td></tr></table>
+</html>
