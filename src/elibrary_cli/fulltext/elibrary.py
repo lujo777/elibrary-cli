@@ -190,7 +190,7 @@ def download_elibrary_pdf(http: ElibraryHTTP, item_id: int, item_html: str | byt
     dest = dest_dir / f"elibrary_{item_id}.pdf"
     if _is_pdf_file(dest):
         return dest
-    base = http.settings.base_url
+    base = getattr(http, "origin", None) or http.settings.base_url
     links = find_elibrary_pdf_links(item_html, item_id=item_id, base_url=base)
     if not links:
         status = fulltext_status(item_html)

@@ -463,7 +463,7 @@ def test_search_authors_org_name_alone_and_org_id_wins(runner, clients, site):
 
 
 def test_search_authors_org_name_not_found(runner, clients, site):
-    site.page("orgs.asp", "orgs_form")  # the form page: no organizations found
+    site.page("orgs.asp", "orgs_results_empty")  # the form page: no organizations found
     r = invoke(runner, "search", "authors", "Петров", "--org", "Несуществующий институт")
     assert r.exit_code == 2
     assert "Организация «Несуществующий институт» не найдена" in r.stderr

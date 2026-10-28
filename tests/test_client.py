@@ -725,7 +725,7 @@ def test_search_authors_org_name_best_hit(client, site, org_name, org_id):
 
 
 def test_search_authors_org_name_not_found(client, site):
-    site.page("orgs.asp", "orgs_form")
+    site.page("orgs.asp", "orgs_results_empty")
     with pytest.raises(NotFound, match="Организация «Институт Атлантиды» не найдена"):
         client.search_authors(surname="Петров", org_name="Институт Атлантиды")
     assert [r.url.path for r in site.requests] == ["/orgs.asp"]
@@ -1242,3 +1242,28 @@ def test_zotero_add_checks_zotero_before_fetching_cards(http, settings, site):
         c.zotero_add([46371463, 54076582], with_pdf=True)
     assert site.requests == [], "no card may be fetched when Zotero is unreachable"
     assert not dead.added
+
+
+def test_bare_form_answer_to_a_search_is_an_error_and_not_cached(client, site):
+    """Live 2026-10-28: a 302 elibrary.ru -> www.elibrary.ru dropped the POST body, the server showed the
+    empty form and it was read (and cached) as "no organizations found"."""
+    from elibrary_cli.errors import ParseError
+
+    site.page("orgs.asp", "orgs_form")  # the bare form: orgname is empty
+    with pytest.raises(ParseError, match="пустую форму"):
+        client.search_organizations(name="казанский")
+    n = len(site.requests)
+    with pytest.raises(ParseError):
+        client.search_organizations(name="казанский")
+    assert len(site.requests) == n + 1, "the bad page must not be served from the cache"
+
+
+@pytest.mark.parametrize(("fixture", "call"), [
+    ("orgs_results_mgu", lambda c: c.search_organizations(name="московский государственный университет")),
+    ("authors_results_petrov", lambda c: c.search_authors(surname="Петров")),
+    ("titles_results", lambda c: c.search_journals(name="вычислительные технологии")),
+])
+def test_result_pages_echo_the_query(client, site, fixture, call):
+    path = {"orgs": "orgs.asp", "authors": "authors.asp", "titles": "titles.asp"}[fixture.split("_")[0]]
+    site.page(path, fixture)
+    assert call(client).total

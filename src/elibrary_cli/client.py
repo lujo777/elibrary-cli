@@ -76,6 +76,7 @@ from elibrary_cli.models.journals import IssueContents, JournalHit, JournalProfi
 from elibrary_cli.models.organizations import OrgHit, OrgProfile, OrgPublicationsPage, OrgQuery
 from elibrary_cli.models.publications import FulltextFlag, Publication, PublicationQuery
 from elibrary_cli.parsers.authors import parse_author_profile, parse_author_publications, parse_author_search
+from elibrary_cli.parsers.common import parse_html
 from elibrary_cli.parsers.item import parse_fulltext_flag, parse_publication
 from elibrary_cli.parsers.journals import (
     parse_issue_contents,
@@ -520,6 +521,33 @@ def _mark(result: Any, page: Page) -> Any:
 # ============================================================================ the client
 
 
+
+#: The search field each POST search form echoes back on its result page (also on an empty result).
+_ECHO_FIELDS = {"orgs.asp": "orgname", "authors.asp": "surname", "titles.asp": "titlename"}
+
+
+def _check_form_echo(path: str, form: list[tuple[str, str]], page: Page) -> None:
+    """Raise ParseError when the server answered a search POST with the bare form.
+
+    elibrary's result pages echo the searched text in the form (``orgname``, ``surname``, ``titlename``),
+    even for an empty result. An empty echo for a non-empty query means the form never reached the
+    server (e.g. a host-switch redirect turned the POST into a GET), and the page must not be read as
+    "nothing found" — nor stay in the cache."""
+    field = _ECHO_FIELDS.get(path.rsplit("/", 1)[-1].split("?", 1)[0])
+    sent = dict(form).get(field, "").strip() if field else ""
+    if not sent:
+        return
+    tree = parse_html(page.content)
+    el = tree.css_first(f'input[name="{field}"], textarea[name="{field}"]')
+    if el is None:
+        return  # not a page with the form: the parser decides
+    echoed = el.attributes.get("value") if el.tag == "input" else el.text()
+    if not (echoed or "").strip():
+        raise ParseError(
+            "eLIBRARY.RU вернул пустую форму поиска вместо результатов: запрос не дошёл до сервера "
+            "(вероятно, сайт перенаправил его на другой адрес). Повторите поиск; если ошибка повторяется, "
+            "сообщите о ней.", url=page.url)
+
 class ElibraryClient:
     """Facade over eLIBRARY.RU. ``settings`` default to ``http.settings`` or :meth:`Settings.from_env`.
 
@@ -629,6 +657,7 @@ class ElibraryClient:
         cache_key = f"POST {self.http.absolute(path)}?{encode_params(form)}"
         page = self.http.post(path, form, referer=referer, cache_ttl_hours=ttl, cache_key=cache_key)
         try:
+            _check_form_echo(path, form, page)
             return parse(page), page
         except (ParseError, NotFound):
             self.http.cache.delete(self._key(cache_key))

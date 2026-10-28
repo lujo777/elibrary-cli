@@ -587,3 +587,61 @@ def test_redirect_loop_is_cut_short(http, site):
 
 def test_single_quoted_ban_div_is_recognised():
     assert classify(200, "https://elibrary.ru/x", b"<div id='blockedip'>x</div>") is Gate.IP_BLOCKED
+
+
+# ---------------------------------------------------------------------------- canonical host (2026-10)
+def _www_redirector(results: bytes):
+    """elibrary.ru answers every request with a 302 to the same path on www.elibrary.ru (seen live
+    2026-10-28); www serves results only when the form body arrives."""
+
+    def handler(r: httpx2.Request) -> httpx2.Response:
+        if r.url.host == "elibrary.ru":
+            return httpx2.Response(302, headers={"Location": f"https://www.elibrary.ru{r.url.raw_path.decode()}"})
+        if r.method == "POST" and b"orgname=" in r.content:
+            return httpx2.Response(200, content=results, headers={"Content-Type": "text/html; Charset=UTF-8"})
+        return httpx2.Response(200, content=fixture_bytes("orgs_form"), headers={"Content-Type": "text/html"})
+
+    return handler
+
+
+def test_post_redirected_to_www_is_resent_with_its_form_and_host_is_learned(http, site):
+    site.add(lambda r: True, _www_redirector(fixture_bytes("orgs_results_mgu")))
+    page = http.post("orgs.asp", [("orgname", "мгу")], referer="orgs.asp")
+    assert "Всего найдено организаций" in page.text
+    first, second = site.requests[0], site.requests[1]
+    assert first.url.host == "elibrary.ru" and second.url.host == "www.elibrary.ru"
+    assert second.method == "POST" and second.content == first.content  # the form was not lost
+    assert second.headers["Origin"] == "https://www.elibrary.ru"
+    assert http.origin == "https://www.elibrary.ru"
+    n = len(site.requests)
+    http.post("orgs.asp", [("orgname", "спбгу")], referer="orgs.asp")
+    assert len(site.requests) == n + 1 and site.requests[-1].url.host == "www.elibrary.ru"  # no redirect hop
+
+
+def test_get_redirect_to_www_is_learned(http, site):
+    site.add(lambda r: True, _www_redirector(b""))
+    http.get("defaultx.asp", cache_ttl_hours=0)
+    assert [r.url.host for r in site.requests] == ["elibrary.ru", "www.elibrary.ru"]
+    http.get("item.asp", {"id": "1"}, cache_ttl_hours=0)
+    assert site.requests[-1].url.host == "www.elibrary.ru" and len(site.requests) == 3
+
+
+def test_redirect_to_another_page_is_not_a_host_switch(http, site):
+    site.add(lambda r: "defaultx.asp" in str(r.url) and r.url.host == "elibrary.ru",
+             lambda r: httpx2.Response(302, headers={"Location": "https://www.elibrary.ru/start_session.asp?rpage=x"}))
+    site.add(lambda r: True, lambda r: httpx2.Response(200, content=b"<html>ok</html>"))
+    http.get("defaultx.asp", cache_ttl_hours=0)
+    assert http.origin == "https://elibrary.ru"
+
+
+def test_custom_base_url_is_never_replaced(settings, site):
+    from elibrary_cli.http import ElibraryHTTP
+
+    settings.base_url = "http://127.0.0.1:9"
+    h = ElibraryHTTP(settings, transport=httpx2.MockTransport(site))
+    try:
+        h.state.set("origin.canonical", "https://www.elibrary.ru")
+        assert h.origin == "http://127.0.0.1:9"
+        assert h.absolute("item.asp") == "http://127.0.0.1:9/item.asp"
+    finally:
+        h.close()

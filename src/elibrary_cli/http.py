@@ -75,6 +75,20 @@ _CHARSET_RE = re.compile(rb"""<meta[^>]+charset\s*=\s*["']?([\w-]+)""", re.I)
 #: (a heavy ``org_items.asp`` page, a login), and a POST is never re-sent at all.
 _RETRYABLE_ERRORS = (httpx2.ConnectError, httpx2.ConnectTimeout, httpx2.PoolTimeout)
 _REDIRECT_STATUSES = frozenset({301, 302, 303, 307, 308})
+#: Hosts that serve the same site; elibrary.ru switches its canonical host between them (2026-10:
+#: ``elibrary.ru`` -> ``www.elibrary.ru`` redirects appeared), see :meth:`ElibraryHTTP.origin`.
+_ELIBRARY_HOSTS = frozenset({"elibrary.ru", "www.elibrary.ru"})
+
+
+def _host_switch(src: str, dst: str) -> str | None:
+    """The new origin when ``dst`` is ``src`` on the other elibrary host (same path), else ``None``."""
+    a, b = urlsplit(src), urlsplit(dst)
+    ha, hb = (a.hostname or "").lower(), (b.hostname or "").lower()
+    if ha == hb or ha not in _ELIBRARY_HOSTS or hb not in _ELIBRARY_HOSTS:
+        return None
+    if (a.path or "/") != (b.path or "/") or a.query.rstrip("&") != b.query.rstrip("&"):
+        return None
+    return f"{b.scheme or 'https'}://{hb}"
 #: Redirect hops of a POST followed by hand (see :meth:`ElibraryHTTP._exchange`).
 #: elibrary chains are short (defaultx -> start_session -> defaultx -> page_captcha); longer chains are
 #: loops, and every hop is a real request that bypasses the throttle.
@@ -642,7 +656,7 @@ class ElibraryHTTP:
         page = _GATE_PAGES.get(gate)
         if page is None:
             return bare
-        return f"{self.settings.base_url}/{page}?rpage={quote(bare, safe='')}"
+        return f"{self.origin}/{page}?rpage={quote(bare, safe='')}"
 
     def _reset_client(self) -> None:
         if self._client is not None:
@@ -670,10 +684,30 @@ class ElibraryHTTP:
             self._bump_cookies_version(client_current=True)
 
     # ------------------------------------------------------------------ requests
+    @property
+    def origin(self) -> str:
+        """Origin all requests go to: ``settings.base_url``, or the elibrary host the site redirected us
+        to (``elibrary.ru`` <-> ``www.elibrary.ru``). Following that redirect on every request would
+        double the page views, and a 302 drops the body of a POST form (the search would silently show
+        the empty form)."""
+        base = self.settings.base_url
+        learned = self.state.get("origin.canonical")
+        if learned and (urlsplit(base).hostname or "").lower() in _ELIBRARY_HOSTS:
+            return str(learned)
+        return base
+
+    def _learn_origin(self, chain: list[httpx2.Response]) -> None:
+        for r in chain[:-1]:
+            loc = r.headers.get("location")
+            if r.status_code in _REDIRECT_STATUSES and loc:
+                new = _host_switch(str(r.url), urljoin(str(r.url), loc))
+                if new and new != self.state.get("origin.canonical"):
+                    self.state.set("origin.canonical", new)
+
     def absolute(self, path_or_url: str) -> str:
         if path_or_url.startswith(("http://", "https://")):
             return path_or_url
-        return urljoin(self.settings.base_url + "/", path_or_url.lstrip("/"))
+        return urljoin(self.origin + "/", path_or_url.lstrip("/"))
 
     def build_url(self, path: str, params: Params | None = None) -> str:
         url = self.absolute(path)
@@ -744,10 +778,24 @@ class ElibraryHTTP:
             return [*resp.history, resp]
         resp = self.client.request(method, url, content=content, headers=headers, follow_redirects=False, **extra)
         chain = [resp]
+        resent = False
         while follow_redirects and resp.next_request is not None and len(chain) <= _MAX_POST_REDIRECTS:
-            if classify(200, str(resp.next_request.url), b"") in CHALLENGE_GATES:
+            nxt = resp.next_request
+            if classify(200, str(nxt.url), b"") in CHALLENGE_GATES:
                 break
-            resp = self.client.send(resp.next_request, follow_redirects=False)
+            new_origin = None if resent else _host_switch(str(resp.request.url), str(nxt.url))
+            if new_origin:
+                # elibrary.ru <-> www.elibrary.ru: a 301/302 turns the POST into a GET and drops the form,
+                # so the same form is sent again to the other host (once)
+                resent = True
+                hop_headers = {**headers, "Origin": new_origin}
+                if "Referer" in hop_headers:
+                    hop_headers["Referer"] = urlunsplit(
+                        urlsplit(hop_headers["Referer"])._replace(netloc=urlsplit(new_origin).netloc))
+                resp = self.client.request(method, str(nxt.url), content=content, headers=hop_headers,
+                                           follow_redirects=False, **extra)
+            else:
+                resp = self.client.send(nxt, follow_redirects=False)
             chain.append(resp)
         return chain
 
@@ -757,7 +805,7 @@ class ElibraryHTTP:
         posted = body is not None
         if posted:
             headers["Content-Type"] = "application/x-www-form-urlencoded"
-            headers["Origin"] = self.settings.base_url
+            headers["Origin"] = self.origin
         # A POST is sent once (the server may have processed it; a second login looks like credential
         # stuffing); a GET is retried once after a connect-phase error or an HTTP 5xx page.
         attempts = 1 if posted else 2
@@ -788,6 +836,7 @@ class ElibraryHTTP:
                 raise NetworkError(f"Запрос к elibrary.ru не удался ({type(exc).__name__}: {exc})", url=url) from exc
             resp = chain[-1]
             self._save_cookies(chain)
+            self._learn_origin(chain)
             self.state.set("requests.count", int(self.state.get("requests.count", 0)) + 1)
             final_url = str(resp.url)
             gate = classify(resp.status_code, final_url, resp.content)
@@ -887,6 +936,7 @@ class ElibraryHTTP:
         stamps = [t for t in (throttle.get("stamps", []) if isinstance(throttle, dict) else []) if now - t < 86400]
         return {
             "base_url": self.settings.base_url,
+            "origin": self.origin,
             "has_session_cookie": bool(cookies.get("SUserID")),
             "cookie_names": sorted(cookies),
             "account": self.state.get("account"),

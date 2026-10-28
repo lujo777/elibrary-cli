@@ -242,7 +242,7 @@ async def test_search_authors_org_name_is_resolved_to_an_org_id(mcp, site):
 
 
 async def test_search_authors_org_name_not_found(mcp, site):
-    site.page("orgs.asp", "orgs_form")
+    site.page("orgs.asp", "orgs_results_empty")
     r = await mcp.call_tool("elibrary_search_authors", {"org_name": "Институт Атлантиды"})
     assert r.is_error is True
     assert "Организация «Институт Атлантиды» не найдена" in text_of(r)
