@@ -17,8 +17,8 @@ Politeness:
   and manual redirects (at most 5, every hop re-checked);
 * ``robots.txt`` for page and file fetches (``robots=True``, used by the full-text sources for
   publisher pages, PDFs and CyberLeninka articles; JSON APIs made for programs — Crossref, OpenAlex,
-  Unpaywall, DataCite, Handle — are not checked): parsed with :mod:`urllib.robotparser` and matched
-  per RFC 9309 (``*``/``$`` wildcards, the longest rule wins), cached per origin in memory and in the
+  Unpaywall, DataCite, Handle — are not checked): parsed and matched per RFC 9309 by our own
+  :class:`RobotsRules` (``*``/``$`` wildcards, the longest rule wins), cached per origin in memory and in the
   external cache for 24 h; only a network error while fetching ``robots.txt`` lets the request
   through ("fail open"), 401/403/5xx forbid it;
 * CyberLeninka PDFs are never downloaded (its robots.txt disallows ``/article/n/*/pdf``);
@@ -45,11 +45,10 @@ import socket
 import ssl
 import threading
 import time
-import urllib.robotparser
 from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any, BinaryIO
-from urllib.parse import quote, unquote, urljoin, urlparse, urlsplit, urlunparse
+from urllib.parse import quote, urljoin, urlsplit
 
 import httpcore2
 import httpx2
@@ -299,30 +298,54 @@ def is_cyberleninka_host(host_or_url: str) -> bool:
     return host == CYBERLENINKA_HOST or host.endswith("." + CYBERLENINKA_HOST)
 
 
+_PCT_RE = re.compile(r"%([0-9A-Fa-f]{2})")
+_UNRESERVED = frozenset("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~")
+
+
+def _normalize_path(path: str) -> str:
+    """RFC 3986 normalisation used for both rules and URLs: percent-encode non-ASCII and spaces,
+    upper-case existing escapes and decode escapes of unreserved characters (``%7E`` -> ``~``)."""
+
+    def fix(m: re.Match[str]) -> str:
+        ch = chr(int(m.group(1), 16))
+        return ch if ch in _UNRESERVED else "%" + m.group(1).upper()
+
+    path = quote(path, safe="/?&=;:@!$'()*+,%[]#~")  # keeps existing escapes, "*" and "$"
+    return _PCT_RE.sub(fix, path) or "/"
+
+
 @functools.lru_cache(maxsize=1024)
 def _rule_regex(path: str) -> re.Pattern[str]:
-    """Regex of a robots.txt rule path as quoted by :mod:`urllib.robotparser` (``*`` is ``%2A``,
-    ``$`` is ``%24``): ``*`` matches any run of characters, a final ``$`` anchors the end."""
-    anchored = path.endswith("%24")
+    """Regex of a normalised robots.txt rule path: ``*`` matches any run of characters, a final ``$``
+    anchors the end (RFC 9309 §2.2.3)."""
+    anchored = path.endswith("$")
     if anchored:
-        path = path[:-3]
-    pattern = ".*".join(re.escape(part) for part in path.split("%2A"))
+        path = path[:-1]
+    pattern = ".*".join(re.escape(part) for part in path.split("*"))
     return re.compile(pattern + (r"\Z" if anchored else ""))
 
 
-class RobotsRules(urllib.robotparser.RobotFileParser):
-    """:class:`urllib.robotparser.RobotFileParser` (groups, user-agent matching) with RFC 9309 path
-    matching: ``*`` and ``$`` wildcards, the longest matching rule wins, ``Allow`` wins a tie.
+class RobotsRules:
+    """robots.txt rules per RFC 9309, independent of :mod:`urllib.robotparser`.
 
-    (urllib itself compares literal prefixes in file order, so ``Disallow: /article/n/*/pdf`` would
-    never match.) Build with :meth:`from_response`.
+    (urllib's parser changed its internals and matching across 3.13.x patch releases, and before that
+    it compared literal prefixes in file order, so ``Disallow: /article/n/*/pdf`` never matched.)
+    Groups start at ``User-agent`` lines; groups naming the same agent are merged; the group whose
+    product token matches our user agent wins, else ``*``. Within a group the longest matching rule
+    wins and ``Allow`` wins a tie; ``/robots.txt`` itself is always allowed. Build with
+    :meth:`from_response`.
     """
+
+    def __init__(self) -> None:
+        self.groups: dict[str, list[tuple[str, bool]]] = {}
+        self.allow_all = False
+        self.disallow_all = False
 
     @classmethod
     def from_response(cls, status: int, content: bytes = b"") -> RobotsRules:
-        """Rules for a robots.txt answer: 2xx is parsed; 401/403 forbid everything (as urllib does);
-        other 4xx mean "no robots.txt" (everything allowed); 429/5xx mean "unreachable" (nothing
-        allowed, RFC 9309 §2.3.1.4)."""
+        """Rules for a robots.txt answer: 2xx is parsed; 401/403 forbid everything; other 4xx mean
+        "no robots.txt" (everything allowed); 429/5xx mean "unreachable" (nothing allowed,
+        RFC 9309 §2.3.1.4)."""
         rules = cls()
         if 200 <= status < 300:
             rules.parse(content.decode("utf-8-sig", "replace").splitlines())
@@ -340,23 +363,56 @@ class RobotsRules(urllib.robotparser.RobotFileParser):
         rules.allow_all = True
         return rules
 
+    def parse(self, lines: list[str]) -> None:
+        agents: list[str] = []
+        rules: list[tuple[str, bool]] = []
+        in_rules = False
+
+        def flush() -> None:
+            for agent in agents:
+                self.groups.setdefault(agent, []).extend(rules)
+
+        for raw in lines:
+            line = raw.split("#", 1)[0].strip()
+            if ":" not in line:
+                continue
+            key, value = (part.strip() for part in line.split(":", 1))
+            key = key.lower()
+            if key == "user-agent":
+                if in_rules:  # a user-agent line after rules starts a new group
+                    flush()
+                    agents, rules, in_rules = [], [], False
+                if value:
+                    agents.append(value.lower())
+            elif key in ("allow", "disallow"):
+                in_rules = True
+                if value:  # an empty Disallow allows everything: no rule
+                    rules.append((_normalize_path(value), key == "allow"))
+        flush()
+
+    def _group(self, useragent: str) -> list[tuple[str, bool]] | None:
+        token = useragent.split("/", 1)[0].strip().lower()
+        for agent, rules in self.groups.items():
+            if agent != "*" and (agent == token or token.startswith(agent)):
+                return rules
+        return self.groups.get("*")
+
     def can_fetch(self, useragent: str, url: str) -> bool:
         if self.disallow_all:
             return False
         if self.allow_all:
             return True
-        if not self.last_checked:
-            return False
-        # the same normalisation urllib applies to the rule paths
-        parsed = urlparse(unquote(url))
-        target = quote(urlunparse(("", "", parsed.path, parsed.params, parsed.query, parsed.fragment))) or "/"
-        entry = next((e for e in self.entries if e.applies_to(useragent)), None) or self.default_entry
-        if entry is None:
+        parts = urlsplit(url)
+        target = _normalize_path(parts.path or "/") + (f"?{parts.query}" if parts.query else "")
+        if target == "/robots.txt":
+            return True
+        rules = self._group(useragent)
+        if not rules:
             return True
         best: tuple[int, bool] | None = None
-        for line in entry.rulelines:
-            if _rule_regex(line.path).match(target):
-                key = (len(line.path), bool(line.allowance))
+        for path, allow in rules:
+            if _rule_regex(path).match(target):
+                key = (len(path), allow)
                 if best is None or key > best:
                     best = key
         return True if best is None else best[1]

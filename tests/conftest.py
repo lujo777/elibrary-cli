@@ -7,11 +7,19 @@ import socket
 from collections.abc import Callable
 from pathlib import Path
 
-import httpx2
-import pytest
+# Typer forces rich "terminal" output (ANSI escapes) when GITHUB_ACTIONS / FORCE_COLOR / PY_COLORS is
+# set, and it decides once, at import time. Tests compare plain help text, so switch that off before
+# any test module imports the CLI. Tests compare plain text, so colour forcing is removed too.
+os.environ["_TYPER_FORCE_DISABLE_TERMINAL"] = "1"
+os.environ.setdefault("NO_COLOR", "1")
+for _var in ("FORCE_COLOR", "PY_COLORS"):  # rich honours these at run time
+    os.environ.pop(_var, None)
 
-from elibrary_cli.config import Settings
-from elibrary_cli.http import ElibraryHTTP
+import httpx2  # noqa: E402
+import pytest  # noqa: E402
+
+from elibrary_cli.config import Settings  # noqa: E402
+from elibrary_cli.http import ElibraryHTTP  # noqa: E402
 
 FIXTURES = Path(__file__).parent / "fixtures" / "html"
 

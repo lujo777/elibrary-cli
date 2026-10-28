@@ -535,6 +535,8 @@ def test_heavy_timeout_setting(monkeypatch):
     assert Settings.from_env().heavy_timeout == 400.0  # never shorter than the normal timeout
 
 
+@pytest.mark.skipif(os.name == "posix", reason="real POSIX: fresh files are created private, so no chmod "
+                    "happens; covered by test_state_files_are_private_on_posix")
 def test_private_permissions_on_posix_are_requested(settings, monkeypatch):
     """#20: on POSIX the data/cache directories become 0700 and the SQLite files 0600 (the state holds
     the session cookies). Simulated on any OS: the chmod calls are recorded."""
